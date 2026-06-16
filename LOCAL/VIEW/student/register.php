@@ -66,7 +66,8 @@
     background-color: #e91e63;
 }
 
-#student_search_unreg::-webkit-calendar-picker-indicator {
+#student_search_unreg::-webkit-calendar-picker-indicator,
+#student_search_reg::-webkit-calendar-picker-indicator {
     display: none !important;
 }
 
@@ -380,12 +381,10 @@
 												
 												<div class="col-sm-8">
 													<label>Student Name:</label>  
-													<select class="form-control select2" id="student_select" style="width: 100%;">
-														<option value="">Select a student...</option>
-													</select>
-													<input type="hidden" id="student_id" name="student_id">
+													<input type="text" list="student_list_reg_datalist" class="form-control" id="student_search_reg" placeholder="Type student name to search..." autocomplete="chrome-off">
+													<datalist id="student_list_reg_datalist"></datalist>
 												</div>
-												
+
 											</div>
 										</div>
 									</div>
@@ -438,7 +437,7 @@
 								</div>
 								
 								<div class="box-footer">
-									<button type="submit" name="search" id="register_selected_students" value="search" class="btn btn-danger btn-sm pull-right checkbox-toggle" formaction="<?php echo base_url(); ?>cafeteria/student/register_batch/"><i class="fa fa-minus"></i> Unregister Selected Students</button>
+									<button type="submit" name="search" id="register_selected_students" value="search" class="btn btn-danger btn-sm pull-right checkbox-toggle" formaction="<?php echo base_url(); ?>cafeteria/student/unregister_batch/"><i class="fa fa-minus"></i> Unregister Selected Students</button>
 									<button type="button" class="btn btn-warning pull-right" id="clear_all" style="margin-right: 10px;" disabled>
 										<i class="fa fa-trash"></i> Clear All
 									</button>
@@ -1119,10 +1118,14 @@
 
                                                     </a>
 
-													<a href="<?php echo base_url(); ?>cafeteria/student/unregister/<?php echo $student->student_session_id; ?>?session_id=<?php echo $session_id;?>" class="btn btn-danger btn-xs"  data-toggle="tooltip" title="<?php echo $this->lang->line('delete'); ?>" onclick="return confirm('Are you sure you want to remove this item?');">
-
+													<a href="javascript:void(0);" 
+													   class="btn btn-danger btn-xs unregister-student-btn" 
+													   data-student-session-id="<?php echo $student->student_session_id; ?>" 
+													   data-student-id="<?php echo $student->id; ?>"
+													   data-student-name="<?php echo htmlspecialchars($student->lastname.', '.$student->firstname.' '.$student->middlename); ?>"
+													   data-toggle="tooltip" 
+													   title="Unregister student from cafeteria system">
                                                        Unregister
-
                                                     </a>
 
 													<?php if ($student->is_deactivate == 'no'): ?>
@@ -1893,76 +1896,113 @@ $(document).ready(function () {
 		// Update session_id in form when dropdown changes
 		$('#session_id').change(function() {
 			$('#form_session_id').val($(this).val());
-			// Clear selected students when session changes
 			clearAllStudents();
-			// Reload student list for new session
-			loadStudentList();
+			$("#student_search_reg").val('');
+			$("#student_list_reg_datalist").empty();
 		});
 
-		// Load student list for dropdown
-		function loadStudentList() {
-			let session_id = $('#session_id').val();
-			if (session_id) {
+		// Trigger AJAX search dynamically as the user types in the search bar
+		// PANEL 1 (BLUE "Search Students"): Search REGISTERED students (allow='yes') to UNREGISTER them
+		$("#student_search_reg").keyup(function() {
+			var search_student = $(this).val().trim();
+			var session_id = $('#session_id').val();
+			
+			if (!session_id) {
+				return;
+			}
+
+			// Starts searching from the first character typed
+			if (search_student.length >= 1) {
 				$.ajax({
-					url: '<?php echo site_url("cafeteria/student/get_students_ajax"); ?>',
-					type: 'POST',
-					data: {session_id: session_id},
-					dataType: 'json',
+					url: "<?php echo base_url('cafeteria/student/getsearchstudentallow'); ?>", // REGISTERED students (allow='yes')
+					type: "POST",
+					data: { "search_student": search_student, "session_id": session_id },
+					dataType: "json",
 					success: function(data) {
-						console.log(data);
-						$('#student_select').empty();
-						$('#student_select').append('<option value="">Select a student...</option>');
+						$("#student_list_reg_datalist").empty();
+
+						// Sort results alphabetically (A-Z) by Last Name, First Name
+						data.sort(function(a, b) {
+							let nameA = (a.lastname + ', ' + a.firstname).toLowerCase();
+							let nameB = (b.lastname + ', ' + b.firstname).toLowerCase();
+							return nameA.localeCompare(nameB);
+						});
+
+						let addedIds = [];
+						let searchLower = search_student.toLowerCase();
+
 						$.each(data, function(index, student) {
+							// Filter out duplicate database records
+							if (addedIds.includes(student.id)) {
+								return;
+							}
+
+							let middlename = student.middlename ? ' ' + student.middlename : '';
+							let suffix = student.suffix ? ' ' + student.suffix : '';
+							let full_name = student.lastname + ', ' + student.firstname + middlename + suffix;
 							
-							if (!selectedStudents.some(s => s.id === student.id)) {
-								$('#student_select').append(
-									'<option value="' + student.id + '" ' +
-									'data-name="' + student.full_name + '" ' +
-									'data-gender="' + student.gender + '" ' +
-									'data-meal="' + (student.meal_plan || 'cafeteria') + '" ' +
-									'data-class="' + (student.class || '') + '" ' + // Changed from grade to class
-									'data-section="' + (student.section || '') + '">' +
-									student.full_name + '</option>'
+							// Filter: Only keep if the Last Name starts with what the user typed
+							let lastNameLower = student.lastname.toLowerCase();
+							if (!lastNameLower.startsWith(searchLower)) {
+								return; // Skip student if their last name doesn't start with the query
+							}
+
+							addedIds.push(student.id);
+
+							// Only show in datalist if not already selected in the table
+							if (!selectedStudents.some(s => s.id == student.id)) {
+								$("#student_list_reg_datalist").append(
+									"<option value='" + full_name + "' " +
+									"data-id='" + student.id + "' " +
+									"data-gender='" + student.gender + "' " +
+									"data-meal='" + (student.meal_plan || 'cafeteria') + "' " +
+									"data-class='" + (student.class || '') + "' " +
+									"data-section='" + (student.section || '') + "'></option>"
 								);
 							}
 						});
-						
-						$('#student_select').trigger('change');
-					},
-					error: function() {
-						alert('Error loading student list. Please try again.');
 					}
 				});
-			} else {
-				$('#student_select').empty();
-				$('#student_select').append('<option value="">Select a school year first...</option>');
 			}
-		}
+		});
 
-		// Add student to selection when dropdown changes
-		$('#student_select').change(function() {
-			let studentId = $(this).val();
-			if (studentId) {
-				let selectedOption = $(this).find('option:selected');
-				let studentName = selectedOption.data('name');
-				let studentGender = selectedOption.data('gender');
-				let studentMeal = selectedOption.data('meal') || 'cafeteria';
-				let studentClass = selectedOption.data('class'); // Changed from grade to class
-				let studentSection = selectedOption.data('section');
-
-				// Add to selected students array
+		// Handle selection when user clicks/presses enter on an autocomplete option
+		$("#student_search_reg").on('input', function() {
+			var val = $(this).val();
+			var options = $('#student_list_reg_datalist option');
+			var matchedOption = null;
+			
+			options.each(function() {
+				if ($(this).val() === val) {
+					matchedOption = $(this);
+					return false;
+				}
+			});
+			
+			if (matchedOption) {
+				let studentId = matchedOption.attr('data-id');
+				let studentName = val;
+				let studentGender = matchedOption.attr('data-gender');
+				let studentMeal = matchedOption.attr('data-meal') || 'cafeteria';
+				let studentClass = matchedOption.attr('data-class');
+				let studentSection = matchedOption.attr('data-section');
+				
+				// Add selected student to table array
 				selectedStudents.push({
 					id: studentId,
 					name: studentName,
 					gender: studentGender,
 					meal_plan: studentMeal,
-					class: studentClass, // Changed
+					class: studentClass,
 					section: studentSection
 				});
-
+				
+				// Update UI Selected Students table
 				updateSelectedStudentsList();
-				selectedOption.remove();
-				$('#student_select').val('').trigger('change');
+				
+				// Clear input search bar and dynamic datalist
+				$("#student_search_reg").val('');
+				$("#student_list_reg_datalist").empty();
 			}
 		});
 
@@ -2163,9 +2203,6 @@ $(document).ready(function () {
 			
 			return true;
 		});
-
-		// Load initial student list
-		loadStudentList();
 	});
 
 	
@@ -2192,6 +2229,7 @@ $(document).ready(function() {
 	});
 
 	// Trigger AJAX search dynamically as the user types in the search bar
+	// PANEL 2 (YELLOW "Search UNREGISTERED Students"): Search UNREGISTERED students (allow='no') to REGISTER them
 	$("#student_search_unreg").keyup(function() {
 		var search_student = $(this).val().trim();
 		var session_id = $('#session_id_unreg').val();
@@ -2203,7 +2241,7 @@ $(document).ready(function() {
 		// Starts searching from the first character typed
 		if (search_student.length >= 1) {
 			$.ajax({
-				url: "<?php echo base_url('cafeteria/student/search_unregistered_students'); ?>",
+				url: "<?php echo base_url('cafeteria/student/search_unregistered_students'); ?>", // UNREGISTERED students (allow='no')
 				type: "POST",
 				data: { "search_student": search_student, "session_id": session_id },
 				dataType: "json",
@@ -2235,7 +2273,7 @@ $(document).ready(function() {
 						if (!lastNameLower.startsWith(searchLower)) {
 							return;
 						}
-						
+
 						addedIds.push(student.id);
 
 						// Only show in datalist if not already selected in the table
@@ -2489,3 +2527,98 @@ $(document).ready(function() {
 });
 </script>
 <!-- END UNREGISTERED STUDENTS JAVASCRIPT -->
+
+<!-- ============================================ -->
+<!-- AJAX UNREGISTER HANDLER FOR BOTTOM TABLE -->
+<!-- Handles unregistering students from the main registered students table dynamically -->
+<!-- When unregistered, student's allow changes from 'yes' to 'no' -->
+<!-- Student will then appear in Panel 2 (Yellow) for re-registration -->
+<!-- ============================================ -->
+<script type="text/javascript">
+$(document).ready(function() {
+	// Handle unregister button click in the main registered students table (bottom table)
+	$(document).on('click', '.unregister-student-btn', function(e) {
+		e.preventDefault();
+		
+		var btn = $(this);
+		var studentSessionId = btn.data('student-session-id');
+		var studentId = btn.data('student-id');
+		var studentName = btn.data('student-name');
+		var sessionId = $('#session_id').val();
+		var row = btn.closest('tr');
+		
+		// Confirm action
+		if (!confirm('Are you sure you want to unregister ' + studentName + '?\n\nThis will change their status to allow="no" and they will appear in the UNREGISTERED students search.')) {
+			return false;
+		}
+		
+		// Disable button and show loading state
+		btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Unregistering...');
+		
+		// Send AJAX request to unregister the student
+		$.ajax({
+			url: '<?php echo base_url("cafeteria/student/unregister_ajax"); ?>',
+			type: 'POST',
+			data: {
+				student_session_id: studentSessionId,
+				student_id: studentId,
+				session_id: sessionId
+			},
+			dataType: 'json',
+			success: function(response) {
+				if (response.status === 'success') {
+					// Show success message
+					showFlashMessage('Student successfully unregistered! They can now be found in the UNREGISTERED students search.', 'success');
+					
+					// Remove the row from the table with animation
+					row.fadeOut(400, function() {
+						$(this).remove();
+						
+						// Renumber the remaining rows
+						$('.example tbody tr').each(function(index) {
+							$(this).find('td:first').text(index + 1);
+						});
+						
+						// Check if table is empty
+						if ($('.example tbody tr').length === 0) {
+							$('.example tbody').html('<tr><td colspan="8"><div class="alert alert-warning">No Results Found.</div></td></tr>');
+						}
+					});
+					
+					// Optional: Refresh Panel 2 (unregistered students) datalist if it's visible
+					// This way the student immediately appears in the unregistered search
+					if ($('#student_search_unreg').length > 0) {
+						$('#student_list_unreg').empty();
+						// User can now search for this student in Panel 2
+					}
+				} else {
+					showFlashMessage('Error: ' + response.message, 'error');
+					btn.prop('disabled', false).html('Unregister');
+				}
+			},
+			error: function(xhr, status, error) {
+				showFlashMessage('An error occurred while unregistering the student. Please try again.', 'error');
+				btn.prop('disabled', false).html('Unregister');
+				console.error('AJAX Error:', error);
+			}
+		});
+	});
+	
+	// Flash message helper function (if not already defined)
+	function showFlashMessage(message, type) {
+		const flashMessage = $('#flashMessage');
+		if (flashMessage.length === 0) {
+			// Create flash message element if it doesn't exist
+			$('body').append('<div id="flashMessage" class="flash-message"></div>');
+		}
+		
+		$('#flashMessage').text(message)
+			.removeClass('flash-success flash-error')
+			.addClass(type === 'success' ? 'flash-success' : 'flash-error')
+			.fadeIn()
+			.delay(4000)
+			.fadeOut();
+	}
+});
+</script>
+<!-- END AJAX UNREGISTER HANDLER -->

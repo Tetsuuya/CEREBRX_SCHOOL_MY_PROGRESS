@@ -441,6 +441,109 @@
 								</div>
 							</form>
 
+							<!-- ============================================ -->
+							<!-- FEATURE: UNREGISTERED STUDENT SEARCH PANEL -->
+							<!-- Added: New panel to search and register unregistered students -->
+							<!-- This section allows searching for students with allow='no' -->
+							<!-- ============================================ -->
+							
+							<div class="row">
+								<div class="col-sm-12">
+									<div class="panel panel-warning">
+										<div class="panel-heading">
+											<h4 class="panel-title"><i class="fa fa-search"></i> Search UNREGISTERED Students</h4>
+										</div>
+										<div class="panel-body">
+											<div class="form-group">
+												<!-- School Year Dropdown for unregistered search -->
+												<div class="col-sm-2">
+													<label>Select School Year:</label>
+													<select id="session_id_unreg" name="session_id_unreg" class="form-control" required>
+														<option value=""><?php echo $this->lang->line('select'); ?></option>
+														<?php
+														foreach ($sessionlist as $session) {
+															?>
+															<option value="<?php echo $session['id'] ?>" <?php if ($session['id'] == $session_id) echo "selected=selected" ?>><?php echo $session['session'] ?></option>
+															<?php
+														}
+														?>
+													</select>
+												</div>
+												
+												<!-- Student Name Dropdown - populated via AJAX -->
+												<div class="col-sm-8">
+													<label>Student Name:</label>  
+													<select class="form-control select2" id="student_select_unreg" style="width: 100%;">
+														<option value="">Select an unregistered student...</option>
+													</select>
+													<input type="hidden" id="student_id_unreg" name="student_id_unreg">
+												</div>
+												
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<!-- Selected UNREGISTERED Students Display Section -->
+							<div class="row">
+								<div class="col-sm-12">
+									<div class="panel panel-danger">
+										<div class="panel-heading">
+											<h4 class="panel-title">Selected UNREGISTERED Students for Registration (<span id="student_count_unreg">0</span>)</h4>
+										</div>
+										<div class="panel-body">
+											<div id="selected_students_container_unreg">
+												<!-- Empty state message -->
+												<div id="no_students_message_unreg" class="alert alert-warning text-center">
+													<i class="fa fa-exclamation-triangle"></i> No unregistered students selected yet. Search and add students above.
+												</div>
+												<!-- Table shows when students are selected -->
+												<div id="selected_students_list_unreg" style="display: none;">
+													<div class="table-responsive">
+														<table class="table table-striped table-hover">
+															<thead>
+																<tr>
+																	<th>#</th>
+																	<th>Student Name</th>
+																	<th>Gender</th>
+																	<th>Grade</th>
+																	<th>Section</th>
+																	<th style="width: 200px;">Meal Plan</th>
+																	<th>Action</th>
+																</tr>
+															</thead>
+															<tbody id="students_table_body_unreg">
+																<!-- Selected unregistered students dynamically added here via JS -->
+															</tbody>
+														</table>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<!-- Registration Form for Unregistered Students -->
+							<form action="<?php echo site_url('cafeteria/student/register_by_student') ?>" id="register_student_unreg" name="employeeform_unreg" method="post" accept-charset="utf-8" enctype="multipart/form-data">
+								<input type="hidden" name="session_id" id="form_session_id_unreg" value="<?php echo $session_id; ?>">
+								<!-- Hidden inputs container - dynamically populated with selected student IDs and meal plans -->
+								<div id="hidden_student_inputs_unreg">
+									<!-- Hidden inputs for selected students will be added here via JavaScript -->
+								</div>
+								
+								<div class="box-footer">
+									<!-- Register button - disabled until students are selected -->
+									<button type="submit" name="search" id="register_selected_students_unreg" value="search" class="btn btn-success btn-sm pull-right checkbox-toggle" formaction="<?php echo base_url(); ?>cafeteria/student/register_batch/" disabled><i class="fa fa-plus"></i> Register Selected Students</button>
+									<!-- Clear all button - disabled until students are selected -->
+									<button type="button" class="btn btn-warning pull-right" id="clear_all_unreg" style="margin-right: 10px;" disabled>
+										<i class="fa fa-trash"></i> Clear All
+									</button>
+								</div>
+							</form>
+							<!-- END UNREGISTERED STUDENT SEARCH FEATURE -->
+
 							<div class="row">
 
 								 <form action="<?php echo site_url('cafeteria/student/register_student') ?>"  id="register_student" name="employeeform" method="post" accept-charset="utf-8" enctype="multipart/form-data">
@@ -2063,3 +2166,307 @@ $(document).ready(function () {
 	
 
 </script>
+
+<!-- ============================================ -->
+<!-- FEATURE: UNREGISTERED STUDENTS JAVASCRIPT -->
+<!-- Handles search, selection, and registration of unregistered students -->
+<!-- This mirrors the functionality of the registered students search above -->
+<!-- ============================================ -->
+<script type="text/javascript">
+$(document).ready(function() {
+	// Array to store selected unregistered students
+	let selectedStudentsUnreg = [];
+
+	/**
+	 * Load unregistered students from server via AJAX
+	 * Calls get_students_ajax which returns students with allow='no'
+	 */
+	function loadUnregisteredStudentList() {
+		let session_id = $('#session_id_unreg').val();
+		
+		// Only load if session is selected
+		if (session_id) {
+			$.ajax({
+				url: '<?php echo site_url("cafeteria/student/get_students_ajax"); ?>',
+				type: 'POST',
+				data: {session_id: session_id},
+				dataType: 'json',
+				success: function(data) {
+					// Clear and populate dropdown
+					$('#student_select_unreg').empty();
+					$('#student_select_unreg').append('<option value="">Select an unregistered student...</option>');
+					
+					// Add each student that hasn't been selected yet
+					$.each(data, function(index, student) {
+						// Only show if not already selected
+						if (!selectedStudentsUnreg.some(s => s.id === student.id)) {
+							$('#student_select_unreg').append(
+								'<option value="' + student.id + '" ' +
+								'data-name="' + student.full_name + '" ' +
+								'data-gender="' + student.gender + '" ' +
+								'data-meal="' + (student.meal_plan || 'cafeteria') + '" ' +
+								'data-class="' + (student.class || '') + '" ' +
+								'data-section="' + (student.section || '') + '">' +
+								student.full_name + '</option>'
+							);
+						}
+					});
+					
+					// Trigger select2 update if using select2 plugin
+					$('#student_select_unreg').trigger('change');
+				},
+				error: function() {
+					alert('Error loading unregistered student list. Please try again.');
+				}
+			});
+		} else {
+			// No session selected, show placeholder
+			$('#student_select_unreg').empty();
+			$('#student_select_unreg').append('<option value="">Select a school year first...</option>');
+		}
+	}
+
+	/**
+	 * Session dropdown change handler
+	 * Updates form session_id and reloads student list
+	 */
+	$('#session_id_unreg').change(function() {
+		$('#form_session_id_unreg').val($(this).val());
+		// Clear selected students when session changes
+		selectedStudentsUnreg = [];
+		updateSelectedStudentsListUnreg();
+		// Load students for new session
+		loadUnregisteredStudentList();
+	});
+
+	/**
+	 * Student dropdown change handler
+	 * Adds selected student to the list
+	 */
+	$('#student_select_unreg').change(function() {
+		let studentId = $(this).val();
+		
+		if (studentId) {
+			let selectedOption = $(this).find('option:selected');
+			
+			// Extract student data from option attributes
+			let studentData = {
+				id: studentId,
+				name: selectedOption.data('name'),
+				gender: selectedOption.data('gender'),
+				meal_plan: selectedOption.data('meal') || 'cafeteria',
+				class: selectedOption.data('class'),
+				section: selectedOption.data('section')
+			};
+			
+			// Add to selected students array
+			selectedStudentsUnreg.push(studentData);
+			
+			// Update UI
+			updateSelectedStudentsListUnreg();
+			
+			// Remove from dropdown (already selected)
+			selectedOption.remove();
+			
+			// Reset dropdown to placeholder
+			$('#student_select_unreg').val('').trigger('change');
+		}
+	});
+
+	/**
+	 * Update the display of selected unregistered students
+	 * Shows/hides table and empty message, populates table rows
+	 */
+	function updateSelectedStudentsListUnreg() {
+		let tbody = $('#students_table_body_unreg');
+		tbody.empty();
+		
+		// Update counter
+		$('#student_count_unreg').text(selectedStudentsUnreg.length);
+
+		// Show/hide appropriate sections based on selection count
+		if (selectedStudentsUnreg.length === 0) {
+			$('#no_students_message_unreg').show();
+			$('#selected_students_list_unreg').hide();
+			$('#register_selected_students_unreg, #clear_all_unreg').prop('disabled', true);
+		} else {
+			$('#no_students_message_unreg').hide();
+			$('#selected_students_list_unreg').show();
+			$('#register_selected_students_unreg, #clear_all_unreg').prop('disabled', false);
+
+			// Clear and update hidden inputs container
+			$('#hidden_student_inputs_unreg').empty();
+			
+			// Build table rows for each selected student
+			$.each(selectedStudentsUnreg, function(index, student) {
+				// Build meal plan radio buttons
+				// Default price based on gender (Male=3200, Female=3000)
+				let defaultPrice = student.gender === 'Female' ? '3000' : '3200';
+				
+				let mealPlanRadios = 
+					'<div class="btn-group btn-group-xs" role="group">' +
+						// Cafeteria option
+						'<label class="btn btn-default ' + (student.meal_plan === 'cafeteria' ? 'active' : '') + '">' +
+							'<input type="radio" class="meal-plan-radio-unreg" ' +
+								'name="meal_plan_unreg_' + student.id + '" ' +
+								'value="cafeteria" ' +
+								'data-student-id="' + student.id + '" ' +
+								(student.meal_plan === 'cafeteria' ? 'checked' : '') + '> ' +
+							'Cafeteria: ₱' + defaultPrice +
+						'</label>' +
+						// Subsidized 1 option
+						'<label class="btn btn-default ' + (student.meal_plan === 'subsidized_1' ? 'active' : '') + '">' +
+							'<input type="radio" class="meal-plan-radio-unreg" ' +
+								'name="meal_plan_unreg_' + student.id + '" ' +
+								'value="subsidized_1" ' +
+								'data-student-id="' + student.id + '" ' +
+								(student.meal_plan === 'subsidized_1' ? 'checked' : '') + '> ' +
+							'Subsidized: ₱3500' +
+						'</label>' +
+						// Subsidized 2 option
+						'<label class="btn btn-default ' + (student.meal_plan === 'subsidized_2' ? 'active' : '') + '">' +
+							'<input type="radio" class="meal-plan-radio-unreg" ' +
+								'name="meal_plan_unreg_' + student.id + '" ' +
+								'value="subsidized_2" ' +
+								'data-student-id="' + student.id + '" ' +
+								(student.meal_plan === 'subsidized_2' ? 'checked' : '') + '> ' +
+							'Subsidized: ₱4000' +
+						'</label>' +
+						// Subsidized 3 option
+						'<label class="btn btn-default ' + (student.meal_plan === 'subsidized_3' ? 'active' : '') + '">' +
+							'<input type="radio" class="meal-plan-radio-unreg" ' +
+								'name="meal_plan_unreg_' + student.id + '" ' +
+								'value="subsidized_3" ' +
+								'data-student-id="' + student.id + '" ' +
+								(student.meal_plan === 'subsidized_3' ? 'checked' : '') + '> ' +
+							'Subsidized: ₱4500' +
+						'</label>' +
+					'</div>';
+
+				// Build table row
+				let row = $('<tr>')
+					.append($('<td>').text(index + 1))
+					.append($('<td>').html('<strong>' + student.name + '</strong>'))
+					.append($('<td>').html('<span class="label label-' + (student.gender === 'Male' ? 'primary' : 'pink') + '">' + student.gender + '</span>'))
+					.append($('<td>').text(student.class || 'N/A'))
+					.append($('<td>').text(student.section || 'N/A'))
+					.append($('<td>').html(mealPlanRadios))
+					.append($('<td>').html('<button type="button" class="btn btn-danger btn-xs remove-student-unreg" data-student-id="' + student.id + '"><i class="fa fa-trash"></i> Remove</button>'));
+				
+				tbody.append(row);
+
+				// Add hidden inputs for form submission
+				$('#hidden_student_inputs_unreg').append(
+					'<input type="hidden" name="student_id[]" value="' + student.id + '">' +
+					'<input type="hidden" name="student_meal_plan[' + student.id + ']" class="meal_plan_input_unreg_' + student.id + '" value="' + student.meal_plan + '">'
+				);
+			});
+		}
+	}
+
+	/**
+	 * Handle meal plan radio button changes
+	 * Updates the student's meal plan in the array and hidden input
+	 */
+	$(document).on('change', '.meal-plan-radio-unreg', function() {
+		let studentId = $(this).data('student-id');
+		let mealPlan = $(this).val();
+		
+		// Update button group active state
+		$(this).closest('.btn-group').find('label').removeClass('active');
+		$(this).closest('label').addClass('active');
+		
+		// Update in selectedStudentsUnreg array
+		let studentIndex = selectedStudentsUnreg.findIndex(s => s.id == studentId);
+		if (studentIndex !== -1) {
+			selectedStudentsUnreg[studentIndex].meal_plan = mealPlan;
+		}
+		
+		// Update hidden input
+		$('.meal_plan_input_unreg_' + studentId).val(mealPlan);
+	});
+
+	/**
+	 * Remove student button handler
+	 * Removes student from selection and adds back to dropdown
+	 */
+	$(document).on('click', '.remove-student-unreg', function() {
+		let studentId = $(this).data('student-id');
+		let studentData = selectedStudentsUnreg.find(s => s.id == studentId);
+		
+		if (studentData) {
+			// Remove from selectedStudentsUnreg array
+			selectedStudentsUnreg = selectedStudentsUnreg.filter(s => s.id != studentId);
+			
+			// Add back to dropdown
+			let option = '<option value="' + studentId + '" ' +
+				'data-name="' + studentData.name + '" ' +
+				'data-gender="' + studentData.gender + '" ' +
+				'data-meal="' + studentData.meal_plan + '" ' +
+				'data-class="' + studentData.class + '" ' +
+				'data-section="' + studentData.section + '">' +
+				studentData.name + '</option>';
+			$('#student_select_unreg').append(option);
+			
+			// Update display
+			updateSelectedStudentsListUnreg();
+		}
+	});
+
+	/**
+	 * Clear all button handler
+	 * Removes all selected students after confirmation
+	 */
+	$('#clear_all_unreg').click(function() {
+		if (confirm('Are you sure you want to remove all selected unregistered students?')) {
+			clearAllStudentsUnreg();
+		}
+	});
+
+	/**
+	 * Clear all selected students and reload dropdown
+	 */
+	function clearAllStudentsUnreg() {
+		selectedStudentsUnreg = [];
+		updateSelectedStudentsListUnreg();
+		loadUnregisteredStudentList(); // Reload the full student list
+	}
+
+	/**
+	 * Form submission validation
+	 * Ensures at least one student is selected and updates meal plans
+	 */
+	$('#register_student_unreg').submit(function(e) {
+		// Check if any students are selected
+		if (selectedStudentsUnreg.length === 0) {
+			e.preventDefault();
+			alert('Please select at least one unregistered student to register.');
+			return false;
+		}
+
+		// Update meal plans from current radio button selections before submitting
+		$('input[type="radio"][name^="meal_plan_unreg_"]:checked').each(function() {
+			let studentId = $(this).data('student-id');
+			let mealPlan = $(this).val();
+			let studentIndex = selectedStudentsUnreg.findIndex(s => s.id == studentId);
+			if (studentIndex !== -1) {
+				selectedStudentsUnreg[studentIndex].meal_plan = mealPlan;
+				// Update hidden input
+				$('.meal_plan_input_unreg_' + studentId).val(mealPlan);
+			}
+		});
+
+		// Confirmation dialog
+		if (!confirm('Are you sure you want to register ' + selectedStudentsUnreg.length + ' unregistered student(s)?')) {
+			e.preventDefault();
+			return false;
+		}
+		
+		return true;
+	});
+
+	// Initial load of unregistered student list on page load
+	loadUnregisteredStudentList();
+});
+</script>
+<!-- END UNREGISTERED STUDENTS JAVASCRIPT -->

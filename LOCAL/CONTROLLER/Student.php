@@ -60,6 +60,26 @@ class Student extends CI_Controller {
         # code...
     }
 	
+	// FEATURE: Search for UNREGISTERED students (allow = 'no')
+	// This method is used by the new unregistered student search panel
+	// Returns list of students who are NOT registered in the cafeteria system
+	// Added: [Your Date]
+	public function search_unregistered_students(){
+		// Get current school year from menu settings
+		$session_details = $this->menusettings_model->get();
+		$session_id = $session_details[0]['school_year'];
+		
+		// Get search term from POST request
+		$search_student = $this->input->post('search_student'); 
+		
+		// Search for students with allow = 'no' (unregistered)
+		// Parameters: search_term, is_deleted, session_id
+		$resultlist = $this->student_model->searchFullText($search_student, 'no', $session_id);
+		
+		// Return results as JSON for AJAX handling
+		echo json_encode($resultlist);  
+	}
+	
 	 public function getstd(){
         $session_id = $this->input->post('session_id'); 
         $search_student = $this->input->post('search_student'); 
@@ -314,7 +334,7 @@ class Student extends CI_Controller {
 			$session_id = $current_session_id;
 		}
 	
-		$this->db->select('students.id as id,student_session.id as `student_session_id`,classes.id AS `class_id`,classes.class,sections.id AS `section_id`,sections.section,students.id,students.admission_no ,allow,students.lastname,students.firstname,students.middlename');
+		$this->db->select('students.id as id,student_session.id as student_session_id,classes.id AS class_id,classes.class,sections.id AS section_id,sections.section,students.id,students.admission_no ,allow,students.lastname,students.firstname,students.middlename');
 		$this->db->from('students');
 		$this->db->join('student_session', 'student_session.student_id = students.id');
 		$this->db->join('classes', 'student_session.class_id = classes.id');

@@ -66,6 +66,10 @@
     background-color: #e91e63;
 }
 
+#student_search_unreg::-webkit-calendar-picker-indicator {
+    display: none !important;
+}
+
 </style>
 
 <div class="se-pre-con"></div>
@@ -470,13 +474,15 @@
 													</select>
 												</div>
 												
-												<!-- Student Name Dropdown - populated via AJAX -->
+												<!-- Student Name Search Field - populated via AJAX -->
 												<div class="col-sm-8">
 													<label>Student Name:</label>  
-													<select class="form-control select2" id="student_select_unreg" style="width: 100%;">
-														<option value="">Select an unregistered student...</option>
-													</select>
-													<input type="hidden" id="student_id_unreg" name="student_id_unreg">
+													<input type="text"
+													list="student_list_unreg"
+													class="form-control"
+													id="student_search_unreg"
+													placeholder="Type student name to search..." autocomplete="off">
+													<datalist id="student_list_unreg"></datalist>
 												</div>
 												
 											</div>
@@ -2177,99 +2183,91 @@ $(document).ready(function() {
 	// Array to store selected unregistered students
 	let selectedStudentsUnreg = [];
 
-	/**
-	 * Load unregistered students from server via AJAX
-	 * Calls get_students_ajax which returns students with allow='no'
-	 */
-	function loadUnregisteredStudentList() {
-		let session_id = $('#session_id_unreg').val();
+	// Clear search results and list when school year changes
+	$('#session_id_unreg').change(function() {
+		$('#form_session_id_unreg').val($(this).val());
+		selectedStudentsUnreg = [];
+		updateSelectedStudentsListUnreg();
+		$("#student_search_unreg").val('');
+		$("#student_list_unreg").empty();
+	});
+
+	// Trigger AJAX search dynamically as the user types in the search bar
+	$("#student_search_unreg").keyup(function() {
+		var search_student = $(this).val().trim();
+		var session_id = $('#session_id_unreg').val();
 		
-		// Only load if session is selected
-		if (session_id) {
+		if (!session_id) {
+			return;
+		}
+
+		if (search_student.length >= 2) {
 			$.ajax({
-				url: '<?php echo site_url("cafeteria/student/get_students_ajax"); ?>',
-				type: 'POST',
-				data: {session_id: session_id},
-				dataType: 'json',
+				url: "<?php echo base_url('cafeteria/student/search_unregistered_students'); ?>",
+				type: "POST",
+				data: { "search_student": search_student, "session_id": session_id },
+				dataType: "json",
 				success: function(data) {
-					// Clear and populate dropdown
-					$('#student_select_unreg').empty();
-					$('#student_select_unreg').append('<option value="">Select an unregistered student...</option>');
-					
-					// Add each student that hasn't been selected yet
+					$("#student_list_unreg").empty();
 					$.each(data, function(index, student) {
-						// Only show if not already selected
-						if (!selectedStudentsUnreg.some(s => s.id === student.id)) {
-							$('#student_select_unreg').append(
-								'<option value="' + student.id + '" ' +
-								'data-name="' + student.full_name + '" ' +
-								'data-gender="' + student.gender + '" ' +
-								'data-meal="' + (student.meal_plan || 'cafeteria') + '" ' +
-								'data-class="' + (student.class || '') + '" ' +
-								'data-section="' + (student.section || '') + '">' +
-								student.full_name + '</option>'
+						let middlename = student.middlename ? ' ' + student.middlename : '';
+						let suffix = student.suffix ? ' ' + student.suffix : '';
+						let full_name = student.lastname + ', ' + student.firstname + middlename + suffix;
+						
+						// Only show in datalist if not already selected in the table
+						if (!selectedStudentsUnreg.some(s => s.id == student.id)) {
+							$("#student_list_unreg").append(
+								"<option value='" + full_name + "' " +
+								"data-id='" + student.id + "' " +
+								"data-gender='" + student.gender + "' " +
+								"data-meal='" + (student.meal_plan || 'cafeteria') + "' " +
+								"data-class='" + (student.class || '') + "' " +
+								"data-section='" + (student.section || '') + "'></option>"
 							);
 						}
 					});
-					
-					// Trigger select2 update if using select2 plugin
-					$('#student_select_unreg').trigger('change');
-				},
-				error: function() {
-					alert('Error loading unregistered student list. Please try again.');
 				}
 			});
-		} else {
-			// No session selected, show placeholder
-			$('#student_select_unreg').empty();
-			$('#student_select_unreg').append('<option value="">Select a school year first...</option>');
 		}
-	}
-
-	/**
-	 * Session dropdown change handler
-	 * Updates form session_id and reloads student list
-	 */
-	$('#session_id_unreg').change(function() {
-		$('#form_session_id_unreg').val($(this).val());
-		// Clear selected students when session changes
-		selectedStudentsUnreg = [];
-		updateSelectedStudentsListUnreg();
-		// Load students for new session
-		loadUnregisteredStudentList();
 	});
 
-	/**
-	 * Student dropdown change handler
-	 * Adds selected student to the list
-	 */
-	$('#student_select_unreg').change(function() {
-		let studentId = $(this).val();
+	// Handle selection when user clicks/presses enter on an autocomplete option
+	$("#student_search_unreg").on('input', function() {
+		var val = $(this).val();
+		var options = $('#student_list_unreg option');
+		var matchedOption = null;
 		
-		if (studentId) {
-			let selectedOption = $(this).find('option:selected');
+		options.each(function() {
+			if ($(this).val() === val) {
+				matchedOption = $(this);
+				return false;
+			}
+		});
+		
+		if (matchedOption) {
+			let studentId = matchedOption.attr('data-id');
+			let studentName = val;
+			let studentGender = matchedOption.attr('data-gender');
+			let studentMeal = matchedOption.attr('data-meal') || 'cafeteria';
+			let studentClass = matchedOption.attr('data-class');
+			let studentSection = matchedOption.attr('data-section');
 			
-			// Extract student data from option attributes
-			let studentData = {
+			// Add selected student to table array
+			selectedStudentsUnreg.push({
 				id: studentId,
-				name: selectedOption.data('name'),
-				gender: selectedOption.data('gender'),
-				meal_plan: selectedOption.data('meal') || 'cafeteria',
-				class: selectedOption.data('class'),
-				section: selectedOption.data('section')
-			};
+				name: studentName,
+				gender: studentGender,
+				meal_plan: studentMeal,
+				class: studentClass,
+				section: studentSection
+			});
 			
-			// Add to selected students array
-			selectedStudentsUnreg.push(studentData);
-			
-			// Update UI
+			// Update UI Selected Students table
 			updateSelectedStudentsListUnreg();
 			
-			// Remove from dropdown (already selected)
-			selectedOption.remove();
-			
-			// Reset dropdown to placeholder
-			$('#student_select_unreg').val('').trigger('change');
+			// Clear input search bar and dynamic datalist
+			$("#student_search_unreg").val('');
+			$("#student_list_unreg").empty();
 		}
 	});
 
@@ -2464,9 +2462,6 @@ $(document).ready(function() {
 		
 		return true;
 	});
-
-	// Initial load of unregistered student list on page load
-	loadUnregisteredStudentList();
 });
 </script>
 <!-- END UNREGISTERED STUDENTS JAVASCRIPT -->

@@ -63,18 +63,21 @@ class Student extends CI_Controller {
 	// FEATURE: Search for UNREGISTERED students (allow = 'no')
 	// This method is used by the new unregistered student search panel
 	// Returns list of students who are NOT registered in the cafeteria system
-	// Added: [Your Date]
+	// Updated to support adaptive search with session_id from POST
 	public function search_unregistered_students(){
-		// Get current school year from menu settings
-		$session_details = $this->menusettings_model->get();
-		$session_id = $session_details[0]['school_year'];
-		
 		// Get search term from POST request
 		$search_student = $this->input->post('search_student'); 
 		
+		// Get session_id from POST, fallback to current school year
+		$session_id = $this->input->post('session_id');
+		if(empty($session_id)){
+			$session_details = $this->menusettings_model->get();
+			$session_id = $session_details[0]['school_year'];
+		}
+		
 		// Search for students with allow = 'no' (unregistered)
-		// Parameters: search_term, is_deleted, session_id
-		$resultlist = $this->student_model->searchFullText($search_student, 'no', $session_id);
+		// Parameters: search_term, include_session, allow_status, session_id
+		$resultlist = $this->student_model->searchFullTextCheckAllow($search_student, 'yes', 'no', $session_id);
 		
 		// Return results as JSON for AJAX handling
 		echo json_encode($resultlist);  
@@ -468,6 +471,7 @@ class Student extends CI_Controller {
 	}
 
 	// Add this new method to handle AJAX requests for student list
+	// RETURNS REGISTERED STUDENTS (allow='yes') for unregistering
 	public function get_students_ajax() {
 		$session_id = $this->input->post('session_id');
 		
@@ -483,7 +487,7 @@ class Student extends CI_Controller {
 		$this->db->join('sections', 'sections.id = student_session.section_id');
 
 		$this->db->where('student_session.session_id', $session_id);
-		$this->db->where('student_session.allow', 'no'); // Only show students not yet registered
+		$this->db->where('student_session.allow', 'yes'); // Only show students already registered (for unregistering)
 		$this->db->order_by('students.lastname', 'asc');
 		$this->db->order_by('students.firstname', 'asc');
 		
@@ -566,14 +570,82 @@ class Student extends CI_Controller {
 	
 	
 	public function unregister( $id ) {
-			$session_id = $this->input->get('session_id');
+		$session_id = $this->input->get('session_id');
 		if( $id ){
 			$this->studentsession_model->add( array('id'=>$id, 'allow' => 'no') );
 			$this->session->set_flashdata('msg', '<div class="alert alert-success text-left">Student successfuly removed.</div>');
 		}
 		
 		redirect('cafeteria/student/register_student/?session_id='.$session_id );
-    }
+	}
+	
+	// AJAX method to unregister student and return updated student data
+	public function unregister_ajax() {
+		$student_session_id = $this->input->post('student_session_id');
+		$student_id = $this->input->post('student_id');
+		$session_id = $this->input->post('session_id');
+		
+		if($student_session_id && $student_id && $session_id) {
+			// Update student_session to set allow = 'no'
+			$this->studentsession_model->add(array('id' => $student_session_id, 'allow' => 'no'));
+			
+			// Get updated student information
+			$this->db->select('students.id, students.firstname, students.middlename, students.lastname, students.suffix, students.gender, students.meal_plan, classes.class, sections.section');
+			$this->db->from('students');
+			$this->db->join('student_session', 'student_session.student_id = students.id');
+			$this->db->join('classes', 'classes.id = student_session.class_id');
+			$this->db->join('sections', 'sections.id = student_session.section_id', 'left');
+			$this->db->where('students.id', $student_id);
+			$this->db->where('student_session.session_id', $session_id);
+			$student = $this->db->get()->row_array();
+			
+			if($student) {
+				// Format full name
+				$full_name = trim($student['lastname'] . ', ' . $student['firstname']);
+				if(!empty($student['middlename'])) {
+					$full_name .= ' ' . $student['middlename'];
+				}
+				if(!empty($student['suffix'])) {
+					$full_name .= ' ' . $student['suffix'];
+				}
+				
+				// Get updated financial data
+				$get_total_load_details = $this->studentload_model->get_total_load($student_id, $session_id);
+				$get_total_load = isset($get_total_load_details['total_amount']) ? $get_total_load_details['total_amount'] : 0;
+				
+				$get_total_spent_details = $this->order_model->get_total_spent($student_id, $session_id);
+				$get_total_spent = isset($get_total_spent_details['total_amount']) ? $get_total_spent_details['total_amount'] : 0;
+				
+				$balance = $get_total_load - $get_total_spent;
+				
+				echo json_encode([
+					'status' => 'success',
+					'message' => 'Student successfully unregistered',
+					'student' => [
+						'id' => $student['id'],
+						'full_name' => $full_name,
+						'gender' => $student['gender'],
+						'meal_plan' => $student['meal_plan'],
+						'class' => $student['class'],
+						'section' => $student['section'],
+						'total_spent' => number_format($get_total_spent, 2, '.', ','),
+						'total_load' => number_format($get_total_load, 2, '.', ','),
+						'balance' => number_format($balance, 2, '.', ',')
+					]
+				]);
+			} else {
+				echo json_encode([
+					'status' => 'error',
+					'message' => 'Student not found'
+				]);
+			}
+		} else {
+			echo json_encode([
+				'status' => 'error',
+				'message' => 'Invalid parameters'
+			]);
+		}
+	}
 
 	public function deactivate($id) {
 		$session_id = $this->input->get('session_id');

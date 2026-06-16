@@ -438,7 +438,7 @@
 								</div>
 								
 								<div class="box-footer">
-									<button type="submit" name="search" id="register_selected_students" value="search" class="btn btn-success btn-sm pull-right checkbox-toggle" formaction="<?php echo base_url(); ?>cafeteria/student/register_batch/"><i class="fa fa-plus"></i> Register Selected Students</button>
+									<button type="submit" name="search" id="register_selected_students" value="search" class="btn btn-danger btn-sm pull-right checkbox-toggle" formaction="<?php echo base_url(); ?>cafeteria/student/register_batch/"><i class="fa fa-minus"></i> Unregister Selected Students</button>
 									<button type="button" class="btn btn-warning pull-right" id="clear_all" style="margin-right: 10px;" disabled>
 										<i class="fa fa-trash"></i> Clear All
 									</button>
@@ -448,7 +448,6 @@
 							<!-- ============================================ -->
 							<!-- FEATURE: UNREGISTERED STUDENT SEARCH PANEL -->
 							<!-- Added: New panel to search and register unregistered students -->
-							<!-- This section allows searching for students with allow='no' -->
 							<!-- ============================================ -->
 							
 							<div class="row">
@@ -481,7 +480,7 @@
 													list="student_list_unreg"
 													class="form-control"
 													id="student_search_unreg"
-													placeholder="Type student name to search..." autocomplete="off">
+													placeholder="Type student name to search..." autocomplete="chrome-off">
 													<datalist id="student_list_unreg"></datalist>
 												</div>
 												
@@ -1120,7 +1119,7 @@
 
                                                     </a>
 
-													<a href="<?php echo base_url(); ?>cafeteria/student/unregister/<?php echo $student->student_session_id; ?>?session_id=<?php echo $session_id;?>" class="btn btn-danger btn-xs"  data-toggle="tooltip" title="<?php echo $this->lang->line('delete'); ?>" onclick="return confirm('Are you sure you want to remove this item?');">
+													<a href="javascript:void(0);" class="btn btn-danger btn-xs unregister-student-btn" data-student-session-id="<?php echo $student->student_session_id; ?>" data-student-id="<?php echo $student->id; ?>" data-student-name="<?php echo htmlspecialchars($student->lastname.', '.$student->firstname.' '.$student->middlename); ?>" data-toggle="tooltip" title="<?php echo $this->lang->line('delete'); ?>">
 
                                                        Unregister
 
@@ -1413,7 +1412,7 @@ $(document).ready(function () {
 
         var options = {};
 
-        options.url = "<?php echo base_url('cafeteria/student/getsearchstudentnotallow'); ?>";
+        options.url = "<?php echo base_url('cafeteria/student/getsearchstudentallow'); ?>";
 
         options.type = "POST";
 
@@ -2157,7 +2156,7 @@ $(document).ready(function () {
 			// Update hidden inputs with latest meal plan selections
 			updateHiddenInputs();
 
-			if (!confirm('Are you sure you want to register ' + selectedStudents.length + ' student(s)?')) {
+			if (!confirm('Are you sure you want to unregister ' + selectedStudents.length + ' student(s)?')) {
 				e.preventDefault();
 				return false;
 			}
@@ -2465,3 +2464,84 @@ $(document).ready(function() {
 });
 </script>
 <!-- END UNREGISTERED STUDENTS JAVASCRIPT -->
+
+<!-- ============================================ -->
+<!-- AJAX UNREGISTER HANDLER -->
+<!-- Handles unregistering students from the main table dynamically -->
+<!-- ============================================ -->
+<script type="text/javascript">
+$(document).ready(function() {
+	// Handle unregister button click in the main registered students table
+	$(document).on('click', '.unregister-student-btn', function(e) {
+		e.preventDefault();
+		
+		var btn = $(this);
+		var studentSessionId = btn.data('student-session-id');
+		var studentId = btn.data('student-id');
+		var studentName = btn.data('student-name');
+		var sessionId = $('#session_id').val();
+		var row = btn.closest('tr');
+		
+		// Confirm action
+		if (!confirm('Are you sure you want to unregister ' + studentName + '?')) {
+			return false;
+		}
+		
+		// Disable button and show loading state
+		btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Unregistering...');
+		
+		// Send AJAX request
+		$.ajax({
+			url: '<?php echo base_url("cafeteria/student/unregister_ajax"); ?>',
+			type: 'POST',
+			data: {
+				student_session_id: studentSessionId,
+				student_id: studentId,
+				session_id: sessionId
+			},
+			dataType: 'json',
+			success: function(response) {
+				if (response.status === 'success') {
+					// Show success message
+					showFlashMessage('Student successfully unregistered!', 'success');
+					
+					// Remove the row from the table with animation
+					row.fadeOut(400, function() {
+						$(this).remove();
+						
+						// Renumber the remaining rows
+						$('.example tbody tr').each(function(index) {
+							$(this).find('td:first').text(index + 1);
+						});
+						
+						// Check if table is empty
+						if ($('.example tbody tr').length === 0) {
+							$('.example tbody').html('<tr><td colspan="8"><div class="alert alert-warning">No Results Found.</div></td></tr>');
+						}
+					});
+				} else {
+					showFlashMessage('Error: ' + response.message, 'error');
+					btn.prop('disabled', false).html('Unregister');
+				}
+			},
+			error: function(xhr, status, error) {
+				showFlashMessage('An error occurred while unregistering the student.', 'error');
+				btn.prop('disabled', false).html('Unregister');
+				console.error('AJAX Error:', error);
+			}
+		});
+	});
+	
+	// Flash message helper function
+	function showFlashMessage(message, type) {
+		const flashMessage = $('#flashMessage');
+		flashMessage.text(message)
+			.removeClass('flash-success flash-error')
+			.addClass(type === 'success' ? 'flash-success' : 'flash-error')
+			.fadeIn()
+			.delay(3000)
+			.fadeOut();
+	}
+});
+</script>
+<!-- END AJAX UNREGISTER HANDLER -->

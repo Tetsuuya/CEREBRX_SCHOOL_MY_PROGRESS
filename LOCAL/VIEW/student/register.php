@@ -1903,22 +1903,46 @@ $(document).ready(function () {
 
 		// Trigger AJAX search dynamically as the user types in the search bar
 		// PANEL 1 (BLUE "Search Students"): Search REGISTERED students (allow='yes') to UNREGISTER them
+		// ADAPTIVE SEARCH: Filters by last name starting with typed characters
+		// Example: "A" shows all last names starting with A, "AB" shows all starting with AB, etc.
+		
+		let searchTimeout; // For debouncing
+		
 		$("#student_search_reg").keyup(function() {
 			var search_student = $(this).val().trim();
 			var session_id = $('#session_id').val();
+			var searchInput = $(this);
+			
+			// Clear previous timeout
+			clearTimeout(searchTimeout);
 			
 			if (!session_id) {
+				$("#student_list_reg_datalist").empty();
+				$("#student_list_reg_datalist").append("<option value='Please select a school year first'>"); 
 				return;
 			}
 
-			// Starts searching from the first character typed
-			if (search_student.length >= 1) {
+			// Clear results if search is empty
+			if (search_student.length === 0) {
+				$("#student_list_reg_datalist").empty();
+				return;
+			}
+
+			// Show loading indicator
+			searchInput.css('background', 'url(data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==) no-repeat right center');
+			searchInput.css('background-size', '16px 16px');
+
+			// Debounce: wait 300ms after user stops typing
+			searchTimeout = setTimeout(function() {
 				$.ajax({
 					url: "<?php echo base_url('cafeteria/student/getsearchstudentallow'); ?>", // REGISTERED students (allow='yes')
 					type: "POST",
 					data: { "search_student": search_student, "session_id": session_id },
 					dataType: "json",
 					success: function(data) {
+						// Remove loading indicator
+						searchInput.css('background', '');
+						
 						$("#student_list_reg_datalist").empty();
 
 						// Sort results alphabetically (A-Z) by Last Name, First Name
@@ -1930,6 +1954,7 @@ $(document).ready(function () {
 
 						let addedIds = [];
 						let searchLower = search_student.toLowerCase();
+						let matchCount = 0;
 
 						$.each(data, function(index, student) {
 							// Filter out duplicate database records
@@ -1941,13 +1966,14 @@ $(document).ready(function () {
 							let suffix = student.suffix ? ' ' + student.suffix : '';
 							let full_name = student.lastname + ', ' + student.firstname + middlename + suffix;
 							
-							// Filter: Only keep if the Last Name starts with what the user typed
+							// ADAPTIVE FILTER: Only keep if the Last Name STARTS WITH what the user typed
 							let lastNameLower = student.lastname.toLowerCase();
 							if (!lastNameLower.startsWith(searchLower)) {
 								return; // Skip student if their last name doesn't start with the query
 							}
 
 							addedIds.push(student.id);
+							matchCount++;
 
 							// Only show in datalist if not already selected in the table
 							if (!selectedStudents.some(s => s.id == student.id)) {
@@ -1961,9 +1987,22 @@ $(document).ready(function () {
 								);
 							}
 						});
+						
+						// Show message if no results found
+						if (matchCount === 0) {
+							$("#student_list_reg_datalist").append(
+								"<option value='No registered students found with last name starting with \"" + search_student + "\"'>"
+							);
+						}
+					},
+					error: function() {
+						// Remove loading indicator on error
+						searchInput.css('background', '');
+						$("#student_list_reg_datalist").empty();
+						$("#student_list_reg_datalist").append("<option value='Error loading students. Please try again.'>");
 					}
 				});
-			}
+			}, 300); // Wait 300ms after user stops typing
 		});
 
 		// Handle selection when user clicks/presses enter on an autocomplete option
@@ -2230,22 +2269,46 @@ $(document).ready(function() {
 
 	// Trigger AJAX search dynamically as the user types in the search bar
 	// PANEL 2 (YELLOW "Search UNREGISTERED Students"): Search UNREGISTERED students (allow='no') to REGISTER them
+	// ADAPTIVE SEARCH: Filters by last name starting with typed characters
+	// Example: "A" shows all last names starting with A, "AB" shows all starting with AB, etc.
+	
+	let searchTimeoutUnreg; // For debouncing
+	
 	$("#student_search_unreg").keyup(function() {
 		var search_student = $(this).val().trim();
 		var session_id = $('#session_id_unreg').val();
+		var searchInput = $(this);
+		
+		// Clear previous timeout
+		clearTimeout(searchTimeoutUnreg);
 		
 		if (!session_id) {
+			$("#student_list_unreg").empty();
+			$("#student_list_unreg").append("<option value='Please select a school year first'>"); 
 			return;
 		}
 
-		// Starts searching from the first character typed
-		if (search_student.length >= 1) {
+		// Clear results if search is empty
+		if (search_student.length === 0) {
+			$("#student_list_unreg").empty();
+			return;
+		}
+
+		// Show loading indicator
+		searchInput.css('background', 'url(data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==) no-repeat right center');
+		searchInput.css('background-size', '16px 16px');
+
+		// Debounce: wait 300ms after user stops typing
+		searchTimeoutUnreg = setTimeout(function() {
 			$.ajax({
 				url: "<?php echo base_url('cafeteria/student/search_unregistered_students'); ?>", // UNREGISTERED students (allow='no')
 				type: "POST",
 				data: { "search_student": search_student, "session_id": session_id },
 				dataType: "json",
 				success: function(data) {
+					// Remove loading indicator
+					searchInput.css('background', '');
+					
 					$("#student_list_unreg").empty();
 
 					// Sort results alphabetically (A-Z) by Last Name, First Name
@@ -2257,6 +2320,7 @@ $(document).ready(function() {
 
 					let addedIds = [];
 					let searchLower = search_student.toLowerCase();
+					let matchCount = 0;
 
 					$.each(data, function(index, student) {
 						// Filter out duplicate database records
@@ -2268,13 +2332,14 @@ $(document).ready(function() {
 						let suffix = student.suffix ? ' ' + student.suffix : '';
 						let full_name = student.lastname + ', ' + student.firstname + middlename + suffix;
 						
-						// Filter: Only keep if the Last Name starts with what the user typed
+						// ADAPTIVE FILTER: Only keep if the Last Name STARTS WITH what the user typed
 						let lastNameLower = student.lastname.toLowerCase();
 						if (!lastNameLower.startsWith(searchLower)) {
 							return;
 						}
 
 						addedIds.push(student.id);
+						matchCount++;
 
 						// Only show in datalist if not already selected in the table
 						if (!selectedStudentsUnreg.some(s => s.id == student.id)) {
@@ -2288,9 +2353,22 @@ $(document).ready(function() {
 							);
 						}
 					});
+					
+					// Show message if no results found
+					if (matchCount === 0) {
+						$("#student_list_unreg").append(
+							"<option value='No unregistered students found with last name starting with \"" + search_student + "\"'>"
+						);
+					}
+				},
+				error: function() {
+					// Remove loading indicator on error
+					searchInput.css('background', '');
+					$("#student_list_unreg").empty();
+					$("#student_list_unreg").append("<option value='Error loading students. Please try again.'>");
 				}
 			});
-		}
+		}, 300); // Wait 300ms after user stops typing
 	});
 
 	// Handle selection when user clicks/presses enter on an autocomplete option

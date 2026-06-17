@@ -88,6 +88,38 @@ class Gatepass_model extends CI_Model {
         return $query->result_array(); 
     }
 
+    public function getactivecampusrecords( $dormdean_id, $session_id ){
+        $this->db->select('gatepass.*'); 
+        $this->db->select('hostel.hostel_name');
+        $this->db->select('hostel_rooms.room_no'); 
+        $this->db->select('hostel_rooms.room_type_id');
+        $this->db->select('room_types.room_type'); 
+        $this->db->select('students.lastname');
+        $this->db->select('students.firstname'); 
+        $this->db->select('students.middlename');
+        $this->db->select('students.mobileno');
+        $this->db->select('students.guardian_name');
+        $this->db->select('students.guardian_midname');
+        $this->db->select('students.guardian_lastname');
+        $this->db->select('students.guardian_phone');
+        $this->db->select('students.guardian_address');
+        $this->db->select('students.guardian_address2');
+        $this->db->from('gatepass');
+        $this->db->join('students', 'gatepass.student_id = students.id ', 'left'); 
+        $this->db->join('hostel_rooms', 'hostel_rooms.id = gatepass.room_id', 'left'); 
+        $this->db->join('room_types', 'room_types.id = hostel_rooms.room_type_id', 'left'); 
+        $this->db->join('hostel', 'hostel.id = hostel_rooms.hostel_id', 'left');  
+        $this->db->where('gatepass.session_id', $session_id);
+        $this->db->where('gatepass.deleted', '0');
+        $this->db->where('hostel.dormdean_id', $dormdean_id);
+        $this->db->where('gatepass.type', 'campus'); // Show ONLY Campus Leave type
+        $this->db->order_by('gatepass.status', 'DESC');
+        $this->db->order_by('gatepass.created_at', 'ASC');
+        $this->db->order_by('gatepass.exit_date', 'ASC');
+        $query = $this->db->get();
+        return $query->result_array(); 
+    }
+
     public function getapproverecords(   $dormdean_id, $session_id ){
         $this->db->select('gatepass.*'); 
         $this->db->select('hostel.hostel_name');

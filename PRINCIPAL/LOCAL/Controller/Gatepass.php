@@ -32,7 +32,7 @@ class Gatepass extends CI_Controller {
         
  
         $student_result = $this->dormitorydean_model->getstudentsunderthedean( $dormitorydean_id, $session_id);
-        $listofrequest = $this->gatepass_model->getactiverecords(  $dormitorydean_id, $session_id );
+        $listofrequest = $this->gatepass_model->getactivecampusrecords(  $dormitorydean_id, $session_id );
         
         $var = "$dormitorydean_id, $session_id";
         var_dump('<script>console.log("\x1b[32mhern_log: '.$var.'")</script>');

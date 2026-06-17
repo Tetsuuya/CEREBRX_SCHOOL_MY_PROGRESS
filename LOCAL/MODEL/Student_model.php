@@ -2098,7 +2098,7 @@ public function searchFullTextCheckAllow($searchterm , $include_session = "yes",
 		$searchterm = trim( $searchterm );
         $this->db->select('classes.id AS `class_id`,students.id,classes.class,sections.id AS `section_id`,sections.section,students.id,students.admission_no , students.roll_no,students.lrn,students.admission_date,students.firstname, students.middlename, students.lastname,students.image,    students.mobileno, students.email ,students.state ,   students.city , students.pincode ,     students.religion,     students.dob ,students.current_address,    students.permanent_address,IFNULL(students.category_id, 0) as `category_id`,IFNULL(categories.category, "") as `category`,      students.esc_number ,students.government_number ,students.adhar_no,students.samagra_id,students.bank_account_no,students.bank_name, students.ifsc_code ,students.father_name ,students.father_lastname , students.guardian_email ,students.guardian_name , students.rfid_number, students.guardian_relation,students.guardian_phone,students.guardian_address,students.is_active ,students.created_at ,students.updated_at,students.gender,students.rte,student_session.session_id,students.load_balance,students.hostel_id,students.dormitory,students.suffix,students.meal_plan')->from('students');
         $this->db->join('student_session', 'student_session.student_id = students.id');
-        $this->db->join('classes', 'student_session.class_id = classes.id');
+        $this->db->join('classes', 'student_session.class_id = classes.id', 'left');
         $this->db->join('sections', 'sections.id = student_session.section_id','LEFT');
         $this->db->join('categories', 'students.category_id = categories.id', 'left');
 		$this->db->where('student_session.allow', $allow );
@@ -2110,14 +2110,14 @@ public function searchFullTextCheckAllow($searchterm , $include_session = "yes",
             $this->db->where('student_session.session_id', $session_id );
         //} 
         $this->db->group_start();
-        $this->db->like('students.firstname', $searchterm);
-        $this->db->or_like('students.lastname', $searchterm);
-        $this->db->or_like('students.guardian_name', $searchterm);
-        $this->db->or_like('students.adhar_no', $searchterm);
-        $this->db->or_like('students.samagra_id', $searchterm);
-        $this->db->or_like('students.roll_no', $searchterm);
-        $this->db->or_like('students.admission_no', $searchterm);
-        $this->db->or_like('students.lrn', $searchterm);
+        $this->db->like('students.firstname', $searchterm, 'after');
+        $this->db->or_like('students.lastname', $searchterm, 'after');
+        $this->db->or_like('students.guardian_name', $searchterm, 'after');
+        $this->db->or_like('students.adhar_no', $searchterm, 'after');
+        $this->db->or_like('students.samagra_id', $searchterm, 'after');
+        $this->db->or_like('students.roll_no', $searchterm, 'after');
+        $this->db->or_like('students.admission_no', $searchterm, 'after');
+        $this->db->or_like('students.lrn', $searchterm, 'after');
        // $this->db->or_like('students.rfid', $searchterm);
         $this->db->group_end();
         $this->db->order_by('students.id');

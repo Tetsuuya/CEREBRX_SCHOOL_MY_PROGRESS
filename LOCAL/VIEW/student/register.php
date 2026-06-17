@@ -381,8 +381,11 @@
 												
 												<div class="col-sm-8">
 													<label>Student Name:</label>  
-													<input type="text" list="student_list_reg_datalist" class="form-control" id="student_search_reg" placeholder="Type student name to search..." autocomplete="chrome-off">
-													<datalist id="student_list_reg_datalist"></datalist>
+													<div style="display: flex; gap: 10px; align-items: center;">
+														<input type="text" list="student_list_reg_datalist" class="form-control" id="student_search_reg" placeholder="Type student name to search..." autocomplete="chrome-off" style="flex: 1; height: 34px;">
+														<datalist id="student_list_reg_datalist"></datalist>
+														<button class="btn btn-primary" type="button" id="btn_search_reg" style="height: 34px; padding: 6px 12px;"> Search</button>
+													</div>
 												</div>
 
 											</div>
@@ -453,7 +456,7 @@
 								<div class="col-sm-12">
 									<div class="panel panel-warning">
 										<div class="panel-heading">
-											<h4 class="panel-title"><i class="fa fa-search"></i> Search UNREGISTERED Students</h4>
+											<h4 class="panel-title"></i> Search UNREGISTERED Students</h4>
 										</div>
 										<div class="panel-body">
 											<div class="form-group">
@@ -472,15 +475,18 @@
 													</select>
 												</div>
 												
-												<!-- Student Name Search Field - populated via AJAX -->
+												<!-- Student Name Search Field -->
 												<div class="col-sm-8">
 													<label>Student Name:</label>  
-													<input type="text"
-													list="student_list_unreg"
-													class="form-control"
-													id="student_search_unreg"
-													placeholder="Type student name to search..." autocomplete="chrome-off">
-													<datalist id="student_list_unreg"></datalist>
+													<div style="display: flex; gap: 10px; align-items: center;">
+														<input type="text"
+														list="student_list_unreg"
+														class="form-control"
+														id="student_search_unreg"
+														placeholder="Type student name to search..." autocomplete="chrome-off" style="flex: 1; height: 34px;">
+														<datalist id="student_list_unreg"></datalist>
+														<button class="btn btn-primary" type="button" id="btn_search_unreg" style="height: 34px; padding: 6px 12px;"> Search</button>
+													</div>
 												</div>
 												
 											</div>
@@ -1918,12 +1924,12 @@ $(document).ready(function () {
 			
 			if (!session_id) {
 				$("#student_list_reg_datalist").empty();
-				$("#student_list_reg_datalist").append("<option value='' disabled>Please select a school year first</option>"); 
+				$("#student_list_reg_datalist").append("<option value='Please select a school year first'>"); 
 				return;
 			}
 
 			// Clear results if search is empty
-			if (search_student.length === 0) {
+			if (search_student.length < 1) {
 				$("#student_list_reg_datalist").empty();
 				return;
 			}
@@ -1944,14 +1950,6 @@ $(document).ready(function () {
 						searchInput.css('background', '');
 						
 						$("#student_list_reg_datalist").empty();
-
-						// Check if no data was returned from server
-						if (!data || data.length === 0) {
-							$("#student_list_reg_datalist").append(
-								"<option value=''>No registered students found with last name starting with \"" + search_student + "\"</option>"
-							);
-							return;
-						}
 
 						// Sort results alphabetically (A-Z) by Last Name, First Name
 						data.sort(function(a, b) {
@@ -1999,7 +1997,7 @@ $(document).ready(function () {
 						// Show message if no results found
 						if (matchCount === 0) {
 							$("#student_list_reg_datalist").append(
-								"<option value=''>No registered students found with last name starting with \"" + search_student + "\"</option>"
+								"<option value='No registered students found with last name starting with \"" + search_student + "\"'>"
 							);
 						}
 					},
@@ -2007,7 +2005,7 @@ $(document).ready(function () {
 						// Remove loading indicator on error
 						searchInput.css('background', '');
 						$("#student_list_reg_datalist").empty();
-						$("#student_list_reg_datalist").append("<option value='' disabled>Error loading students. Please try again.</option>");
+						$("#student_list_reg_datalist").append("<option value='Error loading students. Please try again.'>");
 					}
 				});
 			}, 300); // Wait 300ms after user stops typing
@@ -2029,10 +2027,10 @@ $(document).ready(function () {
 			if (matchedOption) {
 				let studentId = matchedOption.attr('data-id');
 				
-				// Check if this is a valid student option (has data-id attribute and it's not empty)
-				if (!studentId || studentId === '' || studentId === 'undefined') {
-					// This is an error message or invalid option, ignore it
+				// Prevent adding if no valid student ID (e.g., "No students found" message)
+				if (!studentId || studentId === 'undefined') {
 					$("#student_search_reg").val('');
+					$("#student_list_reg_datalist").empty();
 					return;
 				}
 				
@@ -2041,14 +2039,6 @@ $(document).ready(function () {
 				let studentMeal = matchedOption.attr('data-meal') || 'cafeteria';
 				let studentClass = matchedOption.attr('data-class');
 				let studentSection = matchedOption.attr('data-section');
-				
-				// Check if student is already in the selected list
-				if (selectedStudents.some(s => s.id == studentId)) {
-					alert('This student has already been added to the selection.');
-					$("#student_search_reg").val('');
-					$("#student_list_reg_datalist").empty();
-					return;
-				}
 				
 				// Add selected student to table array
 				selectedStudents.push({
@@ -2308,7 +2298,7 @@ $(document).ready(function() {
 		
 		if (!session_id) {
 			$("#student_list_unreg").empty();
-			$("#student_list_unreg").append("<option value='' disabled>Please select a school year first</option>"); 
+			$("#student_list_unreg").append("<option value='Please select a school year first'>"); 
 			return;
 		}
 
@@ -2318,10 +2308,6 @@ $(document).ready(function() {
 			return;
 		}
 
-		// Show loading indicator
-		searchInput.css('background', 'url(data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==) no-repeat right center');
-		searchInput.css('background-size', '16px 16px');
-
 		// Debounce: wait 300ms after user stops typing
 		searchTimeoutUnreg = setTimeout(function() {
 			$.ajax({
@@ -2330,18 +2316,8 @@ $(document).ready(function() {
 				data: { "search_student": search_student, "session_id": session_id },
 				dataType: "json",
 				success: function(data) {
-					// Remove loading indicator
-					searchInput.css('background', '');
 					
 					$("#student_list_unreg").empty();
-
-					// Check if no data was returned from server
-					if (!data || data.length === 0) {
-						$("#student_list_unreg").append(
-							"<option value=''>No unregistered students found with last name starting with \"" + search_student + "\"</option>"
-						);
-						return;
-					}
 
 					// Sort results alphabetically (A-Z) by Last Name, First Name
 					data.sort(function(a, b) {
@@ -2389,7 +2365,7 @@ $(document).ready(function() {
 					// Show message if no results found
 					if (matchCount === 0) {
 						$("#student_list_unreg").append(
-							"<option value=''>No unregistered students found with last name starting with \"" + search_student + "\"</option>"
+							"<option value='No unregistered students found with last name starting with \"" + search_student + "\"'>"
 						);
 					}
 				},
@@ -2397,7 +2373,7 @@ $(document).ready(function() {
 					// Remove loading indicator on error
 					searchInput.css('background', '');
 					$("#student_list_unreg").empty();
-					$("#student_list_unreg").append("<option value='' disabled>Error loading students. Please try again.</option>");
+					$("#student_list_unreg").append("<option value='Error loading students. Please try again.'>");
 				}
 			});
 		}, 300); // Wait 300ms after user stops typing
@@ -2419,10 +2395,10 @@ $(document).ready(function() {
 		if (matchedOption) {
 			let studentId = matchedOption.attr('data-id');
 			
-			// Check if this is a valid student option (has data-id attribute and it's not empty)
-			if (!studentId || studentId === '' || studentId === 'undefined') {
-				// This is an error message or invalid option, ignore it
+			// Prevent adding if no valid student ID (e.g., "No students found" message)
+			if (!studentId || studentId === 'undefined') {
 				$("#student_search_unreg").val('');
+				$("#student_list_unreg").empty();
 				return;
 			}
 			
@@ -2431,14 +2407,6 @@ $(document).ready(function() {
 			let studentMeal = matchedOption.attr('data-meal') || 'cafeteria';
 			let studentClass = matchedOption.attr('data-class');
 			let studentSection = matchedOption.attr('data-section');
-			
-			// Check if student is already in the selected list
-			if (selectedStudentsUnreg.some(s => s.id == studentId)) {
-				alert('This student has already been added to the selection.');
-				$("#student_search_unreg").val('');
-				$("#student_list_unreg").empty();
-				return;
-			}
 			
 			// Add selected student to table array
 			selectedStudentsUnreg.push({

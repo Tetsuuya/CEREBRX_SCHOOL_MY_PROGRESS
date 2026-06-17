@@ -1,0 +1,322 @@
+<?php
+
+if (!defined('BASEPATH'))
+    exit('No direct script access allowed');
+
+class Gatepass extends CI_Controller {
+
+    function __construct() {
+        parent::__construct();
+        $this->load->library('smsgateway');
+        $this->load->helper('file');
+        $this->lang->load('message', 'english');
+        $this->role;
+        $this->load->library('auth');
+        $this->load->model('gatepass_model');
+        $this->load->model('dormitorydean_model');
+        $this->load->model('Sms_model','SMSM'); 
+        $this->auth->is_logged_in_principal();
+    }
+
+    function records() {
+        $this->session->set_userdata('top_menu', 'GatePass');
+        $this->session->set_userdata('sub_menu', 'gatepass/records');
+        $data['title'] = 'Student List';
+
+
+        $dormitorydean_id = $this->session->userdata('principal')['dormitorydean_id'];
+        // printx($dormitorydean_id);
+          
+        $session_id = $this->setting_model->getCurrentSession();
+
+        
+ 
+        $student_result = $this->dormitorydean_model->getstudentsunderthedean( $dormitorydean_id, $session_id);
+        $listofrequest = $this->gatepass_model->getactiverecords(  $dormitorydean_id, $session_id );
+        
+        $var = "$dormitorydean_id, $session_id";
+        var_dump('<script>console.log("\x1b[32mhern_log: '.$var.'")</script>');
+        
+        // printx($listofrequest ); 
+        $data['studentlist'] = $student_result;
+        $data['listofrequest'] = $listofrequest;
+        $this->load->view('layout/principal/header', $data);
+        $this->load->view('principal/gatepass/records', $data);
+        $this->load->view('layout/principal/footer', $data);
+    }
+
+    function save_data() {
+        $dormitorydean_id = $this->session->userdata('principal')['dormitorydean_id'];
+        $session_id = $this->setting_model->getCurrentSession();
+        $student_id =  $this->input->post('student_id');  
+        $exit_date =  $this->input->post('exit_date');
+        $exit_time =  $this->input->post('exit_time');
+        $return_date =  $this->input->post('return_date');
+        $return_time =  $this->input->post('return_time');
+        $purpose =  $this->input->post('purpose');
+        $destination =  $this->input->post('destination');
+        $type_of_gatepass =  $this->input->post('type_of_gatepass'); 
+        $student_result = $this->dormitorydean_model->getstudentsdetails( $student_id , $session_id); 
+        $room_id =  $student_result['room_id'];
+        $dorm_id =  $student_result['dorm_id'];
+        $complete_name =  $student_result['firstname'].' '.$student_result['middlename'].' '.$student_result['lastname']; 
+
+        if( $student_id ){
+            $data = array(
+                'student_id' => $student_id,
+                'room_id' => $room_id,
+                'student' => $complete_name, 
+                'approve' => '0',
+                'exit_date' => $exit_date, 
+                'exit_time' => $exit_time, 
+                'return_date' => $return_date, 
+                'return_time' => $return_time, 
+                'purpose' => $purpose, 
+                'destination' => $destination, 
+                'type' => $type_of_gatepass, 
+                'status' =>  "pending", 
+                'dorm_id' => $dorm_id, 
+                'requestor_id' => $dormitorydean_id, 
+                'session_id' => $session_id, 
+                'created_at' => date("Y-m-d")
+            );
+
+
+            $this->gatepass_model->add($data); 
+
+            $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">Student Gatepass Added successfully</div>');
+            redirect('principal/gatepass/records');
+            
+        }else {
+            $this->session->set_flashdata('msg', '<div class="alert alert-danger text-left">Student Gatepass Not Added please re-entry again!</div>');
+            redirect('principal/gatepass/records');
+        }
+        
+    }
+
+    function declined_data( $id ) {
+        $dormitorydean_id = $this->session->userdata('principal')['dormitorydean_id'];
+        $session_id = $this->setting_model->getCurrentSession();
+
+        $request_datails = $this->gatepass_model->get( $id );   
+        $student_id =  $request_datails['student_id'];
+        $student_result = $this->dormitorydean_model->getstudentsdetails( $student_id , $session_id); 
+        $firstname = $student_result['firstname'];
+        $mobileno = $student_result['mobileno'];
+        $guardian_phone = $student_result['guardian_phone'];
+
+
+        $exit_date =  $request_datails['exit_date'];
+        $return_date =  $request_datails['return_date'];  
+
+        if( $request_datails ){
+            $data = array(
+                'id' => $id, 
+                'status' =>  "denied",  
+            );
+
+
+            $this->gatepass_model->add($data); 
+
+            $sms_message =  'Hi '.$firstname.', your gatepass request with exit date of '.$exit_date.' and return date of '.$return_date.' has been Denied. This is an autogenerated SMS by Bridgette. Please do not reply.'; 
+            $data_sms  = array(
+                'dorm_attendance_id' => $id,
+                'sms_msg' => $sms_message,
+                'sms_number' => '09666608651', 
+                'sms_status' => 'idle',
+                'sms_teacher' => 'no',
+                'sms_parent' => 'yes' 
+            );
+            $data_sms2  = array(
+                'dorm_attendance_id' => $id,
+                'sms_msg' => $sms_message,
+                'sms_number' => '09751096978', 
+                'sms_status' => 'idle',
+                'sms_teacher' => 'no',
+                'sms_parent' => 'yes' 
+            );
+            $this->SMSM->add($data_sms); 
+            $this->SMSM->add($data_sms2); 
+
+            $mobileno = str_replace(' ', '', $mobileno);
+            $mobileno = str_replace('-', '', $mobileno);
+            if (strlen($mobileno)>10) { 
+                $data_sms3  = array(
+                    'dorm_attendance_id' => $id,
+                    'sms_msg' => $sms_message,
+                    'sms_number' => $mobileno, 
+                    'sms_status' => 'idle',
+                    'sms_teacher' => 'no',
+                    'sms_parent' => 'yes' 
+                );
+
+                $this->SMSM->add($data_sms3); 
+            }
+
+            $guardian_phone = str_replace(' ', '', $guardian_phone);
+            $guardian_phone = str_replace('-', '', $guardian_phone);
+            if (strlen($guardian_phone)>10) { 
+                $data_sms4 = array(
+                    'dorm_attendance_id' => $id,
+                    'sms_msg' => $sms_message,
+                    'sms_number' => $guardian_phone, 
+                    'sms_status' => 'idle',
+                    'sms_teacher' => 'no',
+                    'sms_parent' => 'yes' 
+                );
+
+                $this->SMSM->add($data_sms4); 
+            }
+           
+
+            $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">Student Gatepass Denied successfully</div>');
+            redirect('principal/gatepass/records');
+            
+        }else {
+            $this->session->set_flashdata('msg', '<div class="alert alert-danger text-left">Student Gatepass Not Denied please re-try again!</div>');
+            redirect('principal/gatepass/records');
+        }
+        
+    }
+
+    function delete_data( $id ) {
+        $dormitorydean_id = $this->session->userdata('principal')['dormitorydean_id'];
+        $session_id = $this->setting_model->getCurrentSession();
+
+        $request_datails = $this->gatepass_model->get( $id );   
+        // $student_result = $this->dormitorydean_model->getstudentsdetails( $student_id , $session_id); 
+        // $room_id =  $student_result['room_id'];
+        // $dorm_id =  $student_result['dorm_id'];
+        // $complete_name =  $student_result['firstname'].' '.$student_result['middlename'].' '.$student_result['lastname']; 
+
+        if( $request_datails ){
+            $data = array(
+                'id' => $id, 
+                'deleted' =>  "1",  
+            );
+
+
+            $this->gatepass_model->add($data); 
+
+            $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">Student Gatepass Deleted successfully</div>');
+            redirect('principal/gatepass/records');
+            
+        }else {
+            $this->session->set_flashdata('msg', '<div class="alert alert-danger text-left">Student Gatepass Not Deleted please re-try again!</div>');
+            redirect('principal/gatepass/records');
+        }
+        
+    }
+
+    function approved_data( $id ) {
+        $dormitorydean_id = $this->session->userdata('principal')['dormitorydean_id'];
+        $session_id = $this->setting_model->getCurrentSession();
+
+        $request_datails = $this->gatepass_model->get( $id );   
+        $student_id =  $request_datails['student_id'];
+        $student_result = $this->dormitorydean_model->getstudentsdetails( $student_id , $session_id); 
+        $firstname = $student_result['firstname'];
+        $mobileno = $student_result['mobileno'];
+        $guardian_phone = $student_result['guardian_phone'];
+
+
+        $exit_date =  $request_datails['exit_date'];
+        $return_date =  $request_datails['return_date']; 
+
+        if( $request_datails ){
+            $data = array(
+                'id' => $id, 
+                'approve' =>  "1",  
+                'status' =>  "approve",  
+            );
+
+
+            $this->gatepass_model->add($data); 
+
+            $sms_message =  'Hi '.$firstname.', your gatepass request with exit date of '.$exit_date.' and return date of '.$return_date.' has been Approved. This is an autogenerated SMS by Bridgette. Please do not reply.'; 
+            $data_sms  = array(
+                'dorm_attendance_id' => $id,
+                'sms_msg' => $sms_message,
+                'sms_number' => '09666608651', 
+                'sms_status' => 'idle',
+                'sms_teacher' => 'no',
+                'sms_parent' => 'yes' 
+            );
+            $data_sms2  = array(
+                'dorm_attendance_id' => $id,
+                'sms_msg' => $sms_message,
+                'sms_number' => '09751096978', 
+                'sms_status' => 'idle',
+                'sms_teacher' => 'no',
+                'sms_parent' => 'yes' 
+            );
+
+            $this->SMSM->add($data_sms); 
+            $this->SMSM->add($data_sms2); 
+ 
+           
+
+            $mobileno = str_replace(' ', '', $mobileno);
+            $mobileno = str_replace('-', '', $mobileno);
+            if (strlen($mobileno)>10) { 
+                $data_sms3  = array(
+                    'dorm_attendance_id' => $id,
+                    'sms_msg' => $sms_message,
+                    'sms_number' => $mobileno, 
+                    'sms_status' => 'idle',
+                    'sms_teacher' => 'no',
+                    'sms_parent' => 'yes' 
+                );
+
+                $this->SMSM->add($data_sms3); 
+            }
+
+            $guardian_phone = str_replace(' ', '', $guardian_phone);
+            $guardian_phone = str_replace('-', '', $guardian_phone);
+            if (strlen($guardian_phone)>10) { 
+                $data_sms4 = array(
+                    'dorm_attendance_id' => $id,
+                    'sms_msg' => $sms_message,
+                    'sms_number' => $guardian_phone, 
+                    'sms_status' => 'idle',
+                    'sms_teacher' => 'no',
+                    'sms_parent' => 'yes' 
+                );
+
+                $this->SMSM->add($data_sms4); 
+            }
+             
+
+            $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">Student Gatepass Approved successfully</div>');
+            redirect('principal/gatepass/records');
+            
+        }else {
+            $this->session->set_flashdata('msg', '<div class="alert alert-danger text-left">Student Gatepass Not Approved please re-try again!</div>');
+            redirect('principal/gatepass/records');
+        }
+        
+    }
+
+    function tapreport() {
+        $this->session->set_userdata('top_menu', 'GatePass');
+        $this->session->set_userdata('sub_menu', 'gatepass/tapreport');
+        $data['title'] = 'Student List';
+
+
+        $dormitorydean_id = $this->session->userdata('principal')['dormitorydean_id'];
+          
+        $session_id = $this->setting_model->getCurrentSession();
+      
+ 
+        $student_result = $this->gatepass_model->getapproverecords( $dormitorydean_id , $session_id );
+    
+        $data['studentlist'] = $student_result;
+        $this->load->view('layout/principal/header', $data);
+        $this->load->view('principal/gatepass/tapreport', $data);
+        $this->load->view('layout/principal/footer', $data);
+    }
+
+     
+}
+
+?>

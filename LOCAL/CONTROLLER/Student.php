@@ -675,7 +675,14 @@ class Student extends CI_Controller {
 
     public function register_batch(){
 		$student_id = $this->input->post('student_id');
+		$student_meal_plans = $this->input->post('student_meal_plan');
 		$session_id = $this->input->post('session_id');
+		
+		// Debug: Log ALL POST data
+		log_message('debug', 'Register Batch - ALL POST DATA: ' . print_r($_POST, true));
+		log_message('debug', 'Register Batch - Student IDs: ' . print_r($student_id, true));
+		log_message('debug', 'Register Batch - Meal Plans: ' . print_r($student_meal_plans, true));
+		
 		if( count( $student_id ) > 0 ){
 			$update_array = array();
 			for ($x=0; $x<count( $student_id);$x++) {
@@ -688,6 +695,16 @@ class Student extends CI_Controller {
 							'id' => $student_session_id,
 							'allow' => 'yes',
 						);
+						
+						// Update student's meal plan in students table
+						$meal_plan = isset($student_meal_plans[$get_student_id]) ? $student_meal_plans[$get_student_id] : 'cafeteria';
+						log_message('debug', 'Student ID: ' . $get_student_id . ' - Meal plan from POST: ' . $meal_plan);
+						
+						$update_result = $this->db->where('id', $get_student_id)
+							->update('students', array('meal_plan' => $meal_plan));
+						
+						log_message('debug', 'Update result for student ' . $get_student_id . ': ' . ($update_result ? 'SUCCESS' : 'FAILED'));
+						log_message('debug', 'Last query: ' . $this->db->last_query());
 					}
 				}
 			}

@@ -1594,18 +1594,19 @@ $(document).ready(function () {
 
 
   <script type="text/javascript">
+		// Global flash message function (used by both register and unregister panels)
+		function showFlashMessage(message, type) {
+			const flashMessage = $('#flashMessage');
+			flashMessage.text(message)
+				.removeClass('flash-success flash-error')
+				.addClass(type === 'success' ? 'flash-success' : 'flash-error')
+				.fadeIn()
+				.delay(2000)
+				.fadeOut();
+		}
+		
 		// added meal plan javascript
 		$(document).ready(function () {
-			function showFlashMessage(message, type) {
-				const flashMessage = $('#flashMessage');
-				flashMessage.text(message)
-					.removeClass('flash-success flash-error')
-					.addClass(type === 'success' ? 'flash-success' : 'flash-error')
-					.fadeIn()
-					.delay(2000)
-					.fadeOut();
-			}
-
 			$(document).on('change', '.meal-plan-radio', function() {
 				var student_id = $(this).data('student');
 				var meal_plan = $(this).val();
@@ -2604,10 +2605,13 @@ $(document).ready(function() {
 	/**
 	 * Handle meal plan radio button changes
 	 * Updates the student's meal plan in the array and hidden input
+	 * Also saves to database immediately via AJAX
 	 */
 	$(document).on('change', '.meal-plan-radio-unreg', function() {
 		let studentId = $(this).data('student-id');
 		let mealPlan = $(this).val();
+		
+		console.log('Meal plan changed for student:', studentId, 'to:', mealPlan);
 		
 		// Update button group active state
 		$(this).closest('.btn-group').find('label').removeClass('active');
@@ -2617,10 +2621,40 @@ $(document).ready(function() {
 		let studentIndex = selectedStudentsUnreg.findIndex(s => s.id == studentId);
 		if (studentIndex !== -1) {
 			selectedStudentsUnreg[studentIndex].meal_plan = mealPlan;
+			console.log('Updated array:', selectedStudentsUnreg[studentIndex]);
 		}
 		
 		// Update hidden input
-		$('.meal_plan_input_unreg_' + studentId).val(mealPlan);
+		let hiddenInput = $('.meal_plan_input_unreg_' + studentId);
+		if (hiddenInput.length > 0) {
+			hiddenInput.val(mealPlan);
+			console.log('Updated hidden input for student', studentId, ':', hiddenInput.val());
+		} else {
+			console.error('Hidden input not found for student:', studentId);
+		}
+		
+		// Save to database immediately via AJAX (same as registered students panel)
+		$.ajax({
+			url: '<?php echo base_url("cafeteria/student/update_meal_plan"); ?>',
+			type: 'POST',
+			data: {
+				student_id: studentId,
+				meal_plan: mealPlan
+			},
+			success: function(response) {
+				var data = JSON.parse(response);
+				if(data.status == 'success') {
+					// Store the selection in localStorage
+					localStorage.setItem('meal_plan_' + studentId, mealPlan);
+					showFlashMessage('Meal plan updated successfully', 'success');
+				} else {
+					showFlashMessage('Error updating meal plan', 'error');
+				}
+			},
+			error: function() {
+				showFlashMessage('Error occurred while updating meal plan', 'error');
+			}
+		});
 	});
 
 	/**

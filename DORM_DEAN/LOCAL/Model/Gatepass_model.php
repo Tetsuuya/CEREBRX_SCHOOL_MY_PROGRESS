@@ -111,7 +111,8 @@ class Gatepass_model extends CI_Model {
         $this->db->join('hostel', 'hostel.id = hostel_rooms.hostel_id', 'left');  
         $this->db->where('gatepass.session_id', $session_id);
         $this->db->where('gatepass.deleted', '0');
-        $this->db->where('hostel.dormdean_id', $dormdean_id);
+        // REMOVED: $this->db->where('hostel.dormdean_id', $dormdean_id); 
+        // Principal now sees Campus Leave from ALL dorms
         $this->db->where('gatepass.type', 'campus'); // Show ONLY Campus Leave type
         $this->db->order_by('gatepass.status', 'DESC');
         $this->db->order_by('gatepass.created_at', 'ASC');

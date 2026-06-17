@@ -2222,6 +2222,89 @@ $(document).ready(function () {
 			}
 		});
 
+		// Search button - Add all matching students to selection
+		$('#btn_search_reg').click(function() {
+			var search_student = $('#student_search_reg').val().trim();
+			var session_id = $('#session_id').val();
+			
+			if (!session_id) {
+				alert('Please select a school year first.');
+				return;
+			}
+			
+			if (search_student.length < 1) {
+				alert('Please enter a search term (e.g., first letter of last name).');
+				return;
+			}
+			
+			// Show loading indicator
+			$(this).prop('disabled', true).text('Searching...');
+			
+			$.ajax({
+				url: "<?php echo base_url('cafeteria/student/getsearchstudentallow'); ?>",
+				type: "POST",
+				data: { "search_student": search_student, "session_id": session_id },
+				dataType: "json",
+				success: function(data) {
+					// CLEAR previous selection before adding new search results
+					selectedStudents = [];
+					
+					let addedCount = 0;
+					
+					// Check if data is valid array
+					if (!data || !Array.isArray(data) || data.length === 0) {
+						updateSelectedStudentsList();
+						alert('No students found with last name starting with "' + search_student + '"');
+						$('#student_search_reg').val('');
+						$('#btn_search_reg').prop('disabled', false).text('Search');
+						return;
+					}
+					
+					$.each(data, function(index, student) {
+						// Validate student has required ID field
+						if (!student.id) {
+							return; // Skip invalid entries
+						}
+						
+						let middlename = student.middlename ? ' ' + student.middlename : '';
+						let suffix = student.suffix ? ' ' + student.suffix : '';
+						let full_name = student.lastname + ', ' + student.firstname + middlename + suffix;
+						
+						// Add student to selection
+						selectedStudents.push({
+							id: student.id,
+							name: full_name,
+							gender: student.gender,
+							meal_plan: student.meal_plan || 'cafeteria',
+							class: student.class || '',
+							section: student.section || ''
+						});
+						addedCount++;
+					});
+					
+					// Update the display
+					updateSelectedStudentsList();
+					
+					// Show result message
+					if (addedCount > 0) {
+						alert('Found ' + addedCount + ' student(s) with last name starting with "' + search_student.toUpperCase() + '"');
+					} else {
+						alert('No students found with last name starting with "' + search_student + '"');
+					}
+					
+					// Clear search input
+					$('#student_search_reg').val('');
+					
+					// Re-enable button
+					$('#btn_search_reg').prop('disabled', false).text('Search');
+				},
+				error: function() {
+					alert('Error searching for students. Please try again.');
+					$('#btn_search_reg').prop('disabled', false).text('Search');
+				}
+			});
+		});
+
 		function clearAllStudents() {
 			selectedStudents = [];
 			updateSelectedStudentsList();
@@ -2575,6 +2658,91 @@ $(document).ready(function() {
 		if (confirm('Are you sure you want to remove all selected unregistered students?')) {
 			clearAllStudentsUnreg();
 		}
+	});
+
+	/**
+	 * Search button - Add all matching UNREGISTERED students to selection
+	 */
+	$('#btn_search_unreg').click(function() {
+		var search_student = $('#student_search_unreg').val().trim();
+		var session_id = $('#session_id_unreg').val();
+		
+		if (!session_id) {
+			alert('Please select a school year first.');
+			return;
+		}
+		
+		if (search_student.length < 1) {
+			alert('Please enter a search term (e.g., first letter of last name).');
+			return;
+		}
+		
+		// Show loading indicator
+		$(this).prop('disabled', true).text('Searching...');
+		
+		$.ajax({
+			url: "<?php echo base_url('cafeteria/student/search_unregistered_students'); ?>",
+			type: "POST",
+			data: { "search_student": search_student, "session_id": session_id },
+			dataType: "json",
+			success: function(data) {
+				// CLEAR previous selection before adding new search results
+				selectedStudentsUnreg = [];
+				
+				let addedCount = 0;
+				
+				// Check if data is valid array
+				if (!data || !Array.isArray(data) || data.length === 0) {
+					updateSelectedStudentsListUnreg();
+					alert('No unregistered students found with last name starting with "' + search_student + '"');
+					$('#student_search_unreg').val('');
+					$('#btn_search_unreg').prop('disabled', false).text('Search');
+					return;
+				}
+				
+				$.each(data, function(index, student) {
+					// Validate student has required ID field
+					if (!student.id) {
+						return; // Skip invalid entries
+					}
+					
+					let middlename = student.middlename ? ' ' + student.middlename : '';
+					let suffix = student.suffix ? ' ' + student.suffix : '';
+					let full_name = student.lastname + ', ' + student.firstname + middlename + suffix;
+					
+					// Add student to selection
+					selectedStudentsUnreg.push({
+						id: student.id,
+						name: full_name,
+						gender: student.gender,
+						meal_plan: student.meal_plan || 'cafeteria',
+						class: student.class || '',
+						section: student.section || ''
+					});
+					addedCount++;
+				});
+				
+				// Update the display
+				updateSelectedStudentsListUnreg();
+				
+				// Show result message
+				if (addedCount > 0) {
+					alert('Found ' + addedCount + ' unregistered student(s) with last name starting with "' + search_student.toUpperCase() + '"');
+				} else {
+					alert('No unregistered students found with last name starting with "' + search_student + '"');
+				}
+				
+				// Clear search input
+				$('#student_search_unreg').val('');
+				
+				// Re-enable button
+				$('#btn_search_unreg').prop('disabled', false).text('Search');
+			},
+			error: function() {
+				alert('Error searching for students. Please try again.');
+				$('#btn_search_unreg').prop('disabled', false).text('Search');
+			}
+		});
 	});
 
 	/**

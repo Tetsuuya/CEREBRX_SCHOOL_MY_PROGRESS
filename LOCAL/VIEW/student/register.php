@@ -361,7 +361,7 @@
 								<div class="col-sm-12">
 									<div class="panel panel-info">
 										<div class="panel-heading">
-											<h4 class="panel-title">Search Students</h4>
+											<h4 class="panel-title">Search REGISTERED Students</h4>
 										</div>
 										<div class="panel-body">
 											<div class="form-group">
@@ -399,7 +399,7 @@
 								<div class="col-sm-12">
 									<div class="panel panel-success">
 										<div class="panel-heading">
-											<h4 class="panel-title">Selected Students for Registration (<span id="student_count">0</span>)</h4>
+											<h4 class="panel-title">Selected REGISTERED Students for Unregistration (<span id="student_count">0</span>)</h4>
 										</div>
 										<div class="panel-body">
 											<div id="selected_students_container">
@@ -1594,19 +1594,18 @@ $(document).ready(function () {
 
 
   <script type="text/javascript">
-		// Global flash message function (used by both register and unregister panels)
-		function showFlashMessage(message, type) {
-			const flashMessage = $('#flashMessage');
-			flashMessage.text(message)
-				.removeClass('flash-success flash-error')
-				.addClass(type === 'success' ? 'flash-success' : 'flash-error')
-				.fadeIn()
-				.delay(2000)
-				.fadeOut();
-		}
-		
 		// added meal plan javascript
 		$(document).ready(function () {
+			function showFlashMessage(message, type) {
+				const flashMessage = $('#flashMessage');
+				flashMessage.text(message)
+					.removeClass('flash-success flash-error')
+					.addClass(type === 'success' ? 'flash-success' : 'flash-error')
+					.fadeIn()
+					.delay(2000)
+					.fadeOut();
+			}
+
 			$(document).on('change', '.meal-plan-radio', function() {
 				var student_id = $(this).data('student');
 				var meal_plan = $(this).val();
@@ -1935,10 +1934,6 @@ $(document).ready(function () {
 				return;
 			}
 
-			// Show loading indicator
-			searchInput.css('background', 'url(data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==) no-repeat right center');
-			searchInput.css('background-size', '16px 16px');
-
 			// Debounce: wait 300ms after user stops typing
 			searchTimeout = setTimeout(function() {
 				$.ajax({
@@ -1947,8 +1942,6 @@ $(document).ready(function () {
 					data: { "search_student": search_student, "session_id": session_id },
 					dataType: "json",
 					success: function(data) {
-						// Remove loading indicator
-						searchInput.css('background', '');
 						
 						$("#student_list_reg_datalist").empty();
 
@@ -2027,14 +2020,6 @@ $(document).ready(function () {
 			
 			if (matchedOption) {
 				let studentId = matchedOption.attr('data-id');
-				
-				// Prevent adding if no valid student ID (e.g., "No students found" message)
-				if (!studentId || studentId === 'undefined') {
-					$("#student_search_reg").val('');
-					$("#student_list_reg_datalist").empty();
-					return;
-				}
-				
 				let studentName = val;
 				let studentGender = matchedOption.attr('data-gender');
 				let studentMeal = matchedOption.attr('data-meal') || 'cafeteria';
@@ -2223,89 +2208,6 @@ $(document).ready(function () {
 			}
 		});
 
-		// Search button - Add all matching students to selection
-		$('#btn_search_reg').click(function() {
-			var search_student = $('#student_search_reg').val().trim();
-			var session_id = $('#session_id').val();
-			
-			if (!session_id) {
-				alert('Please select a school year first.');
-				return;
-			}
-			
-			if (search_student.length < 1) {
-				alert('Please enter a search term (e.g., first letter of last name).');
-				return;
-			}
-			
-			// Show loading indicator
-			$(this).prop('disabled', true).text('Searching...');
-			
-			$.ajax({
-				url: "<?php echo base_url('cafeteria/student/getsearchstudentallow'); ?>",
-				type: "POST",
-				data: { "search_student": search_student, "session_id": session_id },
-				dataType: "json",
-				success: function(data) {
-					// CLEAR previous selection before adding new search results
-					selectedStudents = [];
-					
-					let addedCount = 0;
-					
-					// Check if data is valid array
-					if (!data || !Array.isArray(data) || data.length === 0) {
-						updateSelectedStudentsList();
-						alert('No students found with last name starting with "' + search_student + '"');
-						$('#student_search_reg').val('');
-						$('#btn_search_reg').prop('disabled', false).text('Search');
-						return;
-					}
-					
-					$.each(data, function(index, student) {
-						// Validate student has required ID field
-						if (!student.id) {
-							return; // Skip invalid entries
-						}
-						
-						let middlename = student.middlename ? ' ' + student.middlename : '';
-						let suffix = student.suffix ? ' ' + student.suffix : '';
-						let full_name = student.lastname + ', ' + student.firstname + middlename + suffix;
-						
-						// Add student to selection
-						selectedStudents.push({
-							id: student.id,
-							name: full_name,
-							gender: student.gender,
-							meal_plan: student.meal_plan || 'cafeteria',
-							class: student.class || '',
-							section: student.section || ''
-						});
-						addedCount++;
-					});
-					
-					// Update the display
-					updateSelectedStudentsList();
-					
-					// Show result message
-					if (addedCount > 0) {
-						alert('Found ' + addedCount + ' student(s) with last name starting with "' + search_student.toUpperCase() + '"');
-					} else {
-						alert('No students found with last name starting with "' + search_student + '"');
-					}
-					
-					// Clear search input
-					$('#student_search_reg').val('');
-					
-					// Re-enable button
-					$('#btn_search_reg').prop('disabled', false).text('Search');
-				},
-				error: function() {
-					alert('Error searching for students. Please try again.');
-					$('#btn_search_reg').prop('disabled', false).text('Search');
-				}
-			});
-		});
-
 		function clearAllStudents() {
 			selectedStudents = [];
 			updateSelectedStudentsList();
@@ -2478,14 +2380,6 @@ $(document).ready(function() {
 		
 		if (matchedOption) {
 			let studentId = matchedOption.attr('data-id');
-			
-			// Prevent adding if no valid student ID (e.g., "No students found" message)
-			if (!studentId || studentId === 'undefined') {
-				$("#student_search_unreg").val('');
-				$("#student_list_unreg").empty();
-				return;
-			}
-			
 			let studentName = val;
 			let studentGender = matchedOption.attr('data-gender');
 			let studentMeal = matchedOption.attr('data-meal') || 'cafeteria';
@@ -2605,13 +2499,10 @@ $(document).ready(function() {
 	/**
 	 * Handle meal plan radio button changes
 	 * Updates the student's meal plan in the array and hidden input
-	 * Also saves to database immediately via AJAX
 	 */
 	$(document).on('change', '.meal-plan-radio-unreg', function() {
 		let studentId = $(this).data('student-id');
 		let mealPlan = $(this).val();
-		
-		console.log('Meal plan changed for student:', studentId, 'to:', mealPlan);
 		
 		// Update button group active state
 		$(this).closest('.btn-group').find('label').removeClass('active');
@@ -2621,40 +2512,10 @@ $(document).ready(function() {
 		let studentIndex = selectedStudentsUnreg.findIndex(s => s.id == studentId);
 		if (studentIndex !== -1) {
 			selectedStudentsUnreg[studentIndex].meal_plan = mealPlan;
-			console.log('Updated array:', selectedStudentsUnreg[studentIndex]);
 		}
 		
 		// Update hidden input
-		let hiddenInput = $('.meal_plan_input_unreg_' + studentId);
-		if (hiddenInput.length > 0) {
-			hiddenInput.val(mealPlan);
-			console.log('Updated hidden input for student', studentId, ':', hiddenInput.val());
-		} else {
-			console.error('Hidden input not found for student:', studentId);
-		}
-		
-		// Save to database immediately via AJAX (same as registered students panel)
-		$.ajax({
-			url: '<?php echo base_url("cafeteria/student/update_meal_plan"); ?>',
-			type: 'POST',
-			data: {
-				student_id: studentId,
-				meal_plan: mealPlan
-			},
-			success: function(response) {
-				var data = JSON.parse(response);
-				if(data.status == 'success') {
-					// Store the selection in localStorage
-					localStorage.setItem('meal_plan_' + studentId, mealPlan);
-					showFlashMessage('Meal plan updated successfully', 'success');
-				} else {
-					showFlashMessage('Error updating meal plan', 'error');
-				}
-			},
-			error: function() {
-				showFlashMessage('Error occurred while updating meal plan', 'error');
-			}
-		});
+		$('.meal_plan_input_unreg_' + studentId).val(mealPlan);
 	});
 
 	/**
@@ -2692,91 +2553,6 @@ $(document).ready(function() {
 		if (confirm('Are you sure you want to remove all selected unregistered students?')) {
 			clearAllStudentsUnreg();
 		}
-	});
-
-	/**
-	 * Search button - Add all matching UNREGISTERED students to selection
-	 */
-	$('#btn_search_unreg').click(function() {
-		var search_student = $('#student_search_unreg').val().trim();
-		var session_id = $('#session_id_unreg').val();
-		
-		if (!session_id) {
-			alert('Please select a school year first.');
-			return;
-		}
-		
-		if (search_student.length < 1) {
-			alert('Please enter a search term (e.g., first letter of last name).');
-			return;
-		}
-		
-		// Show loading indicator
-		$(this).prop('disabled', true).text('Searching...');
-		
-		$.ajax({
-			url: "<?php echo base_url('cafeteria/student/search_unregistered_students'); ?>",
-			type: "POST",
-			data: { "search_student": search_student, "session_id": session_id },
-			dataType: "json",
-			success: function(data) {
-				// CLEAR previous selection before adding new search results
-				selectedStudentsUnreg = [];
-				
-				let addedCount = 0;
-				
-				// Check if data is valid array
-				if (!data || !Array.isArray(data) || data.length === 0) {
-					updateSelectedStudentsListUnreg();
-					alert('No unregistered students found with last name starting with "' + search_student + '"');
-					$('#student_search_unreg').val('');
-					$('#btn_search_unreg').prop('disabled', false).text('Search');
-					return;
-				}
-				
-				$.each(data, function(index, student) {
-					// Validate student has required ID field
-					if (!student.id) {
-						return; // Skip invalid entries
-					}
-					
-					let middlename = student.middlename ? ' ' + student.middlename : '';
-					let suffix = student.suffix ? ' ' + student.suffix : '';
-					let full_name = student.lastname + ', ' + student.firstname + middlename + suffix;
-					
-					// Add student to selection
-					selectedStudentsUnreg.push({
-						id: student.id,
-						name: full_name,
-						gender: student.gender,
-						meal_plan: student.meal_plan || 'cafeteria',
-						class: student.class || '',
-						section: student.section || ''
-					});
-					addedCount++;
-				});
-				
-				// Update the display
-				updateSelectedStudentsListUnreg();
-				
-				// Show result message
-				if (addedCount > 0) {
-					alert('Found ' + addedCount + ' unregistered student(s) with last name starting with "' + search_student.toUpperCase() + '"');
-				} else {
-					alert('No unregistered students found with last name starting with "' + search_student + '"');
-				}
-				
-				// Clear search input
-				$('#student_search_unreg').val('');
-				
-				// Re-enable button
-				$('#btn_search_unreg').prop('disabled', false).text('Search');
-			},
-			error: function() {
-				alert('Error searching for students. Please try again.');
-				$('#btn_search_unreg').prop('disabled', false).text('Search');
-			}
-		});
 	});
 
 	/**

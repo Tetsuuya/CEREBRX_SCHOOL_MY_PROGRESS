@@ -3,7 +3,7 @@ if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
 class orders extends CI_Controller {
-git 
+
     function __construct() {
         parent::__construct();
         $this->load->helper('file');

@@ -1918,7 +1918,7 @@ $(document).ready(function () {
 			
 			if (!session_id) {
 				$("#student_list_reg_datalist").empty();
-				$("#student_list_reg_datalist").append("<option value='Please select a school year first'>"); 
+				$("#student_list_reg_datalist").append("<option value='' disabled>Please select a school year first</option>"); 
 				return;
 			}
 
@@ -1944,6 +1944,14 @@ $(document).ready(function () {
 						searchInput.css('background', '');
 						
 						$("#student_list_reg_datalist").empty();
+
+						// Check if no data was returned from server
+						if (!data || data.length === 0) {
+							$("#student_list_reg_datalist").append(
+								"<option value=''>No registered students found with last name starting with \"" + search_student + "\"</option>"
+							);
+							return;
+						}
 
 						// Sort results alphabetically (A-Z) by Last Name, First Name
 						data.sort(function(a, b) {
@@ -1991,7 +1999,7 @@ $(document).ready(function () {
 						// Show message if no results found
 						if (matchCount === 0) {
 							$("#student_list_reg_datalist").append(
-								"<option value='No registered students found with last name starting with \"" + search_student + "\"'>"
+								"<option value=''>No registered students found with last name starting with \"" + search_student + "\"</option>"
 							);
 						}
 					},
@@ -1999,7 +2007,7 @@ $(document).ready(function () {
 						// Remove loading indicator on error
 						searchInput.css('background', '');
 						$("#student_list_reg_datalist").empty();
-						$("#student_list_reg_datalist").append("<option value='Error loading students. Please try again.'>");
+						$("#student_list_reg_datalist").append("<option value='' disabled>Error loading students. Please try again.</option>");
 					}
 				});
 			}, 300); // Wait 300ms after user stops typing
@@ -2020,11 +2028,27 @@ $(document).ready(function () {
 			
 			if (matchedOption) {
 				let studentId = matchedOption.attr('data-id');
+				
+				// Check if this is a valid student option (has data-id attribute and it's not empty)
+				if (!studentId || studentId === '' || studentId === 'undefined') {
+					// This is an error message or invalid option, ignore it
+					$("#student_search_reg").val('');
+					return;
+				}
+				
 				let studentName = val;
 				let studentGender = matchedOption.attr('data-gender');
 				let studentMeal = matchedOption.attr('data-meal') || 'cafeteria';
 				let studentClass = matchedOption.attr('data-class');
 				let studentSection = matchedOption.attr('data-section');
+				
+				// Check if student is already in the selected list
+				if (selectedStudents.some(s => s.id == studentId)) {
+					alert('This student has already been added to the selection.');
+					$("#student_search_reg").val('');
+					$("#student_list_reg_datalist").empty();
+					return;
+				}
 				
 				// Add selected student to table array
 				selectedStudents.push({
@@ -2284,7 +2308,7 @@ $(document).ready(function() {
 		
 		if (!session_id) {
 			$("#student_list_unreg").empty();
-			$("#student_list_unreg").append("<option value='Please select a school year first'>"); 
+			$("#student_list_unreg").append("<option value='' disabled>Please select a school year first</option>"); 
 			return;
 		}
 
@@ -2310,6 +2334,14 @@ $(document).ready(function() {
 					searchInput.css('background', '');
 					
 					$("#student_list_unreg").empty();
+
+					// Check if no data was returned from server
+					if (!data || data.length === 0) {
+						$("#student_list_unreg").append(
+							"<option value=''>No unregistered students found with last name starting with \"" + search_student + "\"</option>"
+						);
+						return;
+					}
 
 					// Sort results alphabetically (A-Z) by Last Name, First Name
 					data.sort(function(a, b) {
@@ -2357,7 +2389,7 @@ $(document).ready(function() {
 					// Show message if no results found
 					if (matchCount === 0) {
 						$("#student_list_unreg").append(
-							"<option value='No unregistered students found with last name starting with \"" + search_student + "\"'>"
+							"<option value=''>No unregistered students found with last name starting with \"" + search_student + "\"</option>"
 						);
 					}
 				},
@@ -2365,7 +2397,7 @@ $(document).ready(function() {
 					// Remove loading indicator on error
 					searchInput.css('background', '');
 					$("#student_list_unreg").empty();
-					$("#student_list_unreg").append("<option value='Error loading students. Please try again.'>");
+					$("#student_list_unreg").append("<option value='' disabled>Error loading students. Please try again.</option>");
 				}
 			});
 		}, 300); // Wait 300ms after user stops typing
@@ -2386,11 +2418,27 @@ $(document).ready(function() {
 		
 		if (matchedOption) {
 			let studentId = matchedOption.attr('data-id');
+			
+			// Check if this is a valid student option (has data-id attribute and it's not empty)
+			if (!studentId || studentId === '' || studentId === 'undefined') {
+				// This is an error message or invalid option, ignore it
+				$("#student_search_unreg").val('');
+				return;
+			}
+			
 			let studentName = val;
 			let studentGender = matchedOption.attr('data-gender');
 			let studentMeal = matchedOption.attr('data-meal') || 'cafeteria';
 			let studentClass = matchedOption.attr('data-class');
 			let studentSection = matchedOption.attr('data-section');
+			
+			// Check if student is already in the selected list
+			if (selectedStudentsUnreg.some(s => s.id == studentId)) {
+				alert('This student has already been added to the selection.');
+				$("#student_search_unreg").val('');
+				$("#student_list_unreg").empty();
+				return;
+			}
 			
 			// Add selected student to table array
 			selectedStudentsUnreg.push({

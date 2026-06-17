@@ -2502,4 +2502,3 @@ public function searchFullTextCheckAllow($searchterm , $include_session = "yes",
 
 
 }
-

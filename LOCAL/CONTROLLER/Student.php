@@ -340,7 +340,7 @@ class Student extends CI_Controller {
 		$this->db->select('students.id as id,student_session.id as student_session_id,classes.id AS class_id,classes.class,sections.id AS section_id,sections.section,students.id,students.admission_no ,allow,students.lastname,students.firstname,students.middlename');
 		$this->db->from('students');
 		$this->db->join('student_session', 'student_session.student_id = students.id');
-		$this->db->join('classes', 'student_session.class_id = classes.id');
+		$this->db->join('classes', 'student_session.class_id = classes.id', 'left');
 		$this->db->join('sections', 'sections.id = student_session.section_id','left');
 		$this->db->where('student_session.session_id', $session_id);
 		$this->db->where('student_session.allow', 'yes');
@@ -396,6 +396,8 @@ class Student extends CI_Controller {
 		$this->db->select('students.id, student_session.id as student_session_id, students.gender, students.meal_plan, students.lastname, students.suffix, students.firstname, students.middlename');
 		$this->db->from('students');
 		$this->db->join('student_session', 'student_session.student_id = students.id');
+		$this->db->join('classes', 'student_session.class_id = classes.id', 'left');
+		$this->db->join('sections', 'sections.id = student_session.section_id', 'left');
 		$this->db->where('student_session.session_id', $session_id);
 		$this->db->where('student_session.allow', 'yes');
 		$this->db->order_by('students.lastname', 'asc');

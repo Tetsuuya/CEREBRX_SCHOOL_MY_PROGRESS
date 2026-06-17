@@ -448,6 +448,16 @@ class reserved extends CI_Controller {
 					if(isset($get_id[$x])){
 						$student_get_id = $get_id[$x];
 						$reserved_details = $this->reserved_students_model->get( $student_get_id );
+						
+						// e skip ang student nga wala ang button nga "Activate" sa action column
+						$enrollment_status = $reserved_details['enrollment_status'];
+						$review_cashier = $reserved_details['review_cashier'];
+						$paid_status = $reserved_details['paid_status'];
+						$can_activate = ($review_cashier == 'yes' && $enrollment_status == 'passed') || ($paid_status == 'promissory' && $enrollment_status == 'passed');
+						
+						if (!$can_activate) {
+							continue; // e skip and mag continue sa next check
+						}
 						$student_id = $reserved_details['student_id'];
 						$session_id = $reserved_details['session_id'];
 						$class_id = $reserved_details['class_id'];

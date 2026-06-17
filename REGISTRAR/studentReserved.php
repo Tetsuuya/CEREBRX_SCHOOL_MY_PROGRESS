@@ -405,9 +405,9 @@ input[type="text"], input[type="password"], input[type="tel"] {
 
 								<button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this data?');" formaction="<?php echo base_url(); ?>registrar/reserved/delete_all/"><?php echo $this->lang->line('delete'); ?></button>
 
-								<!-- <button type="submit" class="btn btn-warning" onclick="return confirm('Are you sure you want to unconfirmed this data?');" formaction="<?php echo base_url(); ?>registrar/reserved/unconfirmed_all/"><?php echo "unconfirmed" ?></button> -->
+								<button type="submit" class="btn btn-warning" onclick="return confirm('Are you sure you want to unconfirmed this data?');" formaction="<?php echo base_url(); ?>registrar/reserved/unconfirmed_all/"><?php echo "unconfirmed" ?></button>
 
-								<!-- <button type="submit" class="btn btn-info pull-right" onclick="return confirm('Are you sure you want to activate this data? Only status Reserved will be activated.');" >Activate</button>  -->
+								<button type="submit" class="btn btn-info pull-right" onclick="return confirm('Are you sure you want to activate this data? Only status Reserved will be activated.');" >Activate</button>
 
 							</div>
 

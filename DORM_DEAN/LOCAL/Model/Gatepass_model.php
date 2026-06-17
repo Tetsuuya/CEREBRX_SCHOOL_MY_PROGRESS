@@ -80,6 +80,7 @@ class Gatepass_model extends CI_Model {
         $this->db->where('gatepass.session_id', $session_id);
         $this->db->where('gatepass.deleted', '0');
         $this->db->where('hostel.dormdean_id', $dormdean_id);
+        $this->db->where('gatepass.type !=', 'campus'); // Exclude Campus Leave type
         $this->db->order_by('gatepass.status', 'DESC');
         $this->db->order_by('gatepass.created_at', 'ASC');
         $this->db->order_by('gatepass.exit_date', 'ASC');

@@ -2109,18 +2109,10 @@ public function searchFullTextCheckAllow($searchterm , $include_session = "yes",
 			}
             $this->db->where('student_session.session_id', $session_id );
         //} 
-        $this->db->group_start();
-        $this->db->like('students.firstname', $searchterm, 'after');
-        $this->db->or_like('students.lastname', $searchterm, 'after');
-        $this->db->or_like('students.guardian_name', $searchterm, 'after');
-        $this->db->or_like('students.adhar_no', $searchterm, 'after');
-        $this->db->or_like('students.samagra_id', $searchterm, 'after');
-        $this->db->or_like('students.roll_no', $searchterm, 'after');
-        $this->db->or_like('students.admission_no', $searchterm, 'after');
-        $this->db->or_like('students.lrn', $searchterm, 'after');
-       // $this->db->or_like('students.rfid', $searchterm);
-        $this->db->group_end();
-        $this->db->order_by('students.id');
+        // Search only by last name (starts with)
+        $this->db->like('students.lastname', $searchterm, 'after');
+        $this->db->order_by('students.lastname', 'asc');
+        $this->db->order_by('students.firstname', 'asc');
         $this->db->limit('10');
         $query = $this->db->get();
         return $query->result_array();

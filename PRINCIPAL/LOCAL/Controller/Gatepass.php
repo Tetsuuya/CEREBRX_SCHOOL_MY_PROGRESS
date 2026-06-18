@@ -23,23 +23,26 @@ class Gatepass extends CI_Controller {
         $this->session->set_userdata('sub_menu', 'gatepass/records');
         $data['title'] = 'Student List';
 
-
         $dormitorydean_id = $this->session->userdata('principal')['dormitorydean_id'];
-        // printx($dormitorydean_id);
-          
         $session_id = $this->setting_model->getCurrentSession();
-
         
- 
-        $student_result = $this->dormitorydean_model->getstudentsunderthedean( $dormitorydean_id, $session_id);
-        $listofrequest = $this->gatepass_model->getactivecampusrecords(  $dormitorydean_id, $session_id );
+        // Pagination
+        $per_page = 15;
+        $page = $this->input->get('page') ? (int)$this->input->get('page') : 1;
+        $offset = ($page - 1) * $per_page;
         
-        $var = "$dormitorydean_id, $session_id";
-        var_dump('<script>console.log("\x1b[32mhern_log: '.$var.'")</script>');
+        $total_records = $this->gatepass_model->getactivecampusrecords_count($dormitorydean_id, $session_id);
+        $total_pages = ceil($total_records / $per_page);
         
-        // printx($listofrequest ); 
+        $student_result = $this->dormitorydean_model->getstudentsunderthedean($dormitorydean_id, $session_id);
+        $listofrequest = $this->gatepass_model->getactivecampusrecords($dormitorydean_id, $session_id, $per_page, $offset);
+        
         $data['studentlist'] = $student_result;
         $data['listofrequest'] = $listofrequest;
+        $data['current_page'] = $page;
+        $data['total_pages'] = $total_pages;
+        $data['total_records'] = $total_records;
+        
         $this->load->view('layout/principal/header', $data);
         $this->load->view('principal/gatepass/records', $data);
         $this->load->view('layout/principal/footer', $data);

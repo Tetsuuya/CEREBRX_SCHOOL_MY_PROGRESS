@@ -82,6 +82,60 @@
 
                         </div><!-- /.mail-box-messages -->
                     </div><!-- /.box-body -->
+                    
+                    <!-- Pagination -->
+                    <?php if (isset($total_pages) && $total_pages > 1): ?>
+                    <div class="box-footer clearfix">
+                        <ul class="pagination pagination-sm no-margin pull-right">
+                            <?php if ($current_page > 1): ?>
+                                <li><a href="<?php echo base_url('principal/gatepass/records?page=' . ($current_page - 1)); ?>">«</a></li>
+                            <?php else: ?>
+                                <li class="disabled"><span>«</span></li>
+                            <?php endif; ?>
+                            
+                            <?php
+                            $start_page = max(1, $current_page - 2);
+                            $end_page = min($total_pages, $current_page + 2);
+                            
+                            if ($start_page > 1):
+                            ?>
+                                <li><a href="<?php echo base_url('principal/gatepass/records?page=1'); ?>">1</a></li>
+                                <?php if ($start_page > 2): ?>
+                                    <li class="disabled"><span>...</span></li>
+                                <?php endif; ?>
+                            <?php endif; ?>
+                            
+                            <?php for ($i = $start_page; $i <= $end_page; $i++): ?>
+                                <?php if ($i == $current_page): ?>
+                                    <li class="active"><span><?php echo $i; ?></span></li>
+                                <?php else: ?>
+                                    <li><a href="<?php echo base_url('principal/gatepass/records?page=' . $i); ?>"><?php echo $i; ?></a></li>
+                                <?php endif; ?>
+                            <?php endfor; ?>
+                            
+                            <?php if ($end_page < $total_pages): ?>
+                                <?php if ($end_page < $total_pages - 1): ?>
+                                    <li class="disabled"><span>...</span></li>
+                                <?php endif; ?>
+                                <li><a href="<?php echo base_url('principal/gatepass/records?page=' . $total_pages); ?>"><?php echo $total_pages; ?></a></li>
+                            <?php endif; ?>
+                            
+                            <?php if ($current_page < $total_pages): ?>
+                                <li><a href="<?php echo base_url('principal/gatepass/records?page=' . ($current_page + 1)); ?>">»</a></li>
+                            <?php else: ?>
+                                <li class="disabled"><span>»</span></li>
+                            <?php endif; ?>
+                        </ul>
+                        
+                        <div class="pull-left">
+                            Showing <?php echo (($current_page - 1) * 15 + 1); ?> 
+                            to <?php echo min($current_page * 15, $total_records); ?> 
+                            of <?php echo $total_records; ?> entries
+                        </div>
+                    </div>
+                    <?php endif; ?>
+                    <!-- End Pagination -->
+                    
                 </div>
             </div><!--/.col (left) -->
             <!-- right column -->
@@ -98,3 +152,13 @@
     </section><!-- /.content -->
 </div><!-- /.content-wrapper -->
 
+
+<script>
+// Destroy DataTables for this specific table to use server-side pagination
+$(document).ready(function() {
+    var table = $('.example');
+    if ($.fn.DataTable && $.fn.DataTable.isDataTable(table)) {
+        table.DataTable().destroy();
+    }
+});
+</script>

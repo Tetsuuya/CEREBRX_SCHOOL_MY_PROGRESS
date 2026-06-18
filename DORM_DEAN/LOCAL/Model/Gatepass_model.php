@@ -56,7 +56,7 @@ class Gatepass_model extends CI_Model {
     } 
 
 
-     public function getactiverecords( $dormdean_id, $session_id ){
+     public function getactiverecords( $dormdean_id, $session_id, $limit = null, $offset = 0 ){
         $this->db->select('gatepass.*'); 
         $this->db->select('hostel.hostel_name');
         $this->db->select('hostel_rooms.room_no'); 
@@ -84,11 +84,27 @@ class Gatepass_model extends CI_Model {
         $this->db->order_by('gatepass.status', 'DESC');
         $this->db->order_by('gatepass.created_at', 'ASC');
         $this->db->order_by('gatepass.exit_date', 'ASC');
+        
+        if ($limit !== null) {
+            $this->db->limit($limit, $offset);
+        }
+        
         $query = $this->db->get();
         return $query->result_array(); 
     }
 
-    public function getactivecampusrecords( $dormdean_id, $session_id ){
+    public function getactiverecords_count( $dormdean_id, $session_id ){
+        $this->db->from('gatepass');
+        $this->db->join('hostel_rooms', 'hostel_rooms.id = gatepass.room_id', 'left'); 
+        $this->db->join('hostel', 'hostel.id = hostel_rooms.hostel_id', 'left');  
+        $this->db->where('gatepass.session_id', $session_id);
+        $this->db->where('gatepass.deleted', '0');
+        $this->db->where('hostel.dormdean_id', $dormdean_id);
+        $this->db->where('gatepass.type !=', 'campus');
+        return $this->db->count_all_results();
+    }
+
+    public function getactivecampusrecords( $dormdean_id, $session_id, $limit = null, $offset = 0 ){
         $this->db->select('gatepass.*'); 
         $this->db->select('hostel.hostel_name');
         $this->db->select('hostel_rooms.room_no'); 
@@ -117,8 +133,25 @@ class Gatepass_model extends CI_Model {
         $this->db->order_by('gatepass.status', 'DESC');
         $this->db->order_by('gatepass.created_at', 'ASC');
         $this->db->order_by('gatepass.exit_date', 'ASC');
+        
+        if ($limit !== null) {
+            $this->db->limit($limit, $offset);
+        }
+        
         $query = $this->db->get();
         return $query->result_array(); 
+    }
+
+    public function getactivecampusrecords_count( $dormdean_id, $session_id ){
+        $this->db->from('gatepass');
+        $this->db->join('hostel_rooms', 'hostel_rooms.id = gatepass.room_id', 'left'); 
+        $this->db->join('hostel', 'hostel.id = hostel_rooms.hostel_id', 'left');  
+        $this->db->where('gatepass.session_id', $session_id);
+        $this->db->where('gatepass.deleted', '0');
+        // REMOVED: $this->db->where('hostel.dormdean_id', $dormdean_id); 
+        // Principal sees Campus Leave from ALL dorms
+        $this->db->where('gatepass.type', 'campus');
+        return $this->db->count_all_results();
     }
 
     public function getapproverecords(   $dormdean_id, $session_id ){

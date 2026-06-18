@@ -161,6 +161,9 @@ class Gatepass_model extends CI_Model {
                 WHEN gatepass.destination LIKE '$contains' THEN 6
                 ELSE 7 
             END", '', FALSE);
+            // Sort alphabetically within the same priority group
+            $this->db->order_by('students.lastname', 'ASC');
+            $this->db->order_by('students.firstname', 'ASC');
         }
         $this->db->order_by('gatepass.status', 'DESC');
         $this->db->order_by('gatepass.created_at', 'ASC');

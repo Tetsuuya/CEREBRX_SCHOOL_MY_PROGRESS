@@ -351,10 +351,25 @@ class Gatepass extends CI_Controller {
         $this->db->where('gatepass.session_id', $session_id);
         $this->db->where('gatepass.deleted', '0');
         
-        // Search by LASTNAME ONLY (priority)
-        $search_pattern = $this->db->escape_like_str($search_term) . '%';
-        $this->db->where("students.lastname LIKE '$search_pattern'");
+        // Search by LASTNAME or FIRSTNAME (starts with OR contains)
+        $starts_with = $this->db->escape_like_str($search_term) . '%';
+        $contains = '%' . $this->db->escape_like_str($search_term) . '%';
         
+        $this->db->group_start();
+        $this->db->where("students.lastname LIKE '$starts_with'");
+        $this->db->or_where("students.firstname LIKE '$starts_with'");
+        $this->db->or_where("students.lastname LIKE '$contains'");
+        $this->db->or_where("students.firstname LIKE '$contains'");
+        $this->db->group_end();
+        
+        // Order by priority: lastname starts with > firstname starts with > lastname contains > firstname contains
+        $this->db->order_by("CASE 
+            WHEN students.lastname LIKE '$starts_with' THEN 1 
+            WHEN students.firstname LIKE '$starts_with' THEN 2
+            WHEN students.lastname LIKE '$contains' THEN 3
+            WHEN students.firstname LIKE '$contains' THEN 4
+            ELSE 5 
+        END", '', FALSE);
         $this->db->order_by('students.lastname');
         $this->db->limit(10);
         

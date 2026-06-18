@@ -26,22 +26,31 @@ class Gatepass extends CI_Controller {
         $dormitorydean_id = $this->session->userdata('student')['dormitorydean_id'];
         $session_id = $this->setting_model->getCurrentSession();
         
+        // Get search parameter
+        $search = $this->input->get('search');
+        
+        // Trim search to remove extra spaces
+        if ($search !== null && $search !== '') {
+            $search = trim($search);
+        }
+        
         // Pagination
         $per_page = 15;
         $page = $this->input->get('page') ? (int)$this->input->get('page') : 1;
         $offset = ($page - 1) * $per_page;
         
-        $total_records = $this->gatepass_model->getactiverecords_count($dormitorydean_id, $session_id);
+        $total_records = $this->gatepass_model->getactiverecords_count($dormitorydean_id, $session_id, $search);
         $total_pages = ceil($total_records / $per_page);
         
         $student_result = $this->dormitorydean_model->getstudentsunderthedean($dormitorydean_id, $session_id);
-        $listofrequest = $this->gatepass_model->getactiverecords($dormitorydean_id, $session_id, $per_page, $offset);
+        $listofrequest = $this->gatepass_model->getactiverecords($dormitorydean_id, $session_id, $per_page, $offset, $search);
         
         $data['studentlist'] = $student_result;
         $data['listofrequest'] = $listofrequest;
         $data['current_page'] = $page;
         $data['total_pages'] = $total_pages;
         $data['total_records'] = $total_records;
+        $data['search'] = $search;
         
         $this->load->view('layout/dormitorydean/header', $data);
         $this->load->view('dormitorydean/gatepass/records', $data);
@@ -317,6 +326,41 @@ class Gatepass extends CI_Controller {
         $this->load->view('layout/dormitorydean/header', $data);
         $this->load->view('dormitorydean/gatepass/tapreport', $data);
         $this->load->view('layout/dormitorydean/footer', $data);
+    }
+    
+    // AJAX search for students with live suggestions
+    function search_students() {
+        $dormitorydean_id = $this->session->userdata('student')['dormitorydean_id'];
+        $session_id = $this->setting_model->getCurrentSession();
+        $search_term = $this->input->post('search_term');
+        
+        if (empty($search_term)) {
+            echo json_encode([]);
+            return;
+        }
+        
+        $search_term = trim($search_term);
+        
+        // Search in gatepass records for this dorm dean
+        $this->db->select('gatepass.*, students.firstname, students.middlename, students.lastname');
+        $this->db->from('gatepass');
+        $this->db->join('students', 'gatepass.student_id = students.id');
+        $this->db->join('hostel_rooms', 'gatepass.room_id = hostel_rooms.id');
+        $this->db->join('hostel', 'hostel_rooms.hostel_id = hostel.id');
+        $this->db->where('hostel.dormdean_id', $dormitorydean_id);
+        $this->db->where('gatepass.session_id', $session_id);
+        $this->db->where('gatepass.deleted', '0');
+        
+        // Search by LASTNAME ONLY (priority)
+        $search_pattern = $this->db->escape_like_str($search_term) . '%';
+        $this->db->where("students.lastname LIKE '$search_pattern'");
+        
+        $this->db->order_by('students.lastname');
+        $this->db->limit(10);
+        
+        $results = $this->db->get()->result_array();
+        
+        echo json_encode($results);
     }
 
      

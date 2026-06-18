@@ -56,7 +56,7 @@ class Gatepass_model extends CI_Model {
     } 
 
 
-     public function getactiverecords( $dormdean_id, $session_id, $limit = null, $offset = 0 ){
+     public function getactiverecords( $dormdean_id, $session_id, $limit = null, $offset = 0, $search = null ){
         $this->db->select('gatepass.*'); 
         $this->db->select('hostel.hostel_name');
         $this->db->select('hostel_rooms.room_no'); 
@@ -81,6 +81,14 @@ class Gatepass_model extends CI_Model {
         $this->db->where('gatepass.deleted', '0');
         $this->db->where('hostel.dormdean_id', $dormdean_id);
         // REMOVED filter: Show ALL types (Regular, Emergency, AND Campus Leave)
+        
+        // Search filter - LASTNAME PRIORITY (starts with)
+        if ($search !== null && $search !== '') {
+            $search_pattern = $this->db->escape_like_str($search) . '%';
+            // Search ONLY lastname (priority)
+            $this->db->where("students.lastname LIKE '$search_pattern'");
+        }
+        
         $this->db->order_by('gatepass.status', 'DESC');
         $this->db->order_by('gatepass.created_at', 'ASC');
         $this->db->order_by('gatepass.exit_date', 'ASC');
@@ -93,14 +101,23 @@ class Gatepass_model extends CI_Model {
         return $query->result_array(); 
     }
 
-    public function getactiverecords_count( $dormdean_id, $session_id ){
+    public function getactiverecords_count( $dormdean_id, $session_id, $search = null ){
         $this->db->from('gatepass');
+        $this->db->join('students', 'gatepass.student_id = students.id ', 'left');
         $this->db->join('hostel_rooms', 'hostel_rooms.id = gatepass.room_id', 'left'); 
         $this->db->join('hostel', 'hostel.id = hostel_rooms.hostel_id', 'left');  
         $this->db->where('gatepass.session_id', $session_id);
         $this->db->where('gatepass.deleted', '0');
         $this->db->where('hostel.dormdean_id', $dormdean_id);
         // REMOVED filter: Count ALL types
+        
+        // Search filter - LASTNAME PRIORITY (starts with)
+        if ($search !== null && $search !== '') {
+            $search_pattern = $this->db->escape_like_str($search) . '%';
+            // Search ONLY lastname (priority)
+            $this->db->where("students.lastname LIKE '$search_pattern'");
+        }
+        
         return $this->db->count_all_results();
     }
 

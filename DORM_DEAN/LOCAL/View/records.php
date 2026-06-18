@@ -106,6 +106,31 @@
                         <div class="box-tools pull-right">
                         </div><!-- /.box-tools -->
                     </div><!-- /.box-header -->
+                    
+                    <!-- Search Box Below Title -->
+                    <div style="padding: 10px 10px 5px 10px; background: #f9f9f9; border-bottom: 1px solid #ddd;">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <?php if (!empty($search)): ?>
+                                    <small class="text-muted" style="line-height: 30px;">Showing results for: <strong><?php echo htmlspecialchars($search); ?></strong></small>
+                                <?php endif; ?>
+                            </div>
+                            <div class="col-md-6 text-right">
+                                <div style="display: inline-block;">
+                                    <input type="text" id="search_input" class="form-control input-sm" placeholder="Search by lastname..." value="<?php echo htmlspecialchars(isset($search) ? $search : ''); ?>" autocomplete="off" style="width: 250px; height: 30px; display: inline-block;">
+                                    <button class="btn btn-primary btn-sm" type="button" id="search_button" style="height: 28px; padding: 5px 10px; margin-left: 5px;">
+                                        <i class="fa fa-search"></i> Search
+                                    </button>
+                                    <?php if (!empty($search)): ?>
+                                        <a href="<?php echo base_url('dormitorydean/gatepass/records'); ?>" class="btn btn-default btn-sm" style="height: 30px; padding: 5px 10px; margin-left: 5px;">Clear</a>
+                                    <?php endif; ?>
+                                </div>
+                                <div id="search_suggestions" style="position: absolute; z-index: 1000; background: white; border: 1px solid #ddd; display: none; max-height: 300px; overflow-y: auto; width: 250px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); margin-top: 2px; right: 10px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Search Box -->
+                    
                     <div class="box-body">
                         <div class="table-responsive mailbox-messages">
                             <table class="table table-striped table-bordered table-hover example">
@@ -182,8 +207,11 @@
                     <?php if (isset($total_pages) && $total_pages > 1): ?>
                     <div class="box-footer clearfix">
                         <ul class="pagination pagination-sm no-margin pull-right">
+                            <?php 
+                            $search_param = !empty($search) ? '&search=' . urlencode($search) : '';
+                            ?>
                             <?php if ($current_page > 1): ?>
-                                <li><a href="<?php echo base_url('dormitorydean/gatepass/records?page=' . ($current_page - 1)); ?>">«</a></li>
+                                <li><a href="<?php echo base_url('dormitorydean/gatepass/records?page=' . ($current_page - 1) . $search_param); ?>">«</a></li>
                             <?php else: ?>
                                 <li class="disabled"><span>«</span></li>
                             <?php endif; ?>
@@ -194,7 +222,7 @@
                             
                             if ($start_page > 1):
                             ?>
-                                <li><a href="<?php echo base_url('dormitorydean/gatepass/records?page=1'); ?>">1</a></li>
+                                <li><a href="<?php echo base_url('dormitorydean/gatepass/records?page=1' . $search_param); ?>">1</a></li>
                                 <?php if ($start_page > 2): ?>
                                     <li class="disabled"><span>...</span></li>
                                 <?php endif; ?>
@@ -204,7 +232,7 @@
                                 <?php if ($i == $current_page): ?>
                                     <li class="active"><span><?php echo $i; ?></span></li>
                                 <?php else: ?>
-                                    <li><a href="<?php echo base_url('dormitorydean/gatepass/records?page=' . $i); ?>"><?php echo $i; ?></a></li>
+                                    <li><a href="<?php echo base_url('dormitorydean/gatepass/records?page=' . $i . $search_param); ?>"><?php echo $i; ?></a></li>
                                 <?php endif; ?>
                             <?php endfor; ?>
                             
@@ -212,11 +240,11 @@
                                 <?php if ($end_page < $total_pages - 1): ?>
                                     <li class="disabled"><span>...</span></li>
                                 <?php endif; ?>
-                                <li><a href="<?php echo base_url('dormitorydean/gatepass/records?page=' . $total_pages); ?>"><?php echo $total_pages; ?></a></li>
+                                <li><a href="<?php echo base_url('dormitorydean/gatepass/records?page=' . $total_pages . $search_param); ?>"><?php echo $total_pages; ?></a></li>
                             <?php endif; ?>
                             
                             <?php if ($current_page < $total_pages): ?>
-                                <li><a href="<?php echo base_url('dormitorydean/gatepass/records?page=' . ($current_page + 1)); ?>">»</a></li>
+                                <li><a href="<?php echo base_url('dormitorydean/gatepass/records?page=' . ($current_page + 1) . $search_param); ?>">»</a></li>
                             <?php else: ?>
                                 <li class="disabled"><span>»</span></li>
                             <?php endif; ?>
@@ -226,6 +254,9 @@
                             Showing <?php echo (($current_page - 1) * 15 + 1); ?> 
                             to <?php echo min($current_page * 15, $total_records); ?> 
                             of <?php echo $total_records; ?> entries
+                            <?php if (!empty($search)): ?>
+                                <span class="text-muted">(filtered from search)</span>
+                            <?php endif; ?>
                         </div>
                     </div>
                     <?php endif; ?>
@@ -255,5 +286,95 @@ $(document).ready(function() {
     if ($.fn.DataTable && $.fn.DataTable.isDataTable(table)) {
         table.DataTable().destroy();
     }
+    
+    // Live search with autocomplete
+    var searchTimeout;
+    var $searchInput = $('#search_input');
+    var $searchButton = $('#search_button');
+    var $suggestions = $('#search_suggestions');
+    
+    // Function to perform search
+    function performSearch() {
+        var searchTerm = $searchInput.val().trim();
+        if (searchTerm.length > 0) {
+            window.location.href = '<?php echo base_url('dormitorydean/gatepass/records?search='); ?>' + encodeURIComponent(searchTerm);
+        }
+    }
+    
+    // Search button click handler
+    $searchButton.on('click', function() {
+        performSearch();
+    });
+    
+    $searchInput.on('keyup', function() {
+        clearTimeout(searchTimeout);
+        var searchTerm = $(this).val().trim();
+        
+        if (searchTerm.length === 0) {
+            $suggestions.hide().empty();
+            return;
+        }
+        
+        // Show suggestions after user stops typing for 300ms
+        searchTimeout = setTimeout(function() {
+            $.ajax({
+                url: '<?php echo base_url('dormitorydean/gatepass/search_students'); ?>',
+                type: 'POST',
+                data: { search_term: searchTerm },
+                dataType: 'json',
+                success: function(response) {
+                    $suggestions.empty();
+                    
+                    if (response && response.length > 0) {
+                        var html = '<ul class="list-group" style="margin-bottom: 0;">';
+                        $.each(response, function(index, student) {
+                            var fullname = student.lastname + ', ' + student.firstname + ' ' + student.middlename;
+                            var exitDate = student.exit_date || 'N/A';
+                            var status = student.status || 'N/A';
+                            var type = student.type || 'N/A';
+                            
+                            html += '<li class="list-group-item" style="cursor: pointer; padding: 10px;" data-name="' + student.lastname + '">';
+                            html += '<strong>' + fullname + '</strong><br>';
+                            html += '<small>Exit: ' + exitDate + ' | Status: ' + status + ' | Type: ' + type + '</small>';
+                            html += '</li>';
+                        });
+                        html += '</ul>';
+                        
+                        $suggestions.html(html).show();
+                        
+                        // Handle suggestion click
+                        $suggestions.find('li').on('click', function() {
+                            var selectedName = $(this).data('name');
+                            $searchInput.val(selectedName);
+                            $suggestions.hide();
+                            // Trigger search
+                            window.location.href = '<?php echo base_url('dormitorydean/gatepass/records?search='); ?>' + encodeURIComponent(selectedName);
+                        });
+                    } else {
+                        $suggestions.html('<div class="alert alert-info" style="margin: 5px;">No students found</div>').show();
+                    }
+                },
+                error: function() {
+                    $suggestions.html('<div class="alert alert-danger" style="margin: 5px;">Error loading suggestions</div>').show();
+                }
+            });
+        }, 300);
+    });
+    
+    // Handle Enter key to search
+    $searchInput.on('keypress', function(e) {
+        if (e.which === 13) {
+            e.preventDefault();
+            performSearch();
+        }
+    });
+    
+    // Hide suggestions when clicking outside
+    $(document).on('click', function(e) {
+        if (!$(e.target).closest('#search_input, #search_suggestions').length) {
+            $suggestions.hide();
+        }
+    });
 });
 </script>
+

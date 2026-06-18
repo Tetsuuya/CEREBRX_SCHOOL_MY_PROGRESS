@@ -104,7 +104,7 @@ class Gatepass_model extends CI_Model {
         return $this->db->count_all_results();
     }
 
-    public function getactivecampusrecords( $dormdean_id, $session_id, $limit = null, $offset = 0 ){
+    public function getactivecampusrecords( $dormdean_id, $session_id, $limit = null, $offset = 0, $search = null ){
         $this->db->select('gatepass.*'); 
         $this->db->select('hostel.hostel_name');
         $this->db->select('hostel_rooms.room_no'); 
@@ -130,6 +130,38 @@ class Gatepass_model extends CI_Model {
         // REMOVED: $this->db->where('hostel.dormdean_id', $dormdean_id); 
         // Principal now sees Campus Leave from ALL dorms
         $this->db->where('gatepass.type', 'campus'); // Show ONLY Campus Leave type
+        
+        // Search filter - Search multiple fields with starts-with priority
+        if ($search !== null && $search !== '') {
+            $starts_with = $this->db->escape_like_str($search) . '%';
+            $contains = '%' . $this->db->escape_like_str($search) . '%';
+            
+            // Search by lastname, firstname (starts with OR contains), purpose, destination, status, type
+            $this->db->group_start();
+            $this->db->where("students.lastname LIKE '$starts_with'");
+            $this->db->or_where("students.firstname LIKE '$starts_with'");
+            $this->db->or_where("students.lastname LIKE '$contains'");
+            $this->db->or_where("students.firstname LIKE '$contains'");
+            $this->db->or_where("gatepass.purpose LIKE '$contains'");
+            $this->db->or_where("gatepass.destination LIKE '$contains'");
+            $this->db->or_where("gatepass.status LIKE '$contains'");
+            $this->db->or_where("gatepass.type LIKE '$contains'");
+            $this->db->group_end();
+        }
+        
+        // Ordering: Priority to "starts with" name matches first
+        if ($search !== null && $search !== '') {
+            // Show "starts with" lastname first, then "starts with" firstname, then contains
+            $this->db->order_by("CASE 
+                WHEN students.lastname LIKE '$starts_with' THEN 1 
+                WHEN students.firstname LIKE '$starts_with' THEN 2
+                WHEN students.lastname LIKE '$contains' THEN 3
+                WHEN students.firstname LIKE '$contains' THEN 4
+                WHEN gatepass.purpose LIKE '$contains' THEN 5
+                WHEN gatepass.destination LIKE '$contains' THEN 6
+                ELSE 7 
+            END", '', FALSE);
+        }
         $this->db->order_by('gatepass.status', 'DESC');
         $this->db->order_by('gatepass.created_at', 'ASC');
         $this->db->order_by('gatepass.exit_date', 'ASC');
@@ -142,8 +174,9 @@ class Gatepass_model extends CI_Model {
         return $query->result_array(); 
     }
 
-    public function getactivecampusrecords_count( $dormdean_id, $session_id ){
+    public function getactivecampusrecords_count( $dormdean_id, $session_id, $search = null ){
         $this->db->from('gatepass');
+        $this->db->join('students', 'gatepass.student_id = students.id ', 'left');
         $this->db->join('hostel_rooms', 'hostel_rooms.id = gatepass.room_id', 'left'); 
         $this->db->join('hostel', 'hostel.id = hostel_rooms.hostel_id', 'left');  
         $this->db->where('gatepass.session_id', $session_id);
@@ -151,6 +184,25 @@ class Gatepass_model extends CI_Model {
         // REMOVED: $this->db->where('hostel.dormdean_id', $dormdean_id); 
         // Principal sees Campus Leave from ALL dorms
         $this->db->where('gatepass.type', 'campus');
+        
+        // Search filter - Search multiple fields with starts-with priority
+        if ($search !== null && $search !== '') {
+            $starts_with = $this->db->escape_like_str($search) . '%';
+            $contains = '%' . $this->db->escape_like_str($search) . '%';
+            
+            // Search by lastname, firstname (starts with OR contains), purpose, destination, status, type
+            $this->db->group_start();
+            $this->db->where("students.lastname LIKE '$starts_with'");
+            $this->db->or_where("students.firstname LIKE '$starts_with'");
+            $this->db->or_where("students.lastname LIKE '$contains'");
+            $this->db->or_where("students.firstname LIKE '$contains'");
+            $this->db->or_where("gatepass.purpose LIKE '$contains'");
+            $this->db->or_where("gatepass.destination LIKE '$contains'");
+            $this->db->or_where("gatepass.status LIKE '$contains'");
+            $this->db->or_where("gatepass.type LIKE '$contains'");
+            $this->db->group_end();
+        }
+        
         return $this->db->count_all_results();
     }
 

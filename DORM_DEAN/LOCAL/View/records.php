@@ -148,14 +148,22 @@
                                                 <!-- <a href="<?php echo base_url(); ?>classes/edit/<?php echo $request['id']; ?>" class="btn btn-default btn-xs"  data-toggle="tooltip" title="<?php echo $this->lang->line('edit'); ?>">
                                                     <i class="fa fa-pencil"></i>
                                                 </a> -->
-                                                <?php if( $request['status'] == "pending"){  ?>
+                                                <?php 
+                                                // Show actions ONLY for Regular and Emergency (NOT for Campus Leave)
+                                                if( $request['status'] == "pending" && $request['type'] != "campus" ){  
+                                                ?>
                                                 <a href="<?php echo base_url(); ?>dormitorydean/gatepass/delete_data/<?php echo $request['id']; ?>"class="btn btn-danger btn-xs"  data-toggle="tooltip" title="<?php echo $this->lang->line('delete'); ?>" onclick="return confirm('Are you sure you want to Delete this request?');">Delete
                                                 </a>
                                                 <a href="<?php echo base_url(); ?>dormitorydean/gatepass/approved_data/<?php echo $request['id']; ?>"class="btn btn-success btn-xs"  data-toggle="tooltip" title="Approve" onclick="return confirm('Are you sure you want to Approve this request?');">Approved
                                                 </a>
                                                 <a href="<?php echo base_url(); ?>dormitorydean/gatepass/declined_data/<?php echo $request['id']; ?>"class="btn btn-warning btn-xs"  data-toggle="tooltip" title="Declined" onclick="return confirm('Are you sure you want to Decline this request?');">Declined
                                                 </a>
-                                                <?php }  ?>
+                                                <?php 
+                                                } elseif( $request['type'] == "campus" ) {
+                                                    // Campus Leave: Read-only, no actions
+                                                    echo '<span class="text-muted"><i>Managed by Principal</i></span>';
+                                                }
+                                                ?>
                                             </td>
                                         </tr>
                                             <?php

@@ -185,8 +185,14 @@
                                                 </a>
                                                 <?php 
                                                 } elseif( $request['type'] == "campus" ) {
-                                                    // Campus Leave: Read-only, no actions
-                                                    echo '<span class="text-muted"><i>Managed by Principal</i></span>';
+                                                    // Campus Leave: Show status managed by Principal
+                                                    if( $request['status'] == "pending") {
+                                                        echo '<span class="text-warning"><i>Pending Principal Approval</i></span>';
+                                                    } elseif( $request['status'] == "approve") {
+                                                        echo '<span class="text-success"><i>Approved by Principal</i></span>';
+                                                    } elseif( $request['status'] == "denied") {
+                                                        echo '<span class="text-danger"><i>Declined by Principal</i></span>';
+                                                    }
                                                 }
                                                 ?>
                                             </td>

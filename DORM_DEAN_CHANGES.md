@@ -500,16 +500,22 @@ All file changes are listed in sequential order from the top of the file to the 
                                                 </a>
                                                 <?php 
                                                 } elseif( $request['type'] == "campus" ) {
-                                                    // Campus Leave: Read-only, no actions
-                                                    echo '<span class="text-muted"><i>Managed by Principal</i></span>';
+                                                    // Campus Leave: Show status managed by Principal
+                                                    if( $request['status'] == "pending") {
+                                                        echo '<span class="text-warning"><i>Pending Principal Approval</i></span>';
+                                                    } elseif( $request['status'] == "approve") {
+                                                        echo '<span class="text-success"><i>Approved by Principal</i></span>';
+                                                    } elseif( $request['status'] == "denied") {
+                                                        echo '<span class="text-danger"><i>Declined by Principal</i></span>';
+                                                    }
                                                 }
                                                 ?>
 ```
 
-* **What Changed**: Restricted action links (Approve/Decline/Delete) so they do not show if the type is `'campus'`. Added an `elseif` block displaying `"Managed by Principal"` as plain text instead.
-* **Purpose**: Prevent Dorm Deans from managing Principal-level Campus Leaves.
-* **Layman's Explanation**: Hides the Delete, Approve, and Decline buttons for campus leave requests in the Dorm Dean's screen, replacing them with a message saying "Managed by Principal".
-* **Impact**: Ensures that only the Principal can approve or decline Campus Leaves, while still allowing the Dorm Dean to view them.
+* **What Changed**: Restricted action links (Approve/Decline/Delete) so they do not show if the type is `'campus'`. Added an `elseif` block displaying specific status messages showing whether the campus leave is pending, approved, or declined by the Principal.
+* **Purpose**: Prevent Dorm Deans from managing Principal-level Campus Leaves, while providing clear status information about where the request stands.
+* **Layman's Explanation**: Hides the Delete, Approve, and Decline buttons for campus leave requests in the Dorm Dean's screen, replacing them with dynamic indicators showing whether it's pending, approved, or declined by the Principal.
+* **Impact**: Ensures that only the Principal can approve or decline Campus Leaves, while allowing the Dorm Dean to monitor the exact progress of those requests.
 
 ---
 
@@ -763,7 +769,7 @@ Below is a non-technical summary of how the Dorm Dean portal behaved **originall
 | :--- | :--- | :--- |
 | **Page Loading Speed** | **Slow & Heavy**: Loading the page took a long time because the system downloaded thousands of student passes at once, occasionally causing lags. | **Fast & Light**: The system now loads records 15 at a time, resulting in immediate loading speeds. |
 | **Campus Passes Visibility** | **Hidden**: Campus pass requests were completely invisible to the Dorm Dean. | **Visible**: Campus passes are now listed alongside regular requests so the Dorm Dean has a complete view of student whereabouts. |
-| **Campus Passes Action** | **N/A** (Since they were completely hidden). | **Read-Only (Removed Action)**: The Dorm Dean can see Campus passes but cannot approve, decline, or delete them. Action buttons are hidden and replaced with the label: *"Managed by Principal"*. |
+| **Campus Passes Action** | **N/A** (Since they were completely hidden). | **Read-Only (Removed Action)**: The Dorm Dean can see Campus passes but cannot approve, decline, or delete them. Action buttons are hidden and replaced with dynamic status indicators showing whether they are pending, approved, or declined by the Principal. |
 | **Search Functionality** | **None**: No search input field existed to find records. | **Live Auto-suggest**: A search bar exists at the top. Typing shows student recommendations instantly. |
 | **Denied Status Label** | **Denied**: The red status badge for rejected gatepass requests displayed as "Denied". | **Declined**: The status badge is updated to display as "Declined" to maintain consistency. |
 | **Action Button Labels** | **Approved / Declined**: The buttons to process pending requests were labeled as "Approved" and "Declined". | **Approve / Decline**: The buttons are now labeled as "Approve" and "Decline" (verbs) to match action semantics. |

@@ -703,6 +703,31 @@ $(document).ready(function() {
 
 ---
 
+### 3.5 Status Display Label: Denied to Declined
+* **Session**: Thursday/Friday
+* **Type of Change**: Modified
+* **Lines Changed**: Lines 158-160 in Today's `LOCAL` (replaced line 159 in BACKUP)
+
+#### Before (Original BACKUP & Wednesday State)
+```php
+                                        } elseif( $request['status']  == "denied"){
+                                            $status_display = '<button class="btn btn-danger btn-xs">Denied</button';
+                                        }
+```
+
+#### After (Thursday/Friday State)
+```php
+                                        } elseif( $request['status']  == "denied"){
+                                            $status_display = '<button class="btn btn-danger btn-xs">Declined</button';
+                                        }
+```
+* **What Changed**: Updated the HTML status display helper logic. The button text for a gatepass with the `"denied"` status has been changed from `"Denied"` to `"Declined"`.
+* **Purpose**: Align the visible status badge label with the "Declined" state text used elsewhere in the application.
+* **Layman's Explanation**: Replaced the text "Denied" with "Declined" on the red status indicator badge for rejected requests.
+* **Impact**: Ensures consistency in terminology across the user interface.
+
+---
+
 ## 4. Before vs. After Summary (Layman's Terms)
 
 Below is a non-technical summary of how the Dorm Dean portal behaved **originally** compared to **today**:
@@ -713,3 +738,4 @@ Below is a non-technical summary of how the Dorm Dean portal behaved **originall
 | **Campus Passes Visibility** | **Hidden**: Campus pass requests were completely invisible to the Dorm Dean. | **Visible**: Campus passes are now listed alongside regular requests so the Dorm Dean has a complete view of student whereabouts. |
 | **Campus Passes Action** | **N/A** (Since they were completely hidden). | **Read-Only (Removed Action)**: The Dorm Dean can see Campus passes but cannot approve, decline, or delete them. Action buttons are hidden and replaced with the label: *"Managed by Principal"*. |
 | **Search Functionality** | **None**: No search input field existed to find records. | **Live Auto-suggest**: A search bar exists at the top. Typing shows student recommendations instantly. |
+| **Denied Status Label** | **Denied**: The red status badge for rejected gatepass requests displayed as "Denied". | **Declined**: The status badge is updated to display as "Declined" to maintain consistency. |

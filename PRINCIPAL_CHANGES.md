@@ -699,6 +699,31 @@ function exportTableToCSV(filename) {
 
 ---
 
+### 3.6 Status Display Label: Denied to Declined
+* **Session**: Thursday/Friday
+* **Type of Change**: Modified
+* **Lines Changed**: Lines 81-83 in Today's `LOCAL` (replaced line 82 in BACKUP)
+
+#### Before (Original BACKUP & Wednesday State)
+```php
+                                        } elseif( $request['status']  == "denied"){
+                                            $status_display = '<button class="btn btn-danger btn-xs">Denied</button';
+                                        }
+```
+
+#### After (Thursday/Friday State)
+```php
+                                        } elseif( $request['status']  == "denied"){
+                                            $status_display = '<button class="btn btn-danger btn-xs">Declined</button';
+                                        }
+```
+* **What Changed**: Updated the HTML status display helper logic. The button text for a gatepass with the `"denied"` status has been changed from `"Denied"` to `"Declined"`.
+* **Purpose**: Align the visible status badge label with the "Declined" state text used elsewhere in the application.
+* **Layman's Explanation**: Replaced the text "Denied" with "Declined" on the red status indicator badge for rejected requests.
+* **Impact**: Ensures consistency in terminology across the user interface.
+
+---
+
 ## 4. Before vs. After Summary (Layman's Terms)
 
 Below is a non-technical summary of how the Principal portal behaved **originally** compared to **today**:
@@ -710,3 +735,4 @@ Below is a non-technical summary of how the Principal portal behaved **originall
 | **Search Functionality** | **None**: No search input field existed to find records. | **Live Auto-suggest**: A search bar exists at the top. Typing shows student recommendations instantly. |
 | **Print Output Quality** | **Cluttered**: Printing would include sidebars, headers, and buttons on the paper page. | **Clean & Professional**: The print view hides side menus and buttons, showing only the student pass list. |
 | **Scope of campus records (Wednesday Separation)** | **Routine View (Duplicated)**: Principal saw all types of gatepasses (Regular, Emergency, Campus) but was restricted to one dorm building. | **Only Campus Leaves (Filtered)**: Swapped query to display ONLY Campus Leave requests across all dormitories (Regular and Emergency requests are completely removed). It is now fully searchable and paginated. |
+| **Denied Status Label** | **Denied**: The red status badge for rejected gatepass requests displayed as "Denied". | **Declined**: The status badge is updated to display as "Declined" to maintain consistency. |

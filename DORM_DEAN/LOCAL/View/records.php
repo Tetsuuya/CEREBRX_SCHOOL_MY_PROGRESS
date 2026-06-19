@@ -156,7 +156,7 @@
                                         } elseif( $request['status']  == "approve"){
                                             $status_display = '<button class="btn btn-success btn-xs">Approved</button';
                                         } elseif( $request['status']  == "denied"){
-                                            $status_display = '<button class="btn btn-danger btn-xs">Denied</button';
+                                            $status_display = '<button class="btn btn-danger btn-xs">Declined</button';
                                         }
                                         ?>
                                         <tr>

@@ -99,9 +99,9 @@
                                                 <?php if( $request['status'] == "pending"){  ?>
                                                 <a href="<?php echo base_url(); ?>principal/gatepass/delete_data/<?php echo $request['id']; ?>"class="btn btn-danger btn-xs"  data-toggle="tooltip" title="<?php echo $this->lang->line('delete'); ?>" onclick="return confirm('Are you sure you want to Delete this request?');">Delete
                                                 </a>
-                                                <a href="<?php echo base_url(); ?>principal/gatepass/approved_data/<?php echo $request['id']; ?>"class="btn btn-success btn-xs"  data-toggle="tooltip" title="Approve" onclick="return confirm('Are you sure you want to Approve this request?');">Approved
+                                                <a href="<?php echo base_url(); ?>principal/gatepass/approved_data/<?php echo $request['id']; ?>"class="btn btn-success btn-xs"  data-toggle="tooltip" title="Approve" onclick="return confirm('Are you sure you want to Approve this request?');">Approve
                                                 </a>
-                                                <a href="<?php echo base_url(); ?>principal/gatepass/declined_data/<?php echo $request['id']; ?>"class="btn btn-warning btn-xs"  data-toggle="tooltip" title="Declined" onclick="return confirm('Are you sure you want to Decline this request?');">Declined
+                                                <a href="<?php echo base_url(); ?>principal/gatepass/declined_data/<?php echo $request['id']; ?>"class="btn btn-warning btn-xs"  data-toggle="tooltip" title="Decline" onclick="return confirm('Are you sure you want to Decline this request?');">Decline
                                                 </a>
                                                 <?php }  ?>
                                             </td>

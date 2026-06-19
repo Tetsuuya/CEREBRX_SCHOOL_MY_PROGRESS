@@ -724,6 +724,33 @@ function exportTableToCSV(filename) {
 
 ---
 
+### 3.7 Action Buttons: Rename "Approved" and "Declined" to "Approve" and "Decline"
+* **Session**: Thursday/Friday
+* **Type of Change**: Modified
+* **Lines Changed**: Lines 102-105 in Today's `LOCAL` (replaced lines 102 and 104 in BACKUP)
+
+#### Before (Original BACKUP State)
+```php
+                                                <a href="<?php echo base_url(); ?>principal/gatepass/approved_data/<?php echo $request['id']; ?>"class="btn btn-success btn-xs"  data-toggle="tooltip" title="Approve" onclick="return confirm('Are you sure you want to Approve this request?');">Approved
+                                                </a>
+                                                <a href="<?php echo base_url(); ?>principal/gatepass/declined_data/<?php echo $request['id']; ?>"class="btn btn-warning btn-xs"  data-toggle="tooltip" title="Declined" onclick="return confirm('Are you sure you want to Decline this request?');">Declined
+                                                </a>
+```
+
+#### After (Thursday/Friday State)
+```php
+                                                <a href="<?php echo base_url(); ?>principal/gatepass/approved_data/<?php echo $request['id']; ?>"class="btn btn-success btn-xs"  data-toggle="tooltip" title="Approve" onclick="return confirm('Are you sure you want to Approve this request?');">Approve
+                                                </a>
+                                                <a href="<?php echo base_url(); ?>principal/gatepass/declined_data/<?php echo $request['id']; ?>"class="btn btn-warning btn-xs"  data-toggle="tooltip" title="Decline" onclick="return confirm('Are you sure you want to Decline this request?');">Decline
+                                                </a>
+```
+* **What Changed**: Renamed the button label string from `"Approved"` to `"Approve"`, and `"Declined"` to `"Decline"`. Also updated the tooltip title from `"Declined"` to `"Decline"`.
+* **Purpose**: Make the action text verb-based (matching "Delete") rather than adjective-based, which is more intuitive for buttons performing an action.
+* **Layman's Explanation**: The buttons to accept or reject requests now read "Approve" and "Decline" instead of "Approved" and "Declined".
+* **Impact**: Cleaner and more consistent terminology for action buttons.
+
+---
+
 ## 4. Before vs. After Summary (Layman's Terms)
 
 Below is a non-technical summary of how the Principal portal behaved **originally** compared to **today**:
@@ -736,3 +763,4 @@ Below is a non-technical summary of how the Principal portal behaved **originall
 | **Print Output Quality** | **Cluttered**: Printing would include sidebars, headers, and buttons on the paper page. | **Clean & Professional**: The print view hides side menus and buttons, showing only the student pass list. |
 | **Scope of campus records (Wednesday Separation)** | **Routine View (Duplicated)**: Principal saw all types of gatepasses (Regular, Emergency, Campus) but was restricted to one dorm building. | **Only Campus Leaves (Filtered)**: Swapped query to display ONLY Campus Leave requests across all dormitories (Regular and Emergency requests are completely removed). It is now fully searchable and paginated. |
 | **Denied Status Label** | **Denied**: The red status badge for rejected gatepass requests displayed as "Denied". | **Declined**: The status badge is updated to display as "Declined" to maintain consistency. |
+| **Action Button Labels** | **Approved / Declined**: The buttons to process pending requests were labeled as "Approved" and "Declined". | **Approve / Decline**: The buttons are now labeled as "Approve" and "Decline" (verbs) to match action semantics. |

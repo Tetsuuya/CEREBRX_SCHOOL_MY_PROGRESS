@@ -246,7 +246,38 @@ All file changes are listed in sequential order from the top of the file to the 
 *(Omitted - Method did not exist)*
 
 #### After (Thursday/Friday State)
-*(See Gatepass_model.php source code: counts total active records filtering by search parameter)*
+```php
+    public function getactiverecords_count( $dormdean_id, $session_id, $search = null ){
+        $this->db->from('gatepass');
+        $this->db->join('students', 'gatepass.student_id = students.id ', 'left');
+        $this->db->join('hostel_rooms', 'hostel_rooms.id = gatepass.room_id', 'left'); 
+        $this->db->join('hostel', 'hostel.id = hostel_rooms.hostel_id', 'left');  
+        $this->db->where('gatepass.session_id', $session_id);
+        $this->db->where('gatepass.deleted', '0');
+        $this->db->where('hostel.dormdean_id', $dormdean_id);
+        // REMOVED filter: Count ALL types
+        
+        // Search filter - Search multiple fields with starts-with priority
+        if ($search !== null && $search !== '') {
+            $starts_with = $this->db->escape_like_str($search) . '%';
+            $contains = '%' . $this->db->escape_like_str($search) . '%';
+            
+            // Search by lastname, firstname (starts with OR contains), purpose, destination, status, type
+            $this->db->group_start();
+            $this->db->where("students.lastname LIKE '$starts_with'");
+            $this->db->or_where("students.firstname LIKE '$starts_with'");
+            $this->db->or_where("students.lastname LIKE '$contains'");
+            $this->db->or_where("students.firstname LIKE '$contains'");
+            $this->db->or_where("gatepass.purpose LIKE '$contains'");
+            $this->db->or_where("gatepass.destination LIKE '$contains'");
+            $this->db->or_where("gatepass.status LIKE '$contains'");
+            $this->db->or_where("gatepass.type LIKE '$contains'");
+            $this->db->group_end();
+        }
+        
+        return $this->db->count_all_results();
+    }
+```
 * **What Changed**: Implemented a matching method that counts the total quantity of active requests (applying search filters) without loading the full row contents.
 * **Purpose**: Provide total match counts to the pagination system to compute total pages.
 * **Layman's Explanation**: Added a helper that counts matching database rows so the system knows how many total pages to show.
@@ -263,7 +294,80 @@ All file changes are listed in sequential order from the top of the file to the 
 *(Omitted - Method did not exist)*
 
 #### After (Thursday/Friday State)
-*(See Gatepass_model.php source code: filters for `type = 'campus'` and removes the `hostel.dormdean_id` constraint, plus paging and search)*
+```php
+    public function getactivecampusrecords( $dormdean_id, $session_id, $limit = null, $offset = 0, $search = null ){
+        $this->db->select('gatepass.*'); 
+        $this->db->select('hostel.hostel_name');
+        $this->db->select('hostel_rooms.room_no'); 
+        $this->db->select('hostel_rooms.room_type_id');
+        $this->db->select('room_types.room_type'); 
+        $this->db->select('students.lastname');
+        $this->db->select('students.firstname'); 
+        $this->db->select('students.middlename');
+        $this->db->select('students.mobileno');
+        $this->db->select('students.guardian_name');
+        $this->db->select('students.guardian_midname');
+        $this->db->select('students.guardian_lastname');
+        $this->db->select('students.guardian_phone');
+        $this->db->select('students.guardian_address');
+        $this->db->select('students.guardian_address2');
+        $this->db->from('gatepass');
+        $this->db->join('students', 'gatepass.student_id = students.id ', 'left'); 
+        $this->db->join('hostel_rooms', 'hostel_rooms.id = gatepass.room_id', 'left'); 
+        $this->db->join('room_types', 'room_types.id = hostel_rooms.room_type_id', 'left'); 
+        $this->db->join('hostel', 'hostel.id = hostel_rooms.hostel_id', 'left');  
+        $this->db->where('gatepass.session_id', $session_id);
+        $this->db->where('gatepass.deleted', '0');
+        // REMOVED: $this->db->where('hostel.dormdean_id', $dormdean_id); 
+        // Principal now sees Campus Leave from ALL dorms
+        $this->db->where('gatepass.type', 'campus'); // Show ONLY Campus Leave type
+        
+        // Search filter - Search multiple fields with starts-with priority
+        if ($search !== null && $search !== '') {
+            $starts_with = $this->db->escape_like_str($search) . '%';
+            $contains = '%' . $this->db->escape_like_str($search) . '%';
+            
+            // Search by lastname, firstname (starts with OR contains), purpose, destination, status, type
+            $this->db->group_start();
+            $this->db->where("students.lastname LIKE '$starts_with'");
+            $this->db->or_where("students.firstname LIKE '$starts_with'");
+            $this->db->or_where("students.lastname LIKE '$contains'");
+            $this->db->or_where("students.firstname LIKE '$contains'");
+            $this->db->or_where("gatepass.purpose LIKE '$contains'");
+            $this->db->or_where("gatepass.destination LIKE '$contains'");
+            $this->db->or_where("gatepass.status LIKE '$contains'");
+            $this->db->or_where("gatepass.type LIKE '$contains'");
+            $this->db->group_end();
+        }
+        
+        // Ordering: Priority to "starts with" name matches first
+        if ($search !== null && $search !== '') {
+            // Show "starts with" lastname first, then "starts with" firstname, then contains
+            $this->db->order_by("CASE 
+                WHEN students.lastname LIKE '$starts_with' THEN 1 
+                WHEN students.firstname LIKE '$starts_with' THEN 2
+                WHEN students.lastname LIKE '$contains' THEN 3
+                WHEN students.firstname LIKE '$contains' THEN 4
+                WHEN gatepass.purpose LIKE '$contains' THEN 5
+                WHEN gatepass.destination LIKE '$contains' THEN 6
+                ELSE 7 
+            END", '', FALSE);
+            // Sort alphabetically within the same priority group
+            $this->db->order_by('students.lastname', 'ASC');
+            $this->db->order_by('students.firstname', 'ASC');
+        }
+        $this->db->order_by('gatepass.status', 'DESC');
+        $this->db->order_by('gatepass.created_at', 'ASC');
+        $this->db->order_by('gatepass.exit_date', 'ASC');
+        
+        if ($limit !== null) {
+            $this->db->limit($limit, $offset);
+        }
+        
+        $query = $this->db->get();
+        return $query->result_array(); 
+    }
+```
 * **What Changed**: 
   1. *Wednesday*: Added new method to query ONLY Campus Leaves (`type = 'campus'`) school-wide (removed the `dormdean_id` filter).
   2. *Thursday/Friday*: Added pagination limits and offsets, multi-field search conditions, and custom priority sorting to the method.
@@ -282,7 +386,39 @@ All file changes are listed in sequential order from the top of the file to the 
 *(Omitted - Method did not exist)*
 
 #### After (Thursday/Friday State)
-*(See Gatepass_model.php count query: counts total active campus leaves filtering by search parameter)*
+```php
+    public function getactivecampusrecords_count( $dormdean_id, $session_id, $search = null ){
+        $this->db->from('gatepass');
+        $this->db->join('students', 'gatepass.student_id = students.id ', 'left');
+        $this->db->join('hostel_rooms', 'hostel_rooms.id = gatepass.room_id', 'left'); 
+        $this->db->join('hostel', 'hostel.id = hostel_rooms.hostel_id', 'left');  
+        $this->db->where('gatepass.session_id', $session_id);
+        $this->db->where('gatepass.deleted', '0');
+        // REMOVED: $this->db->where('hostel.dormdean_id', $dormdean_id); 
+        // Principal sees Campus Leave from ALL dorms
+        $this->db->where('gatepass.type', 'campus');
+        
+        // Search filter - Search multiple fields with starts-with priority
+        if ($search !== null && $search !== '') {
+            $starts_with = $this->db->escape_like_str($search) . '%';
+            $contains = '%' . $this->db->escape_like_str($search) . '%';
+            
+            // Search by lastname, firstname (starts with OR contains), purpose, destination, status, type
+            $this->db->group_start();
+            $this->db->where("students.lastname LIKE '$starts_with'");
+            $this->db->or_where("students.firstname LIKE '$starts_with'");
+            $this->db->or_where("students.lastname LIKE '$contains'");
+            $this->db->or_where("students.firstname LIKE '$contains'");
+            $this->db->or_where("gatepass.purpose LIKE '$contains'");
+            $this->db->or_where("gatepass.destination LIKE '$contains'");
+            $this->db->or_where("gatepass.status LIKE '$contains'");
+            $this->db->or_where("gatepass.type LIKE '$contains'");
+            $this->db->group_end();
+        }
+        
+        return $this->db->count_all_results();
+    }
+```
 * **What Changed**: Created a matching counter method for the Campus Leave query.
 * **Purpose**: Calculate total pages specifically for the Campus Leave pagination bar.
 * **Layman's Explanation**: Counts total matching campus leaves to calculate the page count.
@@ -301,7 +437,31 @@ All file changes are listed in sequential order from the top of the file to the 
 *(Omitted - Panel did not exist)*
 
 #### After (Thursday/Friday State)
-*(See records.php code change)*
+```html
+                    <!-- Search Box Below Title -->
+                    <div style="padding: 10px 10px 5px 10px; background: #f9f9f9; border-bottom: 1px solid #ddd;">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <?php if (!empty($search)): ?>
+                                    <small class="text-muted" style="line-height: 30px;">Showing results for: <strong><?php echo htmlspecialchars($search); ?></strong></small>
+                                <?php endif; ?>
+                            </div>
+                            <div class="col-md-6 text-right">
+                                <div style="display: inline-block;">
+                                    <input type="text" id="search_input" class="form-control input-sm" placeholder="Search by lastname..." value="<?php echo htmlspecialchars(isset($search) ? $search : ''); ?>" autocomplete="off" style="width: 250px; height: 30px; display: inline-block;">
+                                    <button class="btn btn-primary btn-sm" type="button" id="search_button" style="height: 28px; padding: 5px 10px; margin-left: 5px;">
+                                        <i class="fa fa-search"></i> Search
+                                    </button>
+                                    <?php if (!empty($search)): ?>
+                                        <a href="<?php echo base_url('dormitorydean/gatepass/records'); ?>" class="btn btn-default btn-sm" style="height: 30px; padding: 5px 10px; margin-left: 5px;">Clear</a>
+                                    <?php endif; ?>
+                                </div>
+                                <div id="search_suggestions" style="position: absolute; z-index: 1000; background: white; border: 1px solid #ddd; display: none; max-height: 300px; overflow-y: auto; width: 250px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); margin-top: 2px; right: 10px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Search Box -->
+```
 * **What Changed**: Inserted search layout controls (input element, search button, clear button, and suggestions list dropdown) below the card header.
 * **Purpose**: Collect search queries.
 * **Layman's Explanation**: Placed a search bar at the top of the table.
@@ -362,7 +522,66 @@ All file changes are listed in sequential order from the top of the file to the 
 *(Omitted - Panel did not exist)*
 
 #### After (Thursday/Friday State)
-*(See Today's LOCAL View code: renders HTML pagination links that preserve current search settings)*
+```html
+                    <!-- Pagination -->
+                    <?php if (isset($total_pages) && $total_pages > 1): ?>
+                    <div class="box-footer clearfix">
+                        <ul class="pagination pagination-sm no-margin pull-right">
+                            <?php 
+                            $search_param = !empty($search) ? '&search=' . urlencode($search) : '';
+                            ?>
+                            <?php if ($current_page > 1): ?>
+                                <li><a href="<?php echo base_url('dormitorydean/gatepass/records?page=' . ($current_page - 1) . $search_param); ?>">«</a></li>
+                            <?php else: ?>
+                                <li class="disabled"><span>«</span></li>
+                            <?php endif; ?>
+                            
+                            <?php
+                            $start_page = max(1, $current_page - 2);
+                            $end_page = min($total_pages, $current_page + 2);
+                            
+                            if ($start_page > 1):
+                            ?>
+                                <li><a href="<?php echo base_url('dormitorydean/gatepass/records?page=1' . $search_param); ?>">1</a></li>
+                                <?php if ($start_page > 2): ?>
+                                    <li class="disabled"><span>...</span></li>
+                                <?php endif; ?>
+                            <?php endif; ?>
+                            
+                            <?php for ($i = $start_page; $i <= $end_page; $i++): ?>
+                                <?php if ($i == $current_page): ?>
+                                    <li class="active"><span><?php echo $i; ?></span></li>
+                                <?php else: ?>
+                                    <li><a href="<?php echo base_url('dormitorydean/gatepass/records?page=' . $i . $search_param); ?>"><?php echo $i; ?></a></li>
+                                <?php endif; ?>
+                            <?php endfor; ?>
+                            
+                            <?php if ($end_page < $total_pages): ?>
+                                <?php if ($end_page < $total_pages - 1): ?>
+                                    <li class="disabled"><span>...</span></li>
+                                <?php endif; ?>
+                                <li><a href="<?php echo base_url('dormitorydean/gatepass/records?page=' . $total_pages . $search_param); ?>"><?php echo $total_pages; ?></a></li>
+                            <?php endif; ?>
+                            
+                            <?php if ($current_page < $total_pages): ?>
+                                <li><a href="<?php echo base_url('dormitorydean/gatepass/records?page=' . ($current_page + 1) . $search_param); ?>">»</a></li>
+                            <?php else: ?>
+                                <li class="disabled"><span>»</span></li>
+                            <?php endif; ?>
+                        </ul>
+                        
+                        <div class="pull-left">
+                            Showing <?php echo (($current_page - 1) * 15 + 1); ?> 
+                            to <?php echo min($current_page * 15, $total_records); ?> 
+                            of <?php echo $total_records; ?> entries
+                            <?php if (!empty($search)): ?>
+                                <span class="text-muted">(filtered from search)</span>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                    <?php endif; ?>
+                    <!-- End Pagination -->
+```
 * **What Changed**: Inserted pagination navigation controls to the box footer.
 * **Purpose**: Page navigation.
 * **Layman's Explanation**: Placed page numbers at the bottom of the list.
@@ -379,7 +598,104 @@ All file changes are listed in sequential order from the top of the file to the 
 *(Omitted - Scripts did not exist)*
 
 #### After (Thursday/Friday State)
-*(See Today's LOCAL View javascript blocks: destroys the DataTable library to avoid paging conflicts, registers suggestions triggers, and hooks click handlers)*
+```javascript
+// Destroy DataTables for this specific table to use server-side pagination
+$(document).ready(function() {
+    var table = $('.example');
+    if ($.fn.DataTable && $.fn.DataTable.isDataTable(table)) {
+        table.DataTable().destroy();
+    }
+    
+    // Live search with autocomplete
+    var searchTimeout;
+    var $searchInput = $('#search_input');
+    var $searchButton = $('#search_button');
+    var $suggestions = $('#search_suggestions');
+    
+    // Function to perform search
+    function performSearch() {
+        var searchTerm = $searchInput.val().trim();
+        if (searchTerm.length > 0) {
+            window.location.href = '<?php echo base_url('dormitorydean/gatepass/records?search='); ?>' + encodeURIComponent(searchTerm);
+        }
+    }
+    
+    // Search button click handler
+    $searchButton.on('click', function() {
+        performSearch();
+    });
+    
+    $searchInput.on('keyup', function() {
+        clearTimeout(searchTimeout);
+        var searchTerm = $(this).val().trim();
+        
+        if (searchTerm.length === 0) {
+            $suggestions.hide().empty();
+            return;
+        }
+        
+        // Show suggestions after user stops typing for 300ms
+        searchTimeout = setTimeout(function() {
+            $.ajax({
+                url: '<?php echo base_url('dormitorydean/gatepass/search_students'); ?>',
+                type: 'POST',
+                data: { search_term: searchTerm },
+                dataType: 'json',
+                success: function(response) {
+                    $suggestions.empty();
+                    
+                    if (response && response.length > 0) {
+                        var html = '<ul class="list-group" style="margin-bottom: 0;">';
+                        $.each(response, function(index, student) {
+                            var fullname = student.lastname + ', ' + student.firstname + ' ' + student.middlename;
+                            var exitDate = student.exit_date || 'N/A';
+                            var status = student.status || 'N/A';
+                            var type = student.type || 'N/A';
+                            
+                            html += '<li class="list-group-item" style="cursor: pointer; padding: 10px;" data-name="' + student.lastname + '">';
+                            html += '<strong>' + fullname + '</strong><br>';
+                            html += '<small>Exit: ' + exitDate + ' | Status: ' + status + ' | Type: ' + type + '</small>';
+                            html += '</li>';
+                        });
+                        html += '</ul>';
+                        
+                        $suggestions.html(html).show();
+                        
+                        // Handle suggestion click
+                        $suggestions.find('li').on('click', function() {
+                            var selectedName = $(this).data('name');
+                            $searchInput.val(selectedName);
+                            $suggestions.hide();
+                            // Trigger search
+                            window.location.href = '<?php echo base_url('dormitorydean/gatepass/records?search='); ?>' + encodeURIComponent(selectedName);
+                        });
+                    } else {
+                        $suggestions.html('<div class="alert alert-info" style="margin: 5px;">No students found</div>').show();
+                    }
+                },
+                error: function() {
+                    $suggestions.html('<div class="alert alert-danger" style="margin: 5px;">Error loading suggestions</div>').show();
+                }
+            });
+        }, 300);
+    });
+    
+    // Handle Enter key to search
+    $searchInput.on('keypress', function(e) {
+        if (e.which === 13) {
+            e.preventDefault();
+            performSearch();
+        }
+    });
+    
+    // Hide suggestions when clicking outside
+    $(document).on('click', function(e) {
+        if (!$(e.target).closest('#search_input, #search_suggestions').length) {
+            $suggestions.hide();
+        }
+    });
+});
+```
 * **What Changed**: Added jQuery autocomplete scripts.
 * **Purpose**: Capture typing triggers and query matching results.
 * **Layman's Explanation**: Captures user input to fetch matching names dynamically.

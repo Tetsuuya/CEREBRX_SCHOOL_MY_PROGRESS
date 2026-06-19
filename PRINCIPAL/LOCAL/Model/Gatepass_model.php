@@ -81,9 +81,10 @@ class Gatepass_model extends CI_Model {
         $this->db->where('gatepass.deleted', '0');
         $this->db->where('hostel.dormdean_id', $dormdean_id);
         // REMOVED filter: Show ALL types (Regular, Emergency, AND Campus Leave)
-        $this->db->order_by('gatepass.status', 'DESC');
-        $this->db->order_by('gatepass.created_at', 'ASC');
-        $this->db->order_by('gatepass.exit_date', 'ASC');
+        // Priority-based sorting: Pending first, then by most recent activity
+        $this->db->order_by("CASE gatepass.status WHEN 'pending' THEN 1 WHEN 'approve' THEN 2 WHEN 'denied' THEN 3 END", '', FALSE);
+        $this->db->order_by('gatepass.updated_at', 'DESC');
+        $this->db->order_by('gatepass.created_at', 'DESC');
         
         if ($limit !== null) {
             $this->db->limit($limit, $offset);
@@ -165,9 +166,10 @@ class Gatepass_model extends CI_Model {
             $this->db->order_by('students.lastname', 'ASC');
             $this->db->order_by('students.firstname', 'ASC');
         }
-        $this->db->order_by('gatepass.status', 'DESC');
-        $this->db->order_by('gatepass.created_at', 'ASC');
-        $this->db->order_by('gatepass.exit_date', 'ASC');
+        // Priority-based sorting: Pending first, then by most recent activity
+        $this->db->order_by("CASE gatepass.status WHEN 'pending' THEN 1 WHEN 'approve' THEN 2 WHEN 'denied' THEN 3 END", '', FALSE);
+        $this->db->order_by('gatepass.updated_at', 'DESC');
+        $this->db->order_by('gatepass.created_at', 'DESC');
         
         if ($limit !== null) {
             $this->db->limit($limit, $offset);
@@ -235,8 +237,9 @@ class Gatepass_model extends CI_Model {
         $this->db->where('gatepass.status', 'approve');
         $this->db->where('hostel.dormdean_id', $dormdean_id);
         $this->db->where('gatepass.deleted', '0');
-        $this->db->order_by('gatepass.status', 'DESC');
-        $this->db->order_by('gatepass.created_at', 'ASC');
+        // Priority-based sorting: Most recent activity first
+        $this->db->order_by('gatepass.updated_at', 'DESC');
+        $this->db->order_by('gatepass.created_at', 'DESC');
         $this->db->order_by('gatepass.exit_date', 'ASC');
         $query = $this->db->get();
         return $query->result_array(); 
@@ -267,8 +270,9 @@ class Gatepass_model extends CI_Model {
         $this->db->where('gatepass.session_id', $session_id); 
         $this->db->where('gatepass.student_id', $student_id);
         $this->db->where('gatepass.deleted', '0');
-        $this->db->order_by('gatepass.status', 'DESC');
-        $this->db->order_by('gatepass.created_at', 'ASC');
+        // Priority-based sorting: Most recent activity first
+        $this->db->order_by('gatepass.updated_at', 'DESC');
+        $this->db->order_by('gatepass.created_at', 'DESC');
         $this->db->order_by('gatepass.exit_date', 'ASC');
         $query = $this->db->get();
         return $query->result_array(); 

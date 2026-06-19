@@ -426,6 +426,34 @@ All file changes are listed in sequential order from the top of the file to the 
 
 ---
 
+### 2.5 Dynamic Sorting by Pending Status and Activity Recency
+* **Session**: Thursday/Friday
+* **Type of Change**: Modified
+* **Lines Changed**: 
+  * `DORM_DEAN/LOCAL/Model/Gatepass_model.php`: Lines 119-122, 223-226, 293-295, 325-327
+  * `PRINCIPAL/LOCAL/Model/Gatepass_model.php`: Lines 84-87, 168-171, 238-240, 270-272
+
+#### Before (Original BACKUP State)
+```php
+        $this->db->order_by('gatepass.status', 'DESC');
+        $this->db->order_by('gatepass.created_at', 'ASC');
+        $this->db->order_by('gatepass.exit_date', 'ASC');
+```
+
+#### After (Thursday/Friday State)
+```php
+        // Priority-based sorting: Pending first, then by most recent activity
+        $this->db->order_by("CASE gatepass.status WHEN 'pending' THEN 1 WHEN 'approve' THEN 2 WHEN 'denied' THEN 3 END", '', FALSE);
+        $this->db->order_by('gatepass.updated_at', 'DESC');
+        $this->db->order_by('gatepass.created_at', 'DESC');
+```
+* **What Changed**: Modified the `ORDER BY` sorting clauses in the query methods of `Gatepass_model`. Instead of sorting status descending alphabetically and exit date ascending, requests are sorted dynamically: "pending" requests are prioritized first, followed by most recently updated (`updated_at` DESC) and created (`created_at` DESC) requests.
+* **Purpose**: Make sure that active/pending requests that need attention appear at the very top of the list, and recently processed or submitted requests are shown first.
+* **Layman's Explanation**: Gatepass requests waiting for approval now show up at the top of the table. Once processed, the most recently updated entries are listed first.
+* **Impact**: Improves the workflow efficiency of the Dorm Dean and Principal by ensuring they do not have to search/scroll to find new or recently updated requests.
+
+---
+
 ## 3. View - View/records.php
 
 ### 3.1 Inserted Search Bar Interface
@@ -773,3 +801,4 @@ Below is a non-technical summary of how the Dorm Dean portal behaved **originall
 | **Search Functionality** | **None**: No search input field existed to find records. | **Live Auto-suggest**: A search bar exists at the top. Typing shows student recommendations instantly. |
 | **Denied Status Label** | **Denied**: The red status badge for rejected gatepass requests displayed as "Denied". | **Declined**: The status badge is updated to display as "Declined" to maintain consistency. |
 | **Action Button Labels** | **Approved / Declined**: The buttons to process pending requests were labeled as "Approved" and "Declined". | **Approve / Decline**: The buttons are now labeled as "Approve" and "Decline" (verbs) to match action semantics. |
+| **Record Sorting Priority** | **Exit Date / Created At**: Sorted strictly by exit dates or the date the pass was originally created. | **Pending & Recently Updated First**: "Pending" requests are pinned to the top, and processed requests are ordered by the most recent updates (`updated_at` / `created_at` DESC). |

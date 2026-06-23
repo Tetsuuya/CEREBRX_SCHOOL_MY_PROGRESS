@@ -116,8 +116,8 @@ class Gatepass_model extends CI_Model {
             $this->db->order_by('students.lastname', 'ASC');
             $this->db->order_by('students.firstname', 'ASC');
         }
-        // Priority-based sorting: Pending first, then by most recent activity
-        $this->db->order_by("CASE gatepass.status WHEN 'pending' THEN 1 WHEN 'approve' THEN 2 WHEN 'denied' THEN 3 END", '', FALSE);
+        // Pending first, then sort approved/declined by recent activity
+        $this->db->order_by("CASE WHEN gatepass.status = 'pending' THEN 0 ELSE 1 END", '', FALSE);
         $this->db->order_by('gatepass.updated_at', 'DESC');
         $this->db->order_by('gatepass.created_at', 'DESC');
         
@@ -221,8 +221,8 @@ class Gatepass_model extends CI_Model {
             $this->db->order_by('students.lastname', 'ASC');
             $this->db->order_by('students.firstname', 'ASC');
         }
-        // Priority-based sorting: Pending first, then by most recent activity
-        $this->db->order_by("CASE gatepass.status WHEN 'pending' THEN 1 WHEN 'approve' THEN 2 WHEN 'denied' THEN 3 END", '', FALSE);
+        // Pending first, then sort approved/declined by recent activity
+        $this->db->order_by("CASE WHEN gatepass.status = 'pending' THEN 0 ELSE 1 END", '', FALSE);
         $this->db->order_by('gatepass.updated_at', 'DESC');
         $this->db->order_by('gatepass.created_at', 'DESC');
         

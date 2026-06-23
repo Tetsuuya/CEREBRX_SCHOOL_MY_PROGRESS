@@ -280,15 +280,7 @@
 					<i class="fa fa-map-o"></i> <span><?php echo $this->lang->line('grades'); ?></span> <i class="fa fa-angle-left pull-right"></i>
 				</a>
 				<ul class="treeview-menu">
-                   <?php 
-                    $setting_result = $this->setting_model->get();
-                    $import_grade_settings = $setting_result[0]['import_grade'];
-                    if( $import_grade_settings == 'yes' ){
-                      ?>
-                      <li class="<?php echo set_Submenu('import/index'); ?>"><a href="<?php echo base_url(); ?>teacher/grade/import"><i class="fa fa-angle-double-right"></i> Import Grades</a></li>
-                      <?php 
-                    }
-                    ?>
+                   <li class="<?php echo set_Submenu('import/index'); ?>"><a href="<?php echo base_url(); ?>teacher/grade/import"><i class="fa fa-angle-double-right"></i> Import Grades</a></li>
 					<li class="<?php echo set_Submenu('importcustom/index'); ?>"><a href="<?php echo base_url(); ?>teacher/grade/importcustomgrade"><i class="fa fa-angle-double-right"></i> Import Custom Grades</a></li>
 				    <li class="<?php echo set_Submenu('grade/imported'); ?>"><a href="<?php echo base_url(); ?>teacher/grade/imported"><i class="fa fa-angle-double-right"></i> Imported Grades</a></li>
 					<li class="<?php echo set_Submenu('conduct/import'); ?>"><a href="<?php echo base_url(); ?>teacher/conduct/import"><i class="fa fa-angle-double-right"></i> Import Conduct</a></li> 

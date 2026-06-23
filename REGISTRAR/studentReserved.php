@@ -10,6 +10,13 @@ input[type="text"], input[type="password"], input[type="tel"] {
 
 }
 
+input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
+}
+input[type=number] {
+		-moz-appearance: textfield;
+}
 </style>
 
 <div class="content-wrapper">  
@@ -699,7 +706,7 @@ input[type="text"], input[type="password"], input[type="tel"] {
 
 									<label for="exampleInputEmail1"><?php echo $this->lang->line('lrn'); ?></label>
 
-									<input id="lrn" name="lrn" placeholder="Enter LRN" type="text" class="form-control input-lg"  value="<?php echo set_value('lrn'); ?>" />
+									<input id="lrn" name="lrn" type="number" class="form-control input-lg" value="<?php echo set_value('lrn'); ?>" placeholder="0000 0000 0000" />
 
 									<span class="text-danger"><?php echo form_error('lrn'); ?></span>
 
@@ -1568,7 +1575,7 @@ input[type="text"], input[type="password"], input[type="tel"] {
 
                 <label class="title">Religion</label>
 
-                <input type="text" id="display_religion" name="display_religion" class="form-username form-control"   disabled="disabled" /> 
+                <input type="text" id="display_religion" name="display_religion" class="form-username form-control" /> 
 
             </div> 
 
@@ -1576,7 +1583,10 @@ input[type="text"], input[type="password"], input[type="tel"] {
 
 				<label class="title">If Baptized?</label>
 
-				<input type="text" id="display_baptized" name="display_baptized" class="form-username form-control" disabled="disabled"  /> 
+				<select id="display_baptized" name="display_baptized" class="form-username form-control">
+					<option value="yes">Yes</option>
+					<option value="no">No</option>
+				</select>
 
 			</div> 
 
@@ -1584,7 +1594,7 @@ input[type="text"], input[type="password"], input[type="tel"] {
 
 				<label class="title">Year Baptized</label>
 
-				<input type="text" id="display_year_baptized" name="display_year_baptized" class="form-username form-control" disabled="disabled"  /> 
+				<input type="text" id="display_year_baptized" name="display_year_baptized" class="form-username form-control"  /> 
 
 			</div>
 
@@ -1620,7 +1630,7 @@ input[type="text"], input[type="password"], input[type="tel"] {
 
                 <label class="title">Email Address</label>
 
-                <input type="text" id="display_email" name="display_email" class="form-username form-control" disabled="disabled"  /> 
+                <input type="text" id="display_email" name="display_email" class="form-username form-control"  /> 
 
             </div>
 
@@ -1662,7 +1672,7 @@ input[type="text"], input[type="password"], input[type="tel"] {
 
 				<label class="title">Name</label>
 
-				<input type="text" id="display_guardianfirst" name="display_guardianfirst" class="form-username form-control" disabled="disabled" /> 
+				<input type="text" id="display_guardianfirst" name="display_guardianfirst" class="form-username form-control" /> 
 
 			</div>
 
@@ -1670,7 +1680,7 @@ input[type="text"], input[type="password"], input[type="tel"] {
 
 				<label class="title">Middle Name</label>
 
-				<input type="text" id="display_guardianmiddlename" name="display_guardianmiddlename" class="form-username form-control" disabled="disabled"  /> 
+				<input type="text" id="display_guardianmiddlename" name="display_guardianmiddlename" class="form-username form-control"  /> 
 
 			</div>
 
@@ -1678,7 +1688,7 @@ input[type="text"], input[type="password"], input[type="tel"] {
 
 				<label class="title">Last Name</label>
 
-				<input type="text" id="display_guardianlastname" name="display_guardianlastname" class="form-username form-control" disabled="disabled"  />  
+				<input type="text" id="display_guardianlastname" name="display_guardianlastname" class="form-username form-control" />  
 
 			</div> 
 
@@ -1698,7 +1708,7 @@ input[type="text"], input[type="password"], input[type="tel"] {
 
 				<label class="title">Relation</label>
 
-				<input type="text" id="display_relation" name="display_relation" class="form-username form-control" disabled="disabled"  /> 
+				<input type="text" id="display_relation" name="display_relation" class="form-username form-control"  /> 
 
 			</div> 
 
@@ -1706,7 +1716,7 @@ input[type="text"], input[type="password"], input[type="tel"] {
 
                 <label class="title">Guardian Address</label>
 
-                <input type="text" id="display_address" name="display_address" class="form-username form-control" disabled="disabled"  /> 
+                <input type="text" id="display_address" name="display_address" class="form-username form-control" /> 
 
             </div> 
 
@@ -1722,11 +1732,11 @@ input[type="text"], input[type="password"], input[type="tel"] {
 
             </div> 
 
-            <div class="col-md-6" id="display_institution_area" style="display: none;">
+            <div class="col-md-6" id="display_institution_area">
 
                 <label class="title">Name of Institution</label>
 
-                <input type="text" id="display_institution" name="display_institution" class="form-username form-control" disabled="disabled"  /> 
+                <input type="text" id="display_institution" name="display_institution" class="form-username form-control"  /> 
 
             </div> 
 
@@ -1876,41 +1886,26 @@ $(document).on('click', '.click_modal', function (e) {
                 var year_baptism = json.year_baptism;
 
                 if( subsidized == 'yes'){
-
-                     $('#display_institution').val(json.institution); 
-
-                     $('#display_institution_area').show(); 
-
+                     $('#display_institution').val(json.institution ? json.institution : "N/A"); 
                 } else {
-
-                    $('#display_institution_area').hide(); 
-
+                     $('#display_institution').val("N/A"); 
                 }
 
-
-
-                 if( if_adventist == 'yes'){
-
-                     $('#display_baptized').val(json.if_adventist); 
-
-                     $('#display_year_baptized_area').show(); 
-
+                var is_baptized = json.if_adventist ? json.if_adventist.toLowerCase() : "no";
+                $('#display_baptized').val(is_baptized); 
+                // store the original database year 
+                var original_year = json.year_baptism ? json.year_baptism : "";
+                $('#display_year_baptized').data('original-year', original_year);
+                if( is_baptized === 'yes' ){
+                     $('#display_year_baptized').val(original_year);
+                     $('#display_year_baptized').prop('disabled', false); 
                 } else {
-
-                    $('#display_institution_area').hide(); 
-
+                     $('#display_year_baptized').val("N/A");
+                     $('#display_year_baptized').prop('disabled', true); 
                 }
-
-
-
-
 
                 $('#display_type').val(type.toUpperCase());
-
                
-
-                
-
                 if( lrn == null ){  
 
                      $('#display_lrn').val("N/A");
@@ -2826,9 +2821,24 @@ $(document).ready(function () {
 
 	}
 
-	
+	$(document).on('change', '#display_baptized', function() {
+		var val = $(this).val();
+		if (val === 'yes') {
+			$('#display_year_baptized').prop('disabled', false);
+			// retrieve and restore the original year
+			var originalYear = $('#display_year_baptized').data('original-year') || '';
+			$('#display_year_baptized').val(originalYear);
+		} else {
+			$('#display_year_baptized').prop('disabled', true);
+			$('#display_year_baptized').val('N/A');
+		}
+	});
 
-
+	$(document).on('input', '#display_lrn', function() {
+		if (this.value !== 'N/A') {
+			this.value = this.value.replace(/[^0-9]/g, '');
+		}
+	});
 
 </script>
 

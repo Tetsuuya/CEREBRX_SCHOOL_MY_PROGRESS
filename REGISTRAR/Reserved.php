@@ -505,6 +505,12 @@ class reserved extends CI_Controller {
 						$payment_link = $reserved_details['payment_link'];
 						$email_address = $reserved_details['email_address'];
 						$modality = $reserved_details['modality'];
+						// missing fields
+						$subsidized = $reserved_details['subsidized'];
+						$institution = $reserved_details['institution'];
+						$if_adventist = $reserved_details['if_adventist'];
+						$year_baptism = $reserved_details['year_baptism'];
+						$lrn = $reserved_details['lrn'];
 						
 						if( $status == 'reserved'){	
 							$type = $reserved_details['type'];
@@ -568,6 +574,22 @@ class reserved extends CI_Controller {
 								}
 								if( $email_address ){
 									$data1 = array_merge( $data1, array('email' => $email_address ));
+								}
+								// missing fields
+								if( $subsidized ){
+									$data1 = array_merge( $data1, array('subsidized' => $subsidized ));
+								}
+								if( $institution ){
+									$data1 = array_merge( $data1, array('institution' => $institution ));
+								}
+								if( $if_adventist ){
+									$data1 = array_merge( $data1, array('if_adventist' => $if_adventist ));
+								}
+								if( $year_baptism ){
+									$data1 = array_merge( $data1, array('year_baptism' => $year_baptism ));
+								}
+								if( $lrn ){
+									$data1 = array_merge( $data1, array('lrn' => $lrn ));
 								}
 								
 								$student_id = $this->student_model->add($data1);
@@ -735,6 +757,22 @@ class reserved extends CI_Controller {
 									}
 									if( $email_address ){
 										$update_old_data = array_merge( $update_old_data, array('email' => $email_address ) );
+									}
+									// missing fields
+									if( $subsidized ){
+										$update_old_data = array_merge( $update_old_data, array('subsidized' => $subsidized ));
+									}
+									if( $institution ){
+										$update_old_data = array_merge( $update_old_data, array('institution' => $institution ));
+									}
+									if( $if_adventist ){
+										$update_old_data = array_merge( $update_old_data, array('if_adventist' => $if_adventist ));
+									}
+									if( $year_baptism ){
+										$update_old_data = array_merge( $update_old_data, array('year_baptism' => $year_baptism ));
+									}
+									if( $lrn ){
+										$update_old_data = array_merge( $update_old_data, array('lrn' => $lrn ));
 									}
 									$update_student = $this->student_model->add($update_old_data);
 									$this->delete( $student_get_id );
@@ -1564,7 +1602,36 @@ class reserved extends CI_Controller {
 		if( $reserved_details  ){
 			if( isset( $reserved_details['student_id'] ) && $reserved_details['student_id'] ){
 				$reserved_details = $this->reserved_students_model->get( $id );
-				
+				$student_basic = $this->student_model->get( $reserved_details['student_id'] );
+				if( $student_basic ){
+					if( empty( $reserved_details['lrn'] ) || $reserved_details['lrn'] == 'N/A' ) {
+						$reserved_details['lrn'] = $student_basic['lrn'];
+					}
+					if( empty( $reserved_details['religion'] ) ) {
+						$reserved_details['religion'] = $student_basic['religion'];
+					}
+					if( empty( $reserved_details['email_address'] ) || $reserved_details['email_address'] == 'N/A' ) {
+						$reserved_details['email_address'] = $student_basic['email'];
+					}
+					if( empty( $reserved_details['guardian_name'] ) ) {
+						$reserved_details['guardian_name'] = $student_basic['guardian_name'];
+					}
+					if( empty( $reserved_details['guardian_midname'] ) ) {
+						$reserved_details['guardian_midname'] = $student_basic['guardian_midname'];
+					}
+					if( empty( $reserved_details['guardian_lastname'] ) ) {
+						$reserved_details['guardian_lastname'] = $student_basic['guardian_lastname'];
+					}
+					if( empty( $reserved_details['guardian_phone'] ) ) {
+						$reserved_details['guardian_phone'] = $student_basic['guardian_phone'];
+					}
+					if( empty( $reserved_details['guardian_relation'] ) ) {
+						$reserved_details['guardian_relation'] = $student_basic['guardian_relation'];
+					}
+					if( empty( $reserved_details['guardian_address'] ) ) {
+						$reserved_details['guardian_address'] = $student_basic['guardian_address'];
+					}
+				}
 			} 
 		}
 
@@ -1930,6 +1997,9 @@ class reserved extends CI_Controller {
 						if( $year_baptism ){
 							$update_old_data = array_merge( $update_old_data, array('year_baptism' => $year_baptism ));
 						}
+						if( $lrn ){
+							$update_old_data = array_merge( $update_old_data, array('lrn' => $lrn ));
+						}
 						$update_student = $this->student_model->add($update_old_data);
 						$this->delete( $student_get_id );
 						//$student_details = $this->student_model->get( $student_id );
@@ -2215,6 +2285,23 @@ class reserved extends CI_Controller {
 			$display_lastname = $this->input->post('display_lastname');
 			$display_suffix = $this->input->post('display_suffix');
 			$display_guardiannumber = $this->input->post('display_guardiannumber');
+			
+			$display_religion = $this->input->post('display_religion');
+			$display_baptized = $this->input->post('display_baptized');
+			$display_year_baptized = $this->input->post
+			('display_year_baptized');
+			
+			$display_email = $this->input->post('display_email');
+			$display_lrn = $this->input->post('display_lrn');
+			$display_guardianfirst = $this->input->post('display_guardianfirst');
+			
+			$display_guardianmiddlename = $this->input->post('display_guardianmiddlename');
+			
+			$display_guardianlastname = $this->input->post('display_guardianlastname');
+			
+			$display_relation = $this->input->post('display_relation');
+			$display_address = $this->input->post('display_address');
+			$display_institution = $this->input->post('display_institution');
 
 			$data  = array(
 				'id' => $id,
@@ -2223,10 +2310,44 @@ class reserved extends CI_Controller {
 				'lastname' => $display_lastname,
 				'suffix' => $display_suffix,
 				'guardian_phone' => $display_guardiannumber,
-
+				'religion' => $display_religion,
+				'if_adventist' => $display_baptized,
+				'year_baptism' => $display_year_baptized === 'N/A' ? NULL : $display_year_baptized,
+				'email_address' => $display_email,
+				'lrn' => $display_lrn === 'N/A' ? NULL : $display_lrn,
+				'guardian_name' => $display_guardianfirst,
+				'guardian_midname' => $display_guardianmiddlename,
+				'guardian_lastname' => $display_guardianlastname,
+				'guardian_relation' => $display_relation,
+				'guardian_address' => $display_address,
+				'institution' => $display_institution === 'N/A' ? NULL : $display_institution
 			);
 
 			$this->reserved_students_model->add( $data );
+			$reserved_student = $this->reserved_students_model->get( $id );
+			if ( !empty($reserved_student['student_id']) ) {
+				$student_id = $reserved_student['student_id'];
+				$student_data = array(
+					'id' => $student_id,
+					'firstname' => $display_first,
+					'middlename' => $display_middlename,
+					'lastname' => $display_lastname,
+					'suffix' => $display_suffix,
+					'guardian_name' => $display_guardianfirst,
+					'guardian_midname' => $display_guardianmiddlename,
+					'guardian_lastname' => $display_guardianlastname,
+					'guardian_phone' => $display_guardiannumber,
+					'guardian_relation' => $display_relation,
+					'guardian_address' => $display_address,
+					'religion' => $display_religion,
+					'email' => $display_email, 
+					'lrn' => $display_lrn === 'N/A' ? NULL : $display_lrn,
+					'if_adventist' => $display_baptized,
+					'year_baptism' => $display_year_baptized === 'N/A' ? NULL : $display_year_baptized,
+					'institution' => $display_institution === 'N/A' ? NULL : $display_institution
+				);
+				$this->student_model->add( $student_data );
+			}
 			$this->session->set_flashdata("enrollment_msg", "<div class=\"alert alert-success\"><b>".$display_first." ".$display_lastname."</b> updated data successfully.</div>");
 
 		}

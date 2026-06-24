@@ -1660,7 +1660,11 @@ class Grade extends CI_Controller {
 				'subject_id' => $subject_id,
 				'template_id' => $template_id
 			);
+			while (ob_get_level()) {
+				ob_end_clean();
+			}
 			$this->excelwithspout->generate_spreadsheet( $parameters );
+			exit;
 		}
 	}
 	
@@ -1706,8 +1710,11 @@ class Grade extends CI_Controller {
 				'subject_id' => $subject_id,
 				'template_id' => $template_id
 			);
-			ob_end_clean();
+			while (ob_get_level()) {
+				ob_end_clean();
+			}
 			$this->excelwithspout->generate_spreadsheet_custom( $parameters );
+			exit;
 		}
 	}
 	

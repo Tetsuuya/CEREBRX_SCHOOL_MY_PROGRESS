@@ -235,6 +235,10 @@ class Excelwithspout extends PHPExcel {
 		$filename = $subject_name.'-'.$class_name.' '.$section_name.'-'.$date;
 		$filename= $filename.'.xlsx';
 		//header('Content-Type: application/vnd.ms-excel'); //mime type
+		// Clear all output buffers to prevent download issues
+		while (ob_get_level()) {
+			ob_end_clean();
+		}
 		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'); //mime type
 		header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
 		header('Cache-Control: max-age=0'); //no cache
@@ -243,7 +247,11 @@ class Excelwithspout extends PHPExcel {
 		//if you want to save it as .XLSX Excel 2007 format
 		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');  
 		//force user to download the Excel file without writing it to server's HD
-		$objWriter->save('php://output');
+		$objWriter->save('php://output');
+		$objPHPExcel->disconnectWorksheets();
+		unset($objPHPExcel);
+		unset($objWriter);
+		exit;
 
 	}	
 
@@ -418,6 +426,10 @@ class Excelwithspout extends PHPExcel {
 		$filename = $class_name.' '.$section_name.'- Conduct - '.$date;
 		$filename = $filename.'.xlsx';
 		//header('Content-Type: application/vnd.ms-excel'); //mime type
+		// Clear all output buffers to prevent download issues
+		while (ob_get_level()) {
+			ob_end_clean();
+		}
 		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'); //mime type
 		header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
 		header('Cache-Control: max-age=0'); //no cache
@@ -426,7 +438,11 @@ class Excelwithspout extends PHPExcel {
 		//if you want to save it as .XLSX Excel 2007 format
 		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');  
 		//force user to download the Excel file without writing it to server's HD
-		$objWriter->save('php://output');
+		$objWriter->save('php://output');
+		$objPHPExcel->disconnectWorksheets();
+		unset($objPHPExcel);
+		unset($objWriter);
+		exit;
 	}
 
 	public function generate_spreadsheet_custom( $parameters ){
@@ -599,6 +615,10 @@ class Excelwithspout extends PHPExcel {
 		$filename = $subject_name.'-'.$class_name.' '.$section_name.'-'.$date;
 		$filename= $filename.'.xlsx';
 		//header('Content-Type: application/vnd.ms-excel'); //mime type
+		// Clear all output buffers to prevent download issues
+		while (ob_get_level()) {
+			ob_end_clean();
+		}
 		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'); //mime type
 		header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
 		header('Cache-Control: max-age=0'); //no cache
@@ -607,7 +627,11 @@ class Excelwithspout extends PHPExcel {
 		//if you want to save it as .XLSX Excel 2007 format
 		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');  
 		//force user to download the Excel file without writing it to server's HD
-		$objWriter->save('php://output');
+		$objWriter->save('php://output');
+		$objPHPExcel->disconnectWorksheets();
+		unset($objPHPExcel);
+		unset($objWriter);
+		exit;
 	}
 	
 	public function get_quarter( $quarter ){

@@ -24,6 +24,9 @@ class Excelwithspout extends PHPExcel {
 
 	public function generate_spreadsheet( $parameters ){
 		
+		// Clear the debug log for a fresh run so it does not grow indefinitely
+		@file_put_contents(APPPATH . 'logs/excel_generation_debug.txt', '');
+
 		// Buffer all output. On success we wipe it and send a clean file download.
 		// On any error/crash, the buffer is flushed automatically → error shows in browser.
 		ob_start();
@@ -222,7 +225,8 @@ class Excelwithspout extends PHPExcel {
 		$this->log_debug("=== PHASE 2: DATA INSERTION ===");
 		$total_boys_written = 0;
 		$total_girls_written = 0;
-		for ($sheetIndex = 0; $sheetIndex < $totalSheets; $sheetIndex++) {
+		// Only populate INPUT sheet (sheet 0). TERM1/TERM2/TERM3/SUMMARY have formulas that reference INPUT
+		for ($sheetIndex = 0; $sheetIndex <= 0; $sheetIndex++) {
 			$objPHPExcel->setActiveSheetIndex($sheetIndex);
 			$sheetInsertData = $objPHPExcel->getActiveSheet();
 			$sheetTitle = $sheetInsertData->getTitle();

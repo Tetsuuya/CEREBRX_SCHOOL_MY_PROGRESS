@@ -1036,12 +1036,20 @@ class Grade extends CI_Controller {
 				}
 				$getSheetNames = $objPHPExcel->getSheetNames();
 				$getCurrentSheet = $this->get_assign_sheet_name( $quarter );
+				$termSheetMap = array(1 => 'TERM1', 2 => 'TERM2', 3 => 'TERM3');
+				$targetTermSheet = isset($termSheetMap[$quarter]) ? $termSheetMap[$quarter] : '';
 				
 				if(in_array( $getCurrentSheet, $getSheetNames )){
 					$getquartersheet = array_search( $getCurrentSheet, $getSheetNames);
-					
 					$objPHPExcel->setActiveSheetIndex($getquartersheet);
-					$sheetInsertData = $objPHPExcel->getActiveSheet();
+				} elseif($targetTermSheet !== '' && in_array( $targetTermSheet, $getSheetNames )){
+					$getquartersheet = array_search( $targetTermSheet, $getSheetNames);
+					$objPHPExcel->setActiveSheetIndex($getquartersheet);
+				} else {
+					$this->session->set_flashdata('msg', '<div class="alert alert-warning">Sheet "'.$getCurrentSheet.'" or "'.$targetTermSheet.'" not found. Please import correct template.</div>');
+					redirect('teacher/grade/import');
+				}
+				$sheetInsertData = $objPHPExcel->getActiveSheet();
 					//$sheetInsertData = $sheetInsertData->getTitle();
 					//$sheetInsertData = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
 					$foundInCells = $this->spout->search_cells_with_pt_wt( $inputFileName );
@@ -1573,9 +1581,7 @@ class Grade extends CI_Controller {
 							}
 						} 
 					
-				} else {
-					$this->session->set_flashdata('msg', '<div class="alert alert-warning">Sheet "'.$getCurrentSheet.'" not found. Please import correct template.</div>');		
-				}
+
 				redirect('teacher/grade/import'); 				
 			} else {
 				$this->session->set_flashdata('msg', '<div class="alert alert-warning">No file attached!</div>');		
@@ -1849,12 +1855,20 @@ class Grade extends CI_Controller {
 				}
 				$getSheetNames = $objPHPExcel->getSheetNames();
 				$getCurrentSheet = $this->get_assign_sheet_name( $quarter );
+				$termSheetMap = array(1 => 'TERM1', 2 => 'TERM2', 3 => 'TERM3');
+				$targetTermSheet = isset($termSheetMap[$quarter]) ? $termSheetMap[$quarter] : '';
 				
 				if(in_array( $getCurrentSheet, $getSheetNames )){
 					$getquartersheet = array_search( $getCurrentSheet, $getSheetNames);
-					
 					$objPHPExcel->setActiveSheetIndex($getquartersheet);
-					$sheetInsertData = $objPHPExcel->getActiveSheet();
+				} elseif($targetTermSheet !== '' && in_array( $targetTermSheet, $getSheetNames )){
+					$getquartersheet = array_search( $targetTermSheet, $getSheetNames);
+					$objPHPExcel->setActiveSheetIndex($getquartersheet);
+				} else {
+					$this->session->set_flashdata('msg', '<div class="alert alert-warning">Sheet "'.$getCurrentSheet.'" or "'.$targetTermSheet.'" not found. Please import correct template.</div>');
+					redirect('admin/grade/importcustomgrade');
+				}
+				$sheetInsertData = $objPHPExcel->getActiveSheet();
 					//$sheetInsertData = $sheetInsertData->getTitle();
 					//$sheetInsertData = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
 					
@@ -2352,10 +2366,7 @@ class Grade extends CI_Controller {
 								$this->importgradesbatch_model->remove( $get_batch_id );
 							}
 						} 
-					
-				} else {
-					$this->session->set_flashdata('msg', '<div class="alert alert-warning">Sheet "'.$getCurrentSheet.'" not found. Please import correct template.</div>');		
-				}
+
 				redirect('admin/grade/importcustomgrade'); 				
 			}	else {
 				$this->session->set_flashdata('msg', '<div class="alert alert-warning">No file attached!</div>');	
@@ -2410,12 +2421,20 @@ class Grade extends CI_Controller {
 				}
 				$getSheetNames = $objPHPExcel->getSheetNames();
 				$getCurrentSheet = $this->get_assign_sheet_name( $quarter );
+				$termSheetMap = array(1 => 'TERM1', 2 => 'TERM2', 3 => 'TERM3');
+				$targetTermSheet = isset($termSheetMap[$quarter]) ? $termSheetMap[$quarter] : '';
 				
 				if(in_array( $getCurrentSheet, $getSheetNames )){
 					$getquartersheet = array_search( $getCurrentSheet, $getSheetNames);
-					
 					$objPHPExcel->setActiveSheetIndex($getquartersheet);
-					$sheetInsertData = $objPHPExcel->getActiveSheet();
+				} elseif($targetTermSheet !== '' && in_array( $targetTermSheet, $getSheetNames )){
+					$getquartersheet = array_search( $targetTermSheet, $getSheetNames);
+					$objPHPExcel->setActiveSheetIndex($getquartersheet);
+				} else {
+					$this->session->set_flashdata('msg', '<div class="alert alert-warning">Sheet "'.$getCurrentSheet.'" or "'.$targetTermSheet.'" not found. Please import correct template.</div>');
+					redirect('admin/grade/importcustomgrade');
+				}
+				$sheetInsertData = $objPHPExcel->getActiveSheet();
 					//$sheetInsertData = $sheetInsertData->getTitle();
 					//$sheetInsertData = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
 					
@@ -2913,10 +2932,7 @@ class Grade extends CI_Controller {
 								$this->importgradesbatch_model->remove( $get_batch_id );
 							}
 						} 
-					
-				} else {
-					$this->session->set_flashdata('msg', '<div class="alert alert-warning">Sheet "'.$getCurrentSheet.'" not found. Please import correct template.</div>');		
-				}
+
 				redirect('teacher/grade/importcustomgrade'); 				
 			}	else {
 				$this->session->set_flashdata('msg', '<div class="alert alert-warning">No file attached!</div>');	

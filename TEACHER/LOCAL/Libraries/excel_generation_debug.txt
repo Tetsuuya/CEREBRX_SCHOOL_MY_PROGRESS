@@ -959,3 +959,1527 @@
 [2026-06-25 07:40:40] File size: 3.62 MB
 [2026-06-25 07:40:40] Starting download...
 [2026-06-25 07:40:40] Using chunked streaming
+[2026-06-25 07:48:46] --- START EXCEL GENERATION ---
+[2026-06-25 07:48:46] Params: Class ID: 10, Section ID: 20, Subject ID: 46, Template ID: 1
+[2026-06-25 07:48:46] Template File in DB: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 07:48:46] Loading template file from disk: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 07:48:46] Initial memory usage: 3.75 MB
+[2026-06-25 07:48:46] File size: 991170 bytes (0.95 MB)
+[2026-06-25 07:48:46] File magic bytes (hex): 504b0304
+[2026-06-25 07:48:46] System temp dir: /tmp | Writable: YES
+[2026-06-25 07:48:46] Identifying Excel format...
+[2026-06-25 07:48:46] Excel format identified: Excel2007. Creating reader...
+[2026-06-25 07:48:46] Loading workbook into memory...
+[2026-06-25 07:50:00] PHPExcel loaded template successfully.
+[2026-06-25 07:50:00] Memory usage after load: 751 MB
+[2026-06-25 07:50:00] Total worksheets in workbook: 9
+[2026-06-25 07:50:01] Processing worksheet Index 0: 'INPUT' (Grade Sheet detected)
+[2026-06-25 07:50:01] Worksheet 'INPUT' populated: 3 boys, 1 girls.
+[2026-06-25 07:50:03] Processing worksheet Index 1: 'TERM1' (Grade Sheet detected)
+[2026-06-25 07:50:03] Worksheet 'TERM1' populated: 3 boys, 1 girls.
+[2026-06-25 07:50:04] Processing worksheet Index 2: 'TERM2' (Grade Sheet detected)
+[2026-06-25 07:50:04] Worksheet 'TERM2' populated: 3 boys, 1 girls.
+[2026-06-25 07:50:05] Processing worksheet Index 3: 'TERM3' (Grade Sheet detected)
+[2026-06-25 07:50:05] Worksheet 'TERM3' populated: 3 boys, 1 girls.
+[2026-06-25 07:50:07] Processing worksheet Index 4: 'SUMMARY OF GRADES' (Grade Sheet detected)
+[2026-06-25 07:50:07] Worksheet 'SUMMARY OF GRADES' populated: 3 boys, 1 girls.
+[2026-06-25 07:50:08] Skipping worksheet Index 5: 'Sheet1' (No student grade placeholders found)
+[2026-06-25 07:50:09] Skipping worksheet Index 6: 'Sheet2' (No student grade placeholders found)
+[2026-06-25 07:50:10] Skipping worksheet Index 7: 'Helper (Do Not Delete)' (No student grade placeholders found)
+[2026-06-25 07:50:11] Skipping worksheet Index 8: 'DO NOT DELETE' (No student grade placeholders found)
+[2026-06-25 07:50:12] Saving final file to output. Filename: TLE 7-Grade 7 CS3A-20260625075012.xlsx
+[2026-06-25 07:50:12] Peak memory usage: 833 MB
+[2026-06-25 07:50:12] Saving to public folder: downloads/generated_grades/TLE 7-Grade 7 CS3A-20260625075012.xlsx
+[2026-06-25 07:54:34] File saved successfully.
+[2026-06-25 07:54:35] PHPExcel objects cleaned up.
+[2026-06-25 07:54:35] File size: 3.62 MB
+[2026-06-25 07:54:35] Download URL: https://cerebrox.thinkfast.app/downloads/generated_grades/TLE 7-Grade 7 CS3A-20260625075012.xlsx
+[2026-06-25 07:54:35] --- EXCEL GENERATION SUCCESS ---
+[2026-06-25 07:54:35] Starting download...
+[2026-06-25 07:54:35] Using chunked streaming
+[2026-06-25 08:08:12] --- START EXCEL GENERATION ---
+[2026-06-25 08:08:12] Params: Class ID: 10, Section ID: 20, Subject ID: 46, Template ID: 1
+[2026-06-25 08:08:12] Template File in DB: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 08:08:12] Loading template file from disk: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 08:08:12] Initial memory usage: 4 MB
+[2026-06-25 08:08:12] File size: 991170 bytes (0.95 MB)
+[2026-06-25 08:08:12] File magic bytes (hex): 504b0304
+[2026-06-25 08:08:12] System temp dir: /tmp | Writable: YES
+[2026-06-25 08:08:12] Identifying Excel format...
+[2026-06-25 08:08:12] Excel format identified: Excel2007. Creating reader...
+[2026-06-25 08:08:12] Loading workbook into memory...
+[2026-06-25 08:09:29] PHPExcel loaded template successfully.
+[2026-06-25 08:09:29] Memory usage after load: 751.5 MB
+[2026-06-25 08:09:29] Total worksheets in workbook: 9
+[2026-06-25 08:09:30] Processing worksheet Index 0: 'INPUT' (Grade Sheet detected)
+[2026-06-25 08:09:30] Worksheet 'INPUT' populated: 3 boys, 1 girls.
+[2026-06-25 08:09:31] Processing worksheet Index 1: 'TERM1' (Grade Sheet detected)
+[2026-06-25 08:09:31] Worksheet 'TERM1' populated: 3 boys, 1 girls.
+[2026-06-25 08:09:32] Processing worksheet Index 2: 'TERM2' (Grade Sheet detected)
+[2026-06-25 08:09:32] Worksheet 'TERM2' populated: 3 boys, 1 girls.
+[2026-06-25 08:09:33] Processing worksheet Index 3: 'TERM3' (Grade Sheet detected)
+[2026-06-25 08:09:33] Worksheet 'TERM3' populated: 3 boys, 1 girls.
+[2026-06-25 08:09:34] Processing worksheet Index 4: 'SUMMARY OF GRADES' (Grade Sheet detected)
+[2026-06-25 08:09:34] Worksheet 'SUMMARY OF GRADES' populated: 3 boys, 1 girls.
+[2026-06-25 08:09:35] Skipping worksheet Index 5: 'Sheet1' (No student grade placeholders found)
+[2026-06-25 08:09:36] Skipping worksheet Index 6: 'Sheet2' (No student grade placeholders found)
+[2026-06-25 08:09:37] Skipping worksheet Index 7: 'Helper (Do Not Delete)' (No student grade placeholders found)
+[2026-06-25 08:09:38] Skipping worksheet Index 8: 'DO NOT DELETE' (No student grade placeholders found)
+[2026-06-25 08:09:39] Saving final file to output. Filename: TLE 7-Grade 7 CS3A-20260625080939.xlsx
+[2026-06-25 08:09:39] Peak memory usage: 833.75 MB
+[2026-06-25 08:09:39] Saving to public folder: downloads/generated_grades/TLE 7-Grade 7 CS3A-20260625080939.xlsx
+[2026-06-25 08:13:53] File saved successfully.
+[2026-06-25 08:13:54] PHPExcel objects cleaned up.
+[2026-06-25 08:13:54] File size: 3.62 MB
+[2026-06-25 08:13:54] Download URL: https://cerebrox.thinkfast.app/downloads/generated_grades/TLE 7-Grade 7 CS3A-20260625080939.xlsx
+[2026-06-25 08:13:54] --- EXCEL GENERATION SUCCESS ---
+[2026-06-25 08:28:14] --- START EXCEL GENERATION ---
+[2026-06-25 08:28:14] Params: Class ID: 10, Section ID: 20, Subject ID: 46, Template ID: 1
+[2026-06-25 08:28:14] Template File in DB: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 08:28:14] Loading template file from disk: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 08:28:14] Initial memory usage: 4 MB
+[2026-06-25 08:28:14] File size: 991170 bytes (0.95 MB)
+[2026-06-25 08:28:14] File magic bytes (hex): 504b0304
+[2026-06-25 08:28:14] System temp dir: /tmp | Writable: YES
+[2026-06-25 08:28:14] Identifying Excel format...
+[2026-06-25 08:28:14] Excel format identified: Excel2007. Creating reader...
+[2026-06-25 08:28:14] Loading workbook into memory...
+[2026-06-25 08:29:32] PHPExcel loaded template successfully.
+[2026-06-25 08:29:32] Memory usage after load: 751 MB
+[2026-06-25 08:29:32] Total worksheets in workbook: 9
+[2026-06-25 08:29:33] Processing worksheet Index 0: 'INPUT' (Grade Sheet detected)
+[2026-06-25 08:29:33] Worksheet 'INPUT' populated: 3 boys, 1 girls.
+[2026-06-25 08:29:34] Processing worksheet Index 1: 'TERM1' (Grade Sheet detected)
+[2026-06-25 08:29:34] Worksheet 'TERM1' populated: 3 boys, 1 girls.
+[2026-06-25 08:29:35] Processing worksheet Index 2: 'TERM2' (Grade Sheet detected)
+[2026-06-25 08:29:35] Worksheet 'TERM2' populated: 3 boys, 1 girls.
+[2026-06-25 08:29:36] Processing worksheet Index 3: 'TERM3' (Grade Sheet detected)
+[2026-06-25 08:29:36] Worksheet 'TERM3' populated: 3 boys, 1 girls.
+[2026-06-25 08:29:37] Processing worksheet Index 4: 'SUMMARY OF GRADES' (Grade Sheet detected)
+[2026-06-25 08:29:37] Worksheet 'SUMMARY OF GRADES' populated: 3 boys, 1 girls.
+[2026-06-25 08:29:38] Skipping worksheet Index 5: 'Sheet1' (No student grade placeholders found)
+[2026-06-25 08:29:39] Skipping worksheet Index 6: 'Sheet2' (No student grade placeholders found)
+[2026-06-25 08:29:40] Skipping worksheet Index 7: 'Helper (Do Not Delete)' (No student grade placeholders found)
+[2026-06-25 08:29:41] Skipping worksheet Index 8: 'DO NOT DELETE' (No student grade placeholders found)
+[2026-06-25 08:29:42] Saving final file to output. Filename: TLE 7-Grade 7 CS3A-20260625082942.xlsx
+[2026-06-25 08:29:42] Peak memory usage: 833 MB
+[2026-06-25 08:29:42] Saving to public folder: downloads/generated_grades/TLE 7-Grade 7 CS3A-20260625082942.xlsx
+[2026-06-25 08:34:07] File saved successfully.
+[2026-06-25 08:34:08] PHPExcel objects cleaned up.
+[2026-06-25 08:34:08] File size: 3.62 MB
+[2026-06-25 08:34:09] Download URL: https://cerebrox.thinkfast.app/downloads/generated_grades/TLE 7-Grade 7 CS3A-20260625082942.xlsx
+[2026-06-25 08:34:09] --- EXCEL GENERATION SUCCESS ---
+[2026-06-25 09:35:16] --- START EXCEL GENERATION ---
+[2026-06-25 09:35:16] Params: Class ID: 10, Section ID: 20, Subject ID: 46, Template ID: 1
+[2026-06-25 09:35:16] Template File in DB: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 09:35:16] Loading template file from disk: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 09:35:16] Initial memory usage: 3.75 MB
+[2026-06-25 09:35:16] File size: 991170 bytes (0.95 MB)
+[2026-06-25 09:35:16] File magic bytes (hex): 504b0304
+[2026-06-25 09:35:16] System temp dir: /tmp | Writable: YES
+[2026-06-25 09:35:16] Identifying Excel format...
+[2026-06-25 09:35:16] Excel format identified: Excel2007. Creating reader...
+[2026-06-25 09:35:16] Loading workbook into memory...
+[2026-06-25 09:36:40] PHPExcel loaded template successfully.
+[2026-06-25 09:36:40] Memory usage after load: 750.75 MB
+[2026-06-25 09:36:40] Total worksheets in workbook: 9
+[2026-06-25 09:36:42] Processing worksheet Index 0: 'INPUT' (Grade Sheet detected)
+[2026-06-25 09:36:42] Worksheet 'INPUT' populated: 3 boys, 1 girls.
+[2026-06-25 09:36:43] Processing worksheet Index 1: 'TERM1' (Grade Sheet detected)
+[2026-06-25 09:36:43] Worksheet 'TERM1' populated: 3 boys, 1 girls.
+[2026-06-25 09:36:44] Processing worksheet Index 2: 'TERM2' (Grade Sheet detected)
+[2026-06-25 09:36:44] Worksheet 'TERM2' populated: 3 boys, 1 girls.
+[2026-06-25 09:36:45] Processing worksheet Index 3: 'TERM3' (Grade Sheet detected)
+[2026-06-25 09:36:45] Worksheet 'TERM3' populated: 3 boys, 1 girls.
+[2026-06-25 09:36:46] Processing worksheet Index 4: 'SUMMARY OF GRADES' (Grade Sheet detected)
+[2026-06-25 09:36:46] Worksheet 'SUMMARY OF GRADES' populated: 3 boys, 1 girls.
+[2026-06-25 09:36:47] Skipping worksheet Index 5: 'Sheet1' (No student grade placeholders found)
+[2026-06-25 09:36:48] Skipping worksheet Index 6: 'Sheet2' (No student grade placeholders found)
+[2026-06-25 09:36:50] Skipping worksheet Index 7: 'Helper (Do Not Delete)' (No student grade placeholders found)
+[2026-06-25 09:36:51] Skipping worksheet Index 8: 'DO NOT DELETE' (No student grade placeholders found)
+[2026-06-25 09:36:52] Saving final file to output. Filename: TLE 7-Grade 7 CS3A-20260625093652.xlsx
+[2026-06-25 09:36:52] Peak memory usage: 833.25 MB
+[2026-06-25 09:36:52] Saving to public folder: downloads/generated_grades/TLE 7-Grade 7 CS3A-20260625093652.xlsx
+[2026-06-25 09:41:29] File saved successfully.
+[2026-06-25 09:41:30] PHPExcel objects cleaned up.
+[2026-06-25 09:41:30] File size: 3.62 MB
+[2026-06-25 09:41:30] Download URL: https://cerebrox.thinkfast.app/downloads/generated_grades/TLE 7-Grade 7 CS3A-20260625093652.xlsx
+[2026-06-25 09:41:30] --- EXCEL GENERATION SUCCESS ---
+[2026-06-25 10:04:13] --- START EXCEL GENERATION ---
+[2026-06-25 10:04:13] Params: Class ID: 10, Section ID: 20, Subject ID: 46, Template ID: 1
+[2026-06-25 10:04:13] Template File in DB: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 10:04:13] Loading template file from disk: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 10:04:13] Initial memory usage: 3.75 MB
+[2026-06-25 10:04:13] File size: 991170 bytes (0.95 MB)
+[2026-06-25 10:04:13] File magic bytes (hex): 504b0304
+[2026-06-25 10:04:13] System temp dir: /tmp | Writable: YES
+[2026-06-25 10:04:13] Identifying Excel format...
+[2026-06-25 10:04:13] Excel format identified: Excel2007. Creating reader...
+[2026-06-25 10:04:13] Loading workbook into memory...
+[2026-06-25 10:05:33] PHPExcel loaded template successfully.
+[2026-06-25 10:05:33] Memory usage after load: 750.75 MB
+[2026-06-25 10:05:33] Total worksheets in workbook: 9
+[2026-06-25 10:05:35] Processing worksheet Index 0: 'INPUT' (Grade Sheet detected)
+[2026-06-25 10:05:35] Worksheet 'INPUT' populated: 3 boys, 1 girls.
+[2026-06-25 10:05:36] Processing worksheet Index 1: 'TERM1' (Grade Sheet detected)
+[2026-06-25 10:05:36] Worksheet 'TERM1' populated: 3 boys, 1 girls.
+[2026-06-25 10:05:37] Processing worksheet Index 2: 'TERM2' (Grade Sheet detected)
+[2026-06-25 10:05:37] Worksheet 'TERM2' populated: 3 boys, 1 girls.
+[2026-06-25 10:05:38] Processing worksheet Index 3: 'TERM3' (Grade Sheet detected)
+[2026-06-25 10:05:38] Worksheet 'TERM3' populated: 3 boys, 1 girls.
+[2026-06-25 10:05:39] Processing worksheet Index 4: 'SUMMARY OF GRADES' (Grade Sheet detected)
+[2026-06-25 10:05:39] Worksheet 'SUMMARY OF GRADES' populated: 3 boys, 1 girls.
+[2026-06-25 10:05:40] Skipping worksheet Index 5: 'Sheet1' (No student grade placeholders found)
+[2026-06-25 10:05:41] Skipping worksheet Index 6: 'Sheet2' (No student grade placeholders found)
+[2026-06-25 10:05:42] Skipping worksheet Index 7: 'Helper (Do Not Delete)' (No student grade placeholders found)
+[2026-06-25 10:05:43] Skipping worksheet Index 8: 'DO NOT DELETE' (No student grade placeholders found)
+[2026-06-25 10:05:44] Saving final file to output. Filename: TLE 7-Grade 7 CS3A-20260625100544.xlsx
+[2026-06-25 10:05:44] Peak memory usage: 833.25 MB
+[2026-06-25 10:05:44] Saving to public folder: downloads/generated_grades/TLE 7-Grade 7 CS3A-20260625100544.xlsx
+[2026-06-25 10:09:59] File saved successfully.
+[2026-06-25 10:10:00] PHPExcel objects cleaned up.
+[2026-06-25 10:10:00] File size: 3.62 MB
+[2026-06-25 10:10:00] Download URL: https://cerebrox.thinkfast.app/downloads/generated_grades/TLE 7-Grade 7 CS3A-20260625100544.xlsx
+[2026-06-25 10:10:00] --- EXCEL GENERATION SUCCESS ---
+[2026-06-25 10:19:42] --- START EXCEL GENERATION ---
+[2026-06-25 10:19:42] Params: Class ID: 10, Section ID: 20, Subject ID: 46, Template ID: 4
+[2026-06-25 10:19:42] Template File in DB: uploads/template_documents/academic_subjects/4-17-17-GradingSheetTemplate.xlsx
+[2026-06-25 10:19:42] Loading template file from disk: uploads/template_documents/academic_subjects/4-17-17-GradingSheetTemplate.xlsx
+[2026-06-25 10:19:42] Initial memory usage: 3.75 MB
+[2026-06-25 10:19:42] File size: 1090165 bytes (1.04 MB)
+[2026-06-25 10:19:42] File magic bytes (hex): 504b0304
+[2026-06-25 10:19:42] System temp dir: /tmp | Writable: YES
+[2026-06-25 10:19:42] Identifying Excel format...
+[2026-06-25 10:19:42] Excel format identified: Excel2007. Creating reader...
+[2026-06-25 10:19:42] Loading workbook into memory...
+[2026-06-25 10:19:59] PHPExcel loaded template successfully.
+[2026-06-25 10:19:59] Memory usage after load: 183.5 MB
+[2026-06-25 10:19:59] Total worksheets in workbook: 6
+[2026-06-25 10:19:59] Processing worksheet Index 0: '1st Quarter' (Grade Sheet detected)
+[2026-06-25 10:19:59] Worksheet '1st Quarter' populated: 3 boys, 1 girls.
+[2026-06-25 10:19:59] Processing worksheet Index 1: '2nd Quarter' (Grade Sheet detected)
+[2026-06-25 10:19:59] Worksheet '2nd Quarter' populated: 3 boys, 1 girls.
+[2026-06-25 10:19:59] Processing worksheet Index 2: '3rd Quarter' (Grade Sheet detected)
+[2026-06-25 10:19:59] Worksheet '3rd Quarter' populated: 3 boys, 1 girls.
+[2026-06-25 10:20:00] Processing worksheet Index 3: '4th Quarter' (Grade Sheet detected)
+[2026-06-25 10:20:00] Worksheet '4th Quarter' populated: 3 boys, 1 girls.
+[2026-06-25 10:20:00] Processing worksheet Index 4: 'SUMMARY OF GRADES' (Grade Sheet detected)
+[2026-06-25 10:20:00] Worksheet 'SUMMARY OF GRADES' populated: 3 boys, 1 girls.
+[2026-06-25 10:20:00] Skipping worksheet Index 5: 'Transmutation Table' (No student grade placeholders found)
+[2026-06-25 10:20:00] Saving final file to output. Filename: TLE 7-Grade 7 CS3A-20260625102000.xlsx
+[2026-06-25 10:20:00] Peak memory usage: 189.5 MB
+[2026-06-25 10:20:00] Saving to public folder: downloads/generated_grades/TLE 7-Grade 7 CS3A-20260625102000.xlsx
+[2026-06-25 10:20:37] File saved successfully.
+[2026-06-25 10:20:37] PHPExcel objects cleaned up.
+[2026-06-25 10:20:37] File size: 1.25 MB
+[2026-06-25 10:20:37] Download URL: https://cerebrox.thinkfast.app/downloads/generated_grades/TLE 7-Grade 7 CS3A-20260625102000.xlsx
+[2026-06-25 10:20:37] --- EXCEL GENERATION SUCCESS ---
+[2026-06-25 10:29:04] --- START EXCEL GENERATION ---
+[2026-06-25 10:29:04] Params: Class ID: 10, Section ID: 20, Subject ID: 46, Template ID: 1
+[2026-06-25 10:29:04] Template File in DB: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 10:29:04] Loading template file from disk: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 10:29:04] Initial memory usage: 3.75 MB
+[2026-06-25 10:29:04] File size: 991170 bytes (0.95 MB)
+[2026-06-25 10:29:04] File magic bytes (hex): 504b0304
+[2026-06-25 10:29:04] System temp dir: /tmp | Writable: YES
+[2026-06-25 10:29:04] Identifying Excel format...
+[2026-06-25 10:29:04] Excel format identified: Excel2007. Creating reader...
+[2026-06-25 10:29:04] Loading workbook into memory...
+[2026-06-25 10:30:25] PHPExcel loaded template successfully.
+[2026-06-25 10:30:25] Memory usage after load: 750.25 MB
+[2026-06-25 10:30:25] Total worksheets in workbook: 9
+[2026-06-25 10:30:26] Processing worksheet Index 0: 'INPUT' (Grade Sheet detected)
+[2026-06-25 10:30:26] Worksheet 'INPUT' populated: 3 boys, 1 girls.
+[2026-06-25 10:30:27] Processing worksheet Index 1: 'TERM1' (Grade Sheet detected)
+[2026-06-25 10:30:27] Worksheet 'TERM1' populated: 3 boys, 1 girls.
+[2026-06-25 10:30:28] Processing worksheet Index 2: 'TERM2' (Grade Sheet detected)
+[2026-06-25 10:30:28] Worksheet 'TERM2' populated: 3 boys, 1 girls.
+[2026-06-25 10:30:29] Processing worksheet Index 3: 'TERM3' (Grade Sheet detected)
+[2026-06-25 10:30:30] Worksheet 'TERM3' populated: 3 boys, 1 girls.
+[2026-06-25 10:30:31] Processing worksheet Index 4: 'SUMMARY OF GRADES' (Grade Sheet detected)
+[2026-06-25 10:30:31] Worksheet 'SUMMARY OF GRADES' populated: 3 boys, 1 girls.
+[2026-06-25 10:30:32] Skipping worksheet Index 5: 'Sheet1' (No student grade placeholders found)
+[2026-06-25 10:30:33] Skipping worksheet Index 6: 'Sheet2' (No student grade placeholders found)
+[2026-06-25 10:30:34] Skipping worksheet Index 7: 'Helper (Do Not Delete)' (No student grade placeholders found)
+[2026-06-25 10:30:35] Skipping worksheet Index 8: 'DO NOT DELETE' (No student grade placeholders found)
+[2026-06-25 10:30:36] Saving final file to output. Filename: TLE 7-Grade 7 CS3A-20260625103036.xlsx
+[2026-06-25 10:30:36] Peak memory usage: 832.25 MB
+[2026-06-25 10:30:36] Saving to public folder: downloads/generated_grades/TLE 7-Grade 7 CS3A-20260625103036.xlsx
+[2026-06-25 10:34:59] File saved successfully.
+[2026-06-25 10:35:01] PHPExcel objects cleaned up.
+[2026-06-25 10:35:01] File size: 3.62 MB
+[2026-06-25 10:35:01] Download URL: https://cerebrox.thinkfast.app/downloads/generated_grades/TLE 7-Grade 7 CS3A-20260625103036.xlsx
+[2026-06-25 10:35:01] --- EXCEL GENERATION SUCCESS ---
+[2026-06-25 11:21:37] --- START EXCEL GENERATION ---
+[2026-06-25 11:21:37] Params: Class ID: 10, Section ID: 20, Subject ID: 46, Template ID: 1
+[2026-06-25 11:21:37] Template File in DB: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 11:21:37] Loading template file from disk: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 11:21:37] Initial memory usage: 4 MB
+[2026-06-25 11:21:37] File size: 991170 bytes (0.95 MB)
+[2026-06-25 11:21:37] File magic bytes (hex): 504b0304
+[2026-06-25 11:21:37] System temp dir: /tmp | Writable: YES
+[2026-06-25 11:21:37] Identifying Excel format...
+[2026-06-25 11:21:37] Excel format identified: Excel2007. Creating reader...
+[2026-06-25 11:21:37] Loading workbook into memory...
+[2026-06-25 11:22:59] PHPExcel loaded template successfully.
+[2026-06-25 11:22:59] Memory usage after load: 751 MB
+[2026-06-25 11:22:59] Total worksheets in workbook: 9
+[2026-06-25 11:23:00] Processing worksheet Index 0: 'INPUT' (Grade Sheet detected)
+[2026-06-25 11:23:00] Worksheet 'INPUT' populated: 3 boys, 1 girls.
+[2026-06-25 11:23:01] Processing worksheet Index 1: 'TERM1' (Grade Sheet detected)
+[2026-06-25 11:23:01] Worksheet 'TERM1' populated: 3 boys, 1 girls.
+[2026-06-25 11:23:03] Processing worksheet Index 2: 'TERM2' (Grade Sheet detected)
+[2026-06-25 11:23:03] Worksheet 'TERM2' populated: 3 boys, 1 girls.
+[2026-06-25 11:23:04] Processing worksheet Index 3: 'TERM3' (Grade Sheet detected)
+[2026-06-25 11:23:04] Worksheet 'TERM3' populated: 3 boys, 1 girls.
+[2026-06-25 11:23:05] Processing worksheet Index 4: 'SUMMARY OF GRADES' (Grade Sheet detected)
+[2026-06-25 11:23:05] Worksheet 'SUMMARY OF GRADES' populated: 3 boys, 1 girls.
+[2026-06-25 11:23:06] Skipping worksheet Index 5: 'Sheet1' (No student grade placeholders found)
+[2026-06-25 11:23:07] Skipping worksheet Index 6: 'Sheet2' (No student grade placeholders found)
+[2026-06-25 11:23:08] Skipping worksheet Index 7: 'Helper (Do Not Delete)' (No student grade placeholders found)
+[2026-06-25 11:23:10] Skipping worksheet Index 8: 'DO NOT DELETE' (No student grade placeholders found)
+[2026-06-25 11:23:11] Saving final file to output. Filename: TLE 7-Grade 7 CS3A-20260625112311.xlsx
+[2026-06-25 11:23:11] Peak memory usage: 833 MB
+[2026-06-25 11:23:11] Saving to public folder: downloads/generated_grades/TLE 7-Grade 7 CS3A-20260625112311.xlsx
+[2026-06-25 11:27:37] File saved successfully.
+[2026-06-25 11:27:38] PHPExcel objects cleaned up.
+[2026-06-25 11:27:38] File size: 3.62 MB
+[2026-06-25 11:27:38] Download URL: https://cerebrox.thinkfast.app/downloads/generated_grades/TLE 7-Grade 7 CS3A-20260625112311.xlsx
+[2026-06-25 11:27:38] --- EXCEL GENERATION SUCCESS ---
+[2026-06-25 11:59:27] --- START EXCEL GENERATION ---
+[2026-06-25 11:59:27] Params: Class ID: 10, Section ID: 20, Subject ID: 46, Template ID: 1
+[2026-06-25 11:59:27] Template File in DB: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 11:59:27] Loading template file from disk: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 11:59:27] Initial memory usage: 4 MB
+[2026-06-25 11:59:27] File size: 991170 bytes (0.95 MB)
+[2026-06-25 11:59:27] File magic bytes (hex): 504b0304
+[2026-06-25 11:59:27] System temp dir: /tmp | Writable: YES
+[2026-06-25 11:59:27] Identifying Excel format...
+[2026-06-25 11:59:27] Excel format identified: Excel2007. Creating reader...
+[2026-06-25 11:59:27] Loading workbook into memory...
+[2026-06-25 12:00:55] PHPExcel loaded template successfully.
+[2026-06-25 12:00:55] Memory usage after load: 750.75 MB
+[2026-06-25 12:00:55] Total worksheets in workbook: 9
+[2026-06-25 12:00:55] Sheet 'INPUT': Row 9 is hidden in template
+[2026-06-25 12:00:55] Sheet 'INPUT': Row 11 is hidden in template
+[2026-06-25 12:00:55] Sheet 'INPUT': Row 61 is hidden in template
+[2026-06-25 12:00:55] Sheet 'INPUT': Row 63 is hidden in template
+[2026-06-25 12:00:55] Sheet 'INPUT': Row 112 is hidden in template
+[2026-06-25 12:00:56] Processing worksheet Index 0: 'INPUT' (Grade Sheet detected)
+[2026-06-25 12:00:56] Worksheet 'INPUT' populated: 3 boys, 1 girls.
+[2026-06-25 12:00:56] Re-hiding 5 originally hidden rows in sheet 'INPUT'
+[2026-06-25 12:00:57] Sheet 'TERM1': Row 12 is hidden in template
+[2026-06-25 12:00:57] Sheet 'TERM1': Row 63 is hidden in template
+[2026-06-25 12:00:57] Sheet 'TERM1': Row 65 is hidden in template
+[2026-06-25 12:00:57] Sheet 'TERM1': Row 116 is hidden in template
+[2026-06-25 12:00:57] Processing worksheet Index 1: 'TERM1' (Grade Sheet detected)
+[2026-06-25 12:00:57] Worksheet 'TERM1' populated: 3 boys, 1 girls.
+[2026-06-25 12:00:57] Re-hiding 4 originally hidden rows in sheet 'TERM1'
+[2026-06-25 12:00:58] Sheet 'TERM2': Row 12 is hidden in template
+[2026-06-25 12:00:58] Sheet 'TERM2': Row 63 is hidden in template
+[2026-06-25 12:00:58] Sheet 'TERM2': Row 65 is hidden in template
+[2026-06-25 12:00:58] Sheet 'TERM2': Row 116 is hidden in template
+[2026-06-25 12:00:58] Processing worksheet Index 2: 'TERM2' (Grade Sheet detected)
+[2026-06-25 12:00:58] Worksheet 'TERM2' populated: 3 boys, 1 girls.
+[2026-06-25 12:00:58] Re-hiding 4 originally hidden rows in sheet 'TERM2'
+[2026-06-25 12:00:59] Sheet 'TERM3': Row 12 is hidden in template
+[2026-06-25 12:00:59] Sheet 'TERM3': Row 63 is hidden in template
+[2026-06-25 12:00:59] Sheet 'TERM3': Row 65 is hidden in template
+[2026-06-25 12:00:59] Sheet 'TERM3': Row 116 is hidden in template
+[2026-06-25 12:00:59] Processing worksheet Index 3: 'TERM3' (Grade Sheet detected)
+[2026-06-25 12:00:59] Worksheet 'TERM3' populated: 3 boys, 1 girls.
+[2026-06-25 12:00:59] Re-hiding 4 originally hidden rows in sheet 'TERM3'
+[2026-06-25 12:01:00] Sheet 'SUMMARY OF GRADES': Row 13 is hidden in template
+[2026-06-25 12:01:00] Sheet 'SUMMARY OF GRADES': Row 64 is hidden in template
+[2026-06-25 12:01:00] Sheet 'SUMMARY OF GRADES': Row 66 is hidden in template
+[2026-06-25 12:01:00] Sheet 'SUMMARY OF GRADES': Row 117 is hidden in template
+[2026-06-25 12:01:00] Processing worksheet Index 4: 'SUMMARY OF GRADES' (Grade Sheet detected)
+[2026-06-25 12:01:00] Worksheet 'SUMMARY OF GRADES' populated: 3 boys, 1 girls.
+[2026-06-25 12:01:00] Re-hiding 4 originally hidden rows in sheet 'SUMMARY OF GRADES'
+[2026-06-25 12:01:01] Skipping worksheet Index 5: 'Sheet1' (No student grade placeholders found)
+[2026-06-25 12:01:02] Skipping worksheet Index 6: 'Sheet2' (No student grade placeholders found)
+[2026-06-25 12:01:03] Skipping worksheet Index 7: 'Helper (Do Not Delete)' (No student grade placeholders found)
+[2026-06-25 12:01:04] Skipping worksheet Index 8: 'DO NOT DELETE' (No student grade placeholders found)
+[2026-06-25 12:01:05] Saving final file to output. Filename: TLE 7-Grade 7 CS3A-20260625120105.xlsx
+[2026-06-25 12:01:05] Peak memory usage: 833 MB
+[2026-06-25 12:01:05] Saving to public folder: downloads/generated_grades/TLE 7-Grade 7 CS3A-20260625120105.xlsx
+[2026-06-25 12:05:29] File saved successfully.
+[2026-06-25 12:05:30] PHPExcel objects cleaned up.
+[2026-06-25 12:05:30] File size: 3.62 MB
+[2026-06-25 12:05:30] Download URL: https://cerebrox.thinkfast.app/downloads/generated_grades/TLE 7-Grade 7 CS3A-20260625120105.xlsx
+[2026-06-25 12:05:30] --- EXCEL GENERATION SUCCESS ---
+[2026-06-25 12:29:38] --- START EXCEL GENERATION ---
+[2026-06-25 12:29:38] Params: Class ID: 10, Section ID: 20, Subject ID: 46, Template ID: 1
+[2026-06-25 12:29:38] Template File in DB: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 12:29:38] Loading template file from disk: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 12:29:38] Initial memory usage: 4 MB
+[2026-06-25 12:29:38] File size: 991170 bytes (0.95 MB)
+[2026-06-25 12:29:38] File magic bytes (hex): 504b0304
+[2026-06-25 12:29:38] System temp dir: /tmp | Writable: YES
+[2026-06-25 12:29:38] Identifying Excel format...
+[2026-06-25 12:29:38] Excel format identified: Excel2007. Creating reader...
+[2026-06-25 12:29:38] Loading workbook into memory...
+[2026-06-25 12:31:02] PHPExcel loaded template successfully.
+[2026-06-25 12:31:02] Memory usage after load: 751.5 MB
+[2026-06-25 12:31:02] Total worksheets in workbook: 9
+[2026-06-25 12:31:02] Initial file size on disk: 0.95 MB (991170 bytes)
+[2026-06-25 12:31:02] Memory after load: 751.5 MB
+[2026-06-25 12:31:02] === PHASE 1: DETECTING HIDDEN ROWS IN ALL SHEETS ===
+[2026-06-25 12:31:02]   Sheet 'INPUT': Row 9 is hidden in template
+[2026-06-25 12:31:02]   Sheet 'INPUT': Row 11 is hidden in template
+[2026-06-25 12:31:02]   Sheet 'INPUT': Row 61 is hidden in template
+[2026-06-25 12:31:02]   Sheet 'INPUT': Row 63 is hidden in template
+[2026-06-25 12:31:02]   Sheet 'INPUT': Row 112 is hidden in template
+[2026-06-25 12:31:02]   Sheet 'INPUT': Stored 5 hidden rows for later use
+[2026-06-25 12:31:02]   Sheet 'TERM1': Row 12 is hidden in template
+[2026-06-25 12:31:02]   Sheet 'TERM1': Row 63 is hidden in template
+[2026-06-25 12:31:02]   Sheet 'TERM1': Row 65 is hidden in template
+[2026-06-25 12:31:02]   Sheet 'TERM1': Row 116 is hidden in template
+[2026-06-25 12:31:02]   Sheet 'TERM1': Stored 4 hidden rows for later use
+[2026-06-25 12:31:02]   Sheet 'TERM2': Row 12 is hidden in template
+[2026-06-25 12:31:02]   Sheet 'TERM2': Row 63 is hidden in template
+[2026-06-25 12:31:02]   Sheet 'TERM2': Row 65 is hidden in template
+[2026-06-25 12:31:02]   Sheet 'TERM2': Row 116 is hidden in template
+[2026-06-25 12:31:02]   Sheet 'TERM2': Stored 4 hidden rows for later use
+[2026-06-25 12:31:02]   Sheet 'TERM3': Row 12 is hidden in template
+[2026-06-25 12:31:02]   Sheet 'TERM3': Row 63 is hidden in template
+[2026-06-25 12:31:02]   Sheet 'TERM3': Row 65 is hidden in template
+[2026-06-25 12:31:02]   Sheet 'TERM3': Row 116 is hidden in template
+[2026-06-25 12:31:02]   Sheet 'TERM3': Stored 4 hidden rows for later use
+[2026-06-25 12:31:02]   Sheet 'SUMMARY OF GRADES': Row 13 is hidden in template
+[2026-06-25 12:31:02]   Sheet 'SUMMARY OF GRADES': Row 64 is hidden in template
+[2026-06-25 12:31:02]   Sheet 'SUMMARY OF GRADES': Row 66 is hidden in template
+[2026-06-25 12:31:02]   Sheet 'SUMMARY OF GRADES': Row 117 is hidden in template
+[2026-06-25 12:31:02]   Sheet 'SUMMARY OF GRADES': Stored 4 hidden rows for later use
+[2026-06-25 12:31:02]   Sheet 'Sheet1': Stored 0 hidden rows for later use
+[2026-06-25 12:31:02]   Sheet 'Sheet2': Stored 0 hidden rows for later use
+[2026-06-25 12:31:02]   Sheet 'Helper (Do Not Delete)': Stored 0 hidden rows for later use
+[2026-06-25 12:31:02]   Sheet 'DO NOT DELETE': Stored 0 hidden rows for later use
+[2026-06-25 12:31:02] Memory after Phase 1: 751.5 MB
+[2026-06-25 12:31:02] === PHASE 2: DATA INSERTION ===
+[2026-06-25 12:31:03] Processing worksheet Index 0: 'INPUT' (Grade Sheet detected)
+[2026-06-25 12:31:03] Worksheet 'INPUT' populated: 3 boys, 1 girls.
+[2026-06-25 12:31:03]   Sheet 'INPUT': Re-hiding 5 originally hidden rows
+[2026-06-25 12:31:03]     Row 9: setVisible(false) called
+[2026-06-25 12:31:03]     Row 11: setVisible(false) called
+[2026-06-25 12:31:03]     Row 61: setVisible(false) called
+[2026-06-25 12:31:03]     Row 63: setVisible(false) called
+[2026-06-25 12:31:03]     Row 112: setVisible(false) called
+[2026-06-25 12:31:04]   Memory after sheet 0: 752.25 MB
+[2026-06-25 12:31:04] Processing worksheet Index 1: 'TERM1' (Grade Sheet detected)
+[2026-06-25 12:31:04] Worksheet 'TERM1' populated: 3 boys, 1 girls.
+[2026-06-25 12:31:04]   Sheet 'TERM1': Re-hiding 4 originally hidden rows
+[2026-06-25 12:31:04]     Row 12: setVisible(false) called
+[2026-06-25 12:31:04]     Row 63: setVisible(false) called
+[2026-06-25 12:31:04]     Row 65: setVisible(false) called
+[2026-06-25 12:31:04]     Row 116: setVisible(false) called
+[2026-06-25 12:31:05]   Memory after sheet 1: 753.5 MB
+[2026-06-25 12:31:05] Processing worksheet Index 2: 'TERM2' (Grade Sheet detected)
+[2026-06-25 12:31:05] Worksheet 'TERM2' populated: 3 boys, 1 girls.
+[2026-06-25 12:31:05]   Sheet 'TERM2': Re-hiding 4 originally hidden rows
+[2026-06-25 12:31:05]     Row 12: setVisible(false) called
+[2026-06-25 12:31:05]     Row 63: setVisible(false) called
+[2026-06-25 12:31:05]     Row 65: setVisible(false) called
+[2026-06-25 12:31:05]     Row 116: setVisible(false) called
+[2026-06-25 12:31:06]   Memory after sheet 2: 754.75 MB
+[2026-06-25 12:31:06] Processing worksheet Index 3: 'TERM3' (Grade Sheet detected)
+[2026-06-25 12:31:06] Worksheet 'TERM3' populated: 3 boys, 1 girls.
+[2026-06-25 12:31:06]   Sheet 'TERM3': Re-hiding 4 originally hidden rows
+[2026-06-25 12:31:06]     Row 12: setVisible(false) called
+[2026-06-25 12:31:06]     Row 63: setVisible(false) called
+[2026-06-25 12:31:06]     Row 65: setVisible(false) called
+[2026-06-25 12:31:06]     Row 116: setVisible(false) called
+[2026-06-25 12:31:07]   Memory after sheet 3: 756 MB
+[2026-06-25 12:31:08] Processing worksheet Index 4: 'SUMMARY OF GRADES' (Grade Sheet detected)
+[2026-06-25 12:31:08] Worksheet 'SUMMARY OF GRADES' populated: 3 boys, 1 girls.
+[2026-06-25 12:31:08]   Sheet 'SUMMARY OF GRADES': Re-hiding 4 originally hidden rows
+[2026-06-25 12:31:08]     Row 13: setVisible(false) called
+[2026-06-25 12:31:08]     Row 64: setVisible(false) called
+[2026-06-25 12:31:08]     Row 66: setVisible(false) called
+[2026-06-25 12:31:08]     Row 117: setVisible(false) called
+[2026-06-25 12:31:09]   Memory after sheet 4: 757.25 MB
+[2026-06-25 12:31:09] Skipping worksheet Index 5: 'Sheet1' (No student grade placeholders found)
+[2026-06-25 12:31:09]   Sheet 'Sheet1': No hidden rows to restore
+[2026-06-25 12:31:10]   Memory after sheet 5: 760.25 MB
+[2026-06-25 12:31:10] Skipping worksheet Index 6: 'Sheet2' (No student grade placeholders found)
+[2026-06-25 12:31:10]   Sheet 'Sheet2': No hidden rows to restore
+[2026-06-25 12:31:11]   Memory after sheet 6: 827.5 MB
+[2026-06-25 12:31:11] Skipping worksheet Index 7: 'Helper (Do Not Delete)' (No student grade placeholders found)
+[2026-06-25 12:31:11]   Sheet 'Helper (Do Not Delete)': No hidden rows to restore
+[2026-06-25 12:31:12]   Memory after sheet 7: 830.5 MB
+[2026-06-25 12:31:12] Skipping worksheet Index 8: 'DO NOT DELETE' (No student grade placeholders found)
+[2026-06-25 12:31:12]   Sheet 'DO NOT DELETE': No hidden rows to restore
+[2026-06-25 12:31:13]   Memory after sheet 8: 833.5 MB
+[2026-06-25 12:31:13] Memory after Phase 2: 833.5 MB
+[2026-06-25 12:31:13] === PHASE 3: FINAL PASS - ENSURING ALL HIDDEN ROWS ARE PRESERVED ===
+[2026-06-25 12:31:13]   Sheet 'INPUT': Re-applying 5 hidden rows
+[2026-06-25 12:31:13]     Row 9: setVisible(false) applied in final pass
+[2026-06-25 12:31:13]     Row 11: setVisible(false) applied in final pass
+[2026-06-25 12:31:13]     Row 61: setVisible(false) applied in final pass
+[2026-06-25 12:31:13]     Row 63: setVisible(false) applied in final pass
+[2026-06-25 12:31:13]     Row 112: setVisible(false) applied in final pass
+[2026-06-25 12:31:13]   Sheet 'TERM1': Re-applying 4 hidden rows
+[2026-06-25 12:31:13]     Row 12: setVisible(false) applied in final pass
+[2026-06-25 12:31:13]     Row 63: setVisible(false) applied in final pass
+[2026-06-25 12:31:13]     Row 65: setVisible(false) applied in final pass
+[2026-06-25 12:31:13]     Row 116: setVisible(false) applied in final pass
+[2026-06-25 12:31:13]   Sheet 'TERM2': Re-applying 4 hidden rows
+[2026-06-25 12:31:13]     Row 12: setVisible(false) applied in final pass
+[2026-06-25 12:31:13]     Row 63: setVisible(false) applied in final pass
+[2026-06-25 12:31:13]     Row 65: setVisible(false) applied in final pass
+[2026-06-25 12:31:13]     Row 116: setVisible(false) applied in final pass
+[2026-06-25 12:31:13]   Sheet 'TERM3': Re-applying 4 hidden rows
+[2026-06-25 12:31:13]     Row 12: setVisible(false) applied in final pass
+[2026-06-25 12:31:13]     Row 63: setVisible(false) applied in final pass
+[2026-06-25 12:31:13]     Row 65: setVisible(false) applied in final pass
+[2026-06-25 12:31:13]     Row 116: setVisible(false) applied in final pass
+[2026-06-25 12:31:13]   Sheet 'SUMMARY OF GRADES': Re-applying 4 hidden rows
+[2026-06-25 12:31:13]     Row 13: setVisible(false) applied in final pass
+[2026-06-25 12:31:13]     Row 64: setVisible(false) applied in final pass
+[2026-06-25 12:31:13]     Row 66: setVisible(false) applied in final pass
+[2026-06-25 12:31:13]     Row 117: setVisible(false) applied in final pass
+[2026-06-25 12:31:13]   Sheet 'Sheet1': No hidden rows to re-apply
+[2026-06-25 12:31:13]   Sheet 'Sheet2': No hidden rows to re-apply
+[2026-06-25 12:31:13]   Sheet 'Helper (Do Not Delete)': No hidden rows to re-apply
+[2026-06-25 12:31:13]   Sheet 'DO NOT DELETE': No hidden rows to re-apply
+[2026-06-25 12:31:13] Memory after Phase 3: 833.5 MB
+[2026-06-25 12:31:13] === PHASE 4: SAVING FILE ===
+[2026-06-25 12:31:13] Filename: TLE 7-Grade 7 CS3A-20260625123113.xlsx
+[2026-06-25 12:31:13] Peak memory usage: 833.5 MB
+[2026-06-25 12:31:13] VERIFICATION: Checking hidden row state immediately before save:
+[2026-06-25 12:31:13]   Sheet 'INPUT': 5 rows STILL HIDDEN: 9, 11, 61, 63, 112
+[2026-06-25 12:31:13]   Sheet 'TERM1': 4 rows STILL HIDDEN: 12, 63, 65, 116
+[2026-06-25 12:31:13]   Sheet 'TERM2': 4 rows STILL HIDDEN: 12, 63, 65, 116
+[2026-06-25 12:31:13]   Sheet 'TERM3': 4 rows STILL HIDDEN: 12, 63, 65, 116
+[2026-06-25 12:31:13]   Sheet 'SUMMARY OF GRADES': 4 rows STILL HIDDEN: 13, 64, 66, 117
+[2026-06-25 12:31:13] Target file path: downloads/generated_grades/TLE 7-Grade 7 CS3A-20260625123113.xlsx
+[2026-06-25 12:31:13] PHPExcel object state before save:
+[2026-06-25 12:31:13]   - Sheet count: 9
+[2026-06-25 12:31:13]   - Memory usage: 833.5 MB
+[2026-06-25 12:31:13] Analyzing workbook content:
+[2026-06-25 12:50:43] --- START EXCEL GENERATION ---
+[2026-06-25 12:50:43] Params: Class ID: 10, Section ID: 20, Subject ID: 46, Template ID: 1
+[2026-06-25 12:50:43] Template File in DB: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 12:50:43] Loading template file from disk: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 12:50:43] Initial memory usage: 3.75 MB
+[2026-06-25 12:50:43] File size: 991170 bytes (0.95 MB)
+[2026-06-25 12:50:43] File magic bytes (hex): 504b0304
+[2026-06-25 12:50:43] System temp dir: /tmp | Writable: YES
+[2026-06-25 12:50:43] Identifying Excel format...
+[2026-06-25 12:50:43] Excel format identified: Excel2007. Creating reader...
+[2026-06-25 12:50:43] Loading workbook into memory...
+[2026-06-25 12:52:09] PHPExcel loaded template successfully.
+[2026-06-25 12:52:09] Memory usage after load: 752.75 MB
+[2026-06-25 12:52:09] Total worksheets in workbook: 9
+[2026-06-25 12:52:09] Initial file size on disk: 0.95 MB (991170 bytes)
+[2026-06-25 12:52:09] Memory after load: 752.75 MB
+[2026-06-25 12:52:09] === PHASE 1: DETECTING HIDDEN ROWS IN ALL SHEETS ===
+[2026-06-25 12:52:09]   Sheet 'INPUT': Row 9 is hidden in template
+[2026-06-25 12:52:09]   Sheet 'INPUT': Row 11 is hidden in template
+[2026-06-25 12:52:09]   Sheet 'INPUT': Row 61 is hidden in template
+[2026-06-25 12:52:09]   Sheet 'INPUT': Row 63 is hidden in template
+[2026-06-25 12:52:09]   Sheet 'INPUT': Row 112 is hidden in template
+[2026-06-25 12:52:09]   Sheet 'INPUT': Stored 5 hidden rows for later use
+[2026-06-25 12:52:09]   Sheet 'TERM1': Row 12 is hidden in template
+[2026-06-25 12:52:09]   Sheet 'TERM1': Row 63 is hidden in template
+[2026-06-25 12:52:09]   Sheet 'TERM1': Row 65 is hidden in template
+[2026-06-25 12:52:09]   Sheet 'TERM1': Row 116 is hidden in template
+[2026-06-25 12:52:09]   Sheet 'TERM1': Stored 4 hidden rows for later use
+[2026-06-25 12:52:09]   Sheet 'TERM2': Row 12 is hidden in template
+[2026-06-25 12:52:09]   Sheet 'TERM2': Row 63 is hidden in template
+[2026-06-25 12:52:09]   Sheet 'TERM2': Row 65 is hidden in template
+[2026-06-25 12:52:09]   Sheet 'TERM2': Row 116 is hidden in template
+[2026-06-25 12:52:09]   Sheet 'TERM2': Stored 4 hidden rows for later use
+[2026-06-25 12:52:09]   Sheet 'TERM3': Row 12 is hidden in template
+[2026-06-25 12:52:09]   Sheet 'TERM3': Row 63 is hidden in template
+[2026-06-25 12:52:09]   Sheet 'TERM3': Row 65 is hidden in template
+[2026-06-25 12:52:09]   Sheet 'TERM3': Row 116 is hidden in template
+[2026-06-25 12:52:09]   Sheet 'TERM3': Stored 4 hidden rows for later use
+[2026-06-25 12:52:09]   Sheet 'SUMMARY OF GRADES': Row 13 is hidden in template
+[2026-06-25 12:52:09]   Sheet 'SUMMARY OF GRADES': Row 64 is hidden in template
+[2026-06-25 12:52:09]   Sheet 'SUMMARY OF GRADES': Row 66 is hidden in template
+[2026-06-25 12:52:09]   Sheet 'SUMMARY OF GRADES': Row 117 is hidden in template
+[2026-06-25 12:52:09]   Sheet 'SUMMARY OF GRADES': Stored 4 hidden rows for later use
+[2026-06-25 12:52:09]   Sheet 'Sheet1': Stored 0 hidden rows for later use
+[2026-06-25 12:52:09]   Sheet 'Sheet2': Stored 0 hidden rows for later use
+[2026-06-25 12:52:09]   Sheet 'Helper (Do Not Delete)': Stored 0 hidden rows for later use
+[2026-06-25 12:52:09]   Sheet 'DO NOT DELETE': Stored 0 hidden rows for later use
+[2026-06-25 12:52:09] Memory after Phase 1: 752.75 MB
+[2026-06-25 12:52:09] === PHASE 2: DATA INSERTION ===
+[2026-06-25 12:52:10] Processing worksheet Index 0: 'INPUT' (Grade Sheet detected)
+[2026-06-25 12:52:10] Worksheet 'INPUT' populated: 3 boys, 1 girls.
+[2026-06-25 12:52:10]   Sheet 'INPUT': Re-hiding 5 originally hidden rows
+[2026-06-25 12:52:10]     Row 9: setVisible(false) called
+[2026-06-25 12:52:10]     Row 11: setVisible(false) called
+[2026-06-25 12:52:10]     Row 61: setVisible(false) called
+[2026-06-25 12:52:10]     Row 63: setVisible(false) called
+[2026-06-25 12:52:10]     Row 112: setVisible(false) called
+[2026-06-25 12:52:11]   Memory after sheet 0: 753.5 MB
+[2026-06-25 12:52:11] Processing worksheet Index 1: 'TERM1' (Grade Sheet detected)
+[2026-06-25 12:52:11] Worksheet 'TERM1' populated: 3 boys, 1 girls.
+[2026-06-25 12:52:11]   Sheet 'TERM1': Re-hiding 4 originally hidden rows
+[2026-06-25 12:52:11]     Row 12: setVisible(false) called
+[2026-06-25 12:52:11]     Row 63: setVisible(false) called
+[2026-06-25 12:52:11]     Row 65: setVisible(false) called
+[2026-06-25 12:52:11]     Row 116: setVisible(false) called
+[2026-06-25 12:52:12]   Memory after sheet 1: 754.75 MB
+[2026-06-25 12:52:12] Processing worksheet Index 2: 'TERM2' (Grade Sheet detected)
+[2026-06-25 12:52:12] Worksheet 'TERM2' populated: 3 boys, 1 girls.
+[2026-06-25 12:52:12]   Sheet 'TERM2': Re-hiding 4 originally hidden rows
+[2026-06-25 12:52:12]     Row 12: setVisible(false) called
+[2026-06-25 12:52:12]     Row 63: setVisible(false) called
+[2026-06-25 12:52:12]     Row 65: setVisible(false) called
+[2026-06-25 12:52:12]     Row 116: setVisible(false) called
+[2026-06-25 12:52:13]   Memory after sheet 2: 756 MB
+[2026-06-25 12:52:13] Processing worksheet Index 3: 'TERM3' (Grade Sheet detected)
+[2026-06-25 12:52:13] Worksheet 'TERM3' populated: 3 boys, 1 girls.
+[2026-06-25 12:52:13]   Sheet 'TERM3': Re-hiding 4 originally hidden rows
+[2026-06-25 12:52:13]     Row 12: setVisible(false) called
+[2026-06-25 12:52:13]     Row 63: setVisible(false) called
+[2026-06-25 12:52:13]     Row 65: setVisible(false) called
+[2026-06-25 12:52:13]     Row 116: setVisible(false) called
+[2026-06-25 12:52:14]   Memory after sheet 3: 757.25 MB
+[2026-06-25 12:52:15] Processing worksheet Index 4: 'SUMMARY OF GRADES' (Grade Sheet detected)
+[2026-06-25 12:52:15] Worksheet 'SUMMARY OF GRADES' populated: 3 boys, 1 girls.
+[2026-06-25 12:52:15]   Sheet 'SUMMARY OF GRADES': Re-hiding 4 originally hidden rows
+[2026-06-25 12:52:15]     Row 13: setVisible(false) called
+[2026-06-25 12:52:15]     Row 64: setVisible(false) called
+[2026-06-25 12:52:15]     Row 66: setVisible(false) called
+[2026-06-25 12:52:15]     Row 117: setVisible(false) called
+[2026-06-25 12:52:16]   Memory after sheet 4: 758.5 MB
+[2026-06-25 12:52:16] Skipping worksheet Index 5: 'Sheet1' (No student grade placeholders found)
+[2026-06-25 12:52:16]   Sheet 'Sheet1': No hidden rows to restore
+[2026-06-25 12:52:17]   Memory after sheet 5: 761.75 MB
+[2026-06-25 12:52:17] Skipping worksheet Index 6: 'Sheet2' (No student grade placeholders found)
+[2026-06-25 12:52:17]   Sheet 'Sheet2': No hidden rows to restore
+[2026-06-25 12:52:18]   Memory after sheet 6: 828.75 MB
+[2026-06-25 12:52:18] Skipping worksheet Index 7: 'Helper (Do Not Delete)' (No student grade placeholders found)
+[2026-06-25 12:52:18]   Sheet 'Helper (Do Not Delete)': No hidden rows to restore
+[2026-06-25 12:52:19]   Memory after sheet 7: 831.75 MB
+[2026-06-25 12:52:19] Skipping worksheet Index 8: 'DO NOT DELETE' (No student grade placeholders found)
+[2026-06-25 12:52:19]   Sheet 'DO NOT DELETE': No hidden rows to restore
+[2026-06-25 12:52:20]   Memory after sheet 8: 835 MB
+[2026-06-25 12:52:20] Memory after Phase 2: 835 MB
+[2026-06-25 12:52:20] === PHASE 3: FINAL PASS - ENSURING ALL HIDDEN ROWS ARE PRESERVED ===
+[2026-06-25 12:52:20]   Sheet 'INPUT': Re-applying 5 hidden rows
+[2026-06-25 12:52:20]     Row 9: setVisible(false) applied in final pass
+[2026-06-25 12:52:20]     Row 11: setVisible(false) applied in final pass
+[2026-06-25 12:52:20]     Row 61: setVisible(false) applied in final pass
+[2026-06-25 12:52:20]     Row 63: setVisible(false) applied in final pass
+[2026-06-25 12:52:20]     Row 112: setVisible(false) applied in final pass
+[2026-06-25 12:52:20]   Sheet 'TERM1': Re-applying 4 hidden rows
+[2026-06-25 12:52:20]     Row 12: setVisible(false) applied in final pass
+[2026-06-25 12:52:20]     Row 63: setVisible(false) applied in final pass
+[2026-06-25 12:52:20]     Row 65: setVisible(false) applied in final pass
+[2026-06-25 12:52:20]     Row 116: setVisible(false) applied in final pass
+[2026-06-25 12:52:20]   Sheet 'TERM2': Re-applying 4 hidden rows
+[2026-06-25 12:52:20]     Row 12: setVisible(false) applied in final pass
+[2026-06-25 12:52:20]     Row 63: setVisible(false) applied in final pass
+[2026-06-25 12:52:20]     Row 65: setVisible(false) applied in final pass
+[2026-06-25 12:52:20]     Row 116: setVisible(false) applied in final pass
+[2026-06-25 12:52:20]   Sheet 'TERM3': Re-applying 4 hidden rows
+[2026-06-25 12:52:20]     Row 12: setVisible(false) applied in final pass
+[2026-06-25 12:52:20]     Row 63: setVisible(false) applied in final pass
+[2026-06-25 12:52:20]     Row 65: setVisible(false) applied in final pass
+[2026-06-25 12:52:20]     Row 116: setVisible(false) applied in final pass
+[2026-06-25 12:52:20]   Sheet 'SUMMARY OF GRADES': Re-applying 4 hidden rows
+[2026-06-25 12:52:20]     Row 13: setVisible(false) applied in final pass
+[2026-06-25 12:52:20]     Row 64: setVisible(false) applied in final pass
+[2026-06-25 12:52:20]     Row 66: setVisible(false) applied in final pass
+[2026-06-25 12:52:20]     Row 117: setVisible(false) applied in final pass
+[2026-06-25 12:52:20]   Sheet 'Sheet1': No hidden rows to re-apply
+[2026-06-25 12:52:20]   Sheet 'Sheet2': No hidden rows to re-apply
+[2026-06-25 12:52:20]   Sheet 'Helper (Do Not Delete)': No hidden rows to re-apply
+[2026-06-25 12:52:20]   Sheet 'DO NOT DELETE': No hidden rows to re-apply
+[2026-06-25 12:52:20] Memory after Phase 3: 835 MB
+[2026-06-25 12:52:20] === PHASE 4: SAVING FILE ===
+[2026-06-25 12:52:20] Filename: TLE 7-Grade 7 CS3A-20260625125220.xlsx
+[2026-06-25 12:52:20] Peak memory usage: 835 MB
+[2026-06-25 12:52:20] VERIFICATION: Checking hidden row state immediately before save:
+[2026-06-25 12:52:20]   Sheet 'INPUT': 5 rows STILL HIDDEN: 9, 11, 61, 63, 112
+[2026-06-25 12:52:20]   Sheet 'TERM1': 4 rows STILL HIDDEN: 12, 63, 65, 116
+[2026-06-25 12:52:20]   Sheet 'TERM2': 4 rows STILL HIDDEN: 12, 63, 65, 116
+[2026-06-25 12:52:20]   Sheet 'TERM3': 4 rows STILL HIDDEN: 12, 63, 65, 116
+[2026-06-25 12:52:20]   Sheet 'SUMMARY OF GRADES': 4 rows STILL HIDDEN: 13, 64, 66, 117
+[2026-06-25 12:52:20] Target file path: downloads/generated_grades/TLE 7-Grade 7 CS3A-20260625125220.xlsx
+[2026-06-25 12:52:20] PHPExcel object state before save:
+[2026-06-25 12:52:20]   - Sheet count: 9
+[2026-06-25 12:52:20]   - Memory usage: 835 MB
+[2026-06-25 12:52:20] Analyzing workbook content:
+[2026-06-25 13:10:29] --- START EXCEL GENERATION ---
+[2026-06-25 13:10:29] Params: Class ID: 10, Section ID: 20, Subject ID: 46, Template ID: 1
+[2026-06-25 13:10:29] Template File in DB: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 13:10:29] Loading template file from disk: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 13:10:29] Initial memory usage: 3.75 MB
+[2026-06-25 13:10:29] File size: 991170 bytes (0.95 MB)
+[2026-06-25 13:10:29] File magic bytes (hex): 504b0304
+[2026-06-25 13:10:29] System temp dir: /tmp | Writable: YES
+[2026-06-25 13:10:29] Identifying Excel format...
+[2026-06-25 13:10:29] Excel format identified: Excel2007. Creating reader...
+[2026-06-25 13:10:29] Loading workbook into memory...
+[2026-06-25 13:11:51] PHPExcel loaded template successfully.
+[2026-06-25 13:11:51] Memory usage after load: 751 MB
+[2026-06-25 13:11:51] Total worksheets in workbook: 9
+[2026-06-25 13:11:51] Initial file size on disk: 0.95 MB (991170 bytes)
+[2026-06-25 13:11:51] Memory after load: 751 MB
+[2026-06-25 13:11:51] === PHASE 1: DETECTING HIDDEN ROWS IN ALL SHEETS ===
+[2026-06-25 13:11:51]   Sheet 'INPUT': Row 9 is hidden in template
+[2026-06-25 13:11:51]   Sheet 'INPUT': Row 11 is hidden in template
+[2026-06-25 13:11:51]   Sheet 'INPUT': Row 61 is hidden in template
+[2026-06-25 13:11:51]   Sheet 'INPUT': Row 63 is hidden in template
+[2026-06-25 13:11:51]   Sheet 'INPUT': Row 112 is hidden in template
+[2026-06-25 13:11:51]   Sheet 'INPUT': Stored 5 hidden rows for later use
+[2026-06-25 13:11:51]   Sheet 'TERM1': Row 12 is hidden in template
+[2026-06-25 13:11:51]   Sheet 'TERM1': Row 63 is hidden in template
+[2026-06-25 13:11:51]   Sheet 'TERM1': Row 65 is hidden in template
+[2026-06-25 13:11:51]   Sheet 'TERM1': Row 116 is hidden in template
+[2026-06-25 13:11:51]   Sheet 'TERM1': Stored 4 hidden rows for later use
+[2026-06-25 13:11:51]   Sheet 'TERM2': Row 12 is hidden in template
+[2026-06-25 13:11:51]   Sheet 'TERM2': Row 63 is hidden in template
+[2026-06-25 13:11:51]   Sheet 'TERM2': Row 65 is hidden in template
+[2026-06-25 13:11:51]   Sheet 'TERM2': Row 116 is hidden in template
+[2026-06-25 13:11:51]   Sheet 'TERM2': Stored 4 hidden rows for later use
+[2026-06-25 13:11:51]   Sheet 'TERM3': Row 12 is hidden in template
+[2026-06-25 13:11:51]   Sheet 'TERM3': Row 63 is hidden in template
+[2026-06-25 13:11:51]   Sheet 'TERM3': Row 65 is hidden in template
+[2026-06-25 13:11:51]   Sheet 'TERM3': Row 116 is hidden in template
+[2026-06-25 13:11:51]   Sheet 'TERM3': Stored 4 hidden rows for later use
+[2026-06-25 13:11:51]   Sheet 'SUMMARY OF GRADES': Row 13 is hidden in template
+[2026-06-25 13:11:51]   Sheet 'SUMMARY OF GRADES': Row 64 is hidden in template
+[2026-06-25 13:11:51]   Sheet 'SUMMARY OF GRADES': Row 66 is hidden in template
+[2026-06-25 13:11:51]   Sheet 'SUMMARY OF GRADES': Row 117 is hidden in template
+[2026-06-25 13:11:51]   Sheet 'SUMMARY OF GRADES': Stored 4 hidden rows for later use
+[2026-06-25 13:11:51]   Sheet 'Sheet1': Stored 0 hidden rows for later use
+[2026-06-25 13:11:51]   Sheet 'Sheet2': Stored 0 hidden rows for later use
+[2026-06-25 13:11:51]   Sheet 'Helper (Do Not Delete)': Stored 0 hidden rows for later use
+[2026-06-25 13:11:51]   Sheet 'DO NOT DELETE': Stored 0 hidden rows for later use
+[2026-06-25 13:11:51] Memory after Phase 1: 751 MB
+[2026-06-25 13:11:51] === PHASE 2: DATA INSERTION ===
+[2026-06-25 13:11:52] Processing worksheet Index 0: 'INPUT' (Grade Sheet detected)
+[2026-06-25 13:11:52] Worksheet 'INPUT' populated: 3 boys, 1 girls.
+[2026-06-25 13:11:52]   Sheet 'INPUT': Re-hiding 5 originally hidden rows
+[2026-06-25 13:11:52]     Row 9: setVisible(false) called
+[2026-06-25 13:11:52]     Row 11: setVisible(false) called
+[2026-06-25 13:11:52]     Row 61: setVisible(false) called
+[2026-06-25 13:11:52]     Row 63: setVisible(false) called
+[2026-06-25 13:11:52]     Row 112: setVisible(false) called
+[2026-06-25 13:11:53]   Memory after sheet 0: 751.75 MB
+[2026-06-25 13:11:53] Processing worksheet Index 1: 'TERM1' (Grade Sheet detected)
+[2026-06-25 13:11:53] Worksheet 'TERM1' populated: 3 boys, 1 girls.
+[2026-06-25 13:11:53]   Sheet 'TERM1': Re-hiding 4 originally hidden rows
+[2026-06-25 13:11:53]     Row 12: setVisible(false) called
+[2026-06-25 13:11:53]     Row 63: setVisible(false) called
+[2026-06-25 13:11:53]     Row 65: setVisible(false) called
+[2026-06-25 13:11:53]     Row 116: setVisible(false) called
+[2026-06-25 13:11:54]   Memory after sheet 1: 753 MB
+[2026-06-25 13:11:54] Processing worksheet Index 2: 'TERM2' (Grade Sheet detected)
+[2026-06-25 13:11:54] Worksheet 'TERM2' populated: 3 boys, 1 girls.
+[2026-06-25 13:11:54]   Sheet 'TERM2': Re-hiding 4 originally hidden rows
+[2026-06-25 13:11:54]     Row 12: setVisible(false) called
+[2026-06-25 13:11:54]     Row 63: setVisible(false) called
+[2026-06-25 13:11:54]     Row 65: setVisible(false) called
+[2026-06-25 13:11:54]     Row 116: setVisible(false) called
+[2026-06-25 13:11:55]   Memory after sheet 2: 754.25 MB
+[2026-06-25 13:11:55] Processing worksheet Index 3: 'TERM3' (Grade Sheet detected)
+[2026-06-25 13:11:55] Worksheet 'TERM3' populated: 3 boys, 1 girls.
+[2026-06-25 13:11:55]   Sheet 'TERM3': Re-hiding 4 originally hidden rows
+[2026-06-25 13:11:55]     Row 12: setVisible(false) called
+[2026-06-25 13:11:55]     Row 63: setVisible(false) called
+[2026-06-25 13:11:55]     Row 65: setVisible(false) called
+[2026-06-25 13:11:55]     Row 116: setVisible(false) called
+[2026-06-25 13:11:56]   Memory after sheet 3: 755.5 MB
+[2026-06-25 13:11:56] Processing worksheet Index 4: 'SUMMARY OF GRADES' (Grade Sheet detected)
+[2026-06-25 13:11:56] Worksheet 'SUMMARY OF GRADES' populated: 3 boys, 1 girls.
+[2026-06-25 13:11:56]   Sheet 'SUMMARY OF GRADES': Re-hiding 4 originally hidden rows
+[2026-06-25 13:11:56]     Row 13: setVisible(false) called
+[2026-06-25 13:11:56]     Row 64: setVisible(false) called
+[2026-06-25 13:11:56]     Row 66: setVisible(false) called
+[2026-06-25 13:11:56]     Row 117: setVisible(false) called
+[2026-06-25 13:11:57]   Memory after sheet 4: 756.75 MB
+[2026-06-25 13:11:57] Skipping worksheet Index 5: 'Sheet1' (No student grade placeholders found)
+[2026-06-25 13:11:57]   Sheet 'Sheet1': No hidden rows to restore
+[2026-06-25 13:11:58]   Memory after sheet 5: 760 MB
+[2026-06-25 13:11:58] Skipping worksheet Index 6: 'Sheet2' (No student grade placeholders found)
+[2026-06-25 13:11:58]   Sheet 'Sheet2': No hidden rows to restore
+[2026-06-25 13:11:59]   Memory after sheet 6: 827.25 MB
+[2026-06-25 13:11:59] Skipping worksheet Index 7: 'Helper (Do Not Delete)' (No student grade placeholders found)
+[2026-06-25 13:11:59]   Sheet 'Helper (Do Not Delete)': No hidden rows to restore
+[2026-06-25 13:12:00]   Memory after sheet 7: 830.25 MB
+[2026-06-25 13:12:00] Skipping worksheet Index 8: 'DO NOT DELETE' (No student grade placeholders found)
+[2026-06-25 13:12:00]   Sheet 'DO NOT DELETE': No hidden rows to restore
+[2026-06-25 13:12:01]   Memory after sheet 8: 833.25 MB
+[2026-06-25 13:12:01] Memory after Phase 2: 833.25 MB
+[2026-06-25 13:12:01] === PHASE 3: FINAL PASS - ENSURING ALL HIDDEN ROWS ARE PRESERVED ===
+[2026-06-25 13:12:01]   Sheet 'INPUT': Re-applying 5 hidden rows
+[2026-06-25 13:12:01]     Row 9: setVisible(false) applied in final pass
+[2026-06-25 13:12:01]     Row 11: setVisible(false) applied in final pass
+[2026-06-25 13:12:01]     Row 61: setVisible(false) applied in final pass
+[2026-06-25 13:12:01]     Row 63: setVisible(false) applied in final pass
+[2026-06-25 13:12:01]     Row 112: setVisible(false) applied in final pass
+[2026-06-25 13:12:01]   Sheet 'TERM1': Re-applying 4 hidden rows
+[2026-06-25 13:12:01]     Row 12: setVisible(false) applied in final pass
+[2026-06-25 13:12:01]     Row 63: setVisible(false) applied in final pass
+[2026-06-25 13:12:01]     Row 65: setVisible(false) applied in final pass
+[2026-06-25 13:12:01]     Row 116: setVisible(false) applied in final pass
+[2026-06-25 13:12:01]   Sheet 'TERM2': Re-applying 4 hidden rows
+[2026-06-25 13:12:01]     Row 12: setVisible(false) applied in final pass
+[2026-06-25 13:12:01]     Row 63: setVisible(false) applied in final pass
+[2026-06-25 13:12:01]     Row 65: setVisible(false) applied in final pass
+[2026-06-25 13:12:01]     Row 116: setVisible(false) applied in final pass
+[2026-06-25 13:12:01]   Sheet 'TERM3': Re-applying 4 hidden rows
+[2026-06-25 13:12:01]     Row 12: setVisible(false) applied in final pass
+[2026-06-25 13:12:01]     Row 63: setVisible(false) applied in final pass
+[2026-06-25 13:12:01]     Row 65: setVisible(false) applied in final pass
+[2026-06-25 13:12:01]     Row 116: setVisible(false) applied in final pass
+[2026-06-25 13:12:01]   Sheet 'SUMMARY OF GRADES': Re-applying 4 hidden rows
+[2026-06-25 13:12:01]     Row 13: setVisible(false) applied in final pass
+[2026-06-25 13:12:01]     Row 64: setVisible(false) applied in final pass
+[2026-06-25 13:12:01]     Row 66: setVisible(false) applied in final pass
+[2026-06-25 13:12:01]     Row 117: setVisible(false) applied in final pass
+[2026-06-25 13:12:01]   Sheet 'Sheet1': No hidden rows to re-apply
+[2026-06-25 13:12:01]   Sheet 'Sheet2': No hidden rows to re-apply
+[2026-06-25 13:12:01]   Sheet 'Helper (Do Not Delete)': No hidden rows to re-apply
+[2026-06-25 13:12:01]   Sheet 'DO NOT DELETE': No hidden rows to re-apply
+[2026-06-25 13:12:01] Memory after Phase 3: 833.25 MB
+[2026-06-25 13:12:01] === PHASE 4: SAVING FILE ===
+[2026-06-25 13:12:01] Filename: TLE 7-Grade 7 CS3A-20260625011201.xlsx
+[2026-06-25 13:12:01] Peak memory usage: 833.25 MB
+[2026-06-25 13:12:01] VERIFICATION: Checking hidden row state immediately before save:
+[2026-06-25 13:12:01]   Sheet 'INPUT': 5 rows STILL HIDDEN: 9, 11, 61, 63, 112
+[2026-06-25 13:12:01]   Sheet 'TERM1': 4 rows STILL HIDDEN: 12, 63, 65, 116
+[2026-06-25 13:12:01]   Sheet 'TERM2': 4 rows STILL HIDDEN: 12, 63, 65, 116
+[2026-06-25 13:12:01]   Sheet 'TERM3': 4 rows STILL HIDDEN: 12, 63, 65, 116
+[2026-06-25 13:12:01]   Sheet 'SUMMARY OF GRADES': 4 rows STILL HIDDEN: 13, 64, 66, 117
+[2026-06-25 13:12:01] Target file path: downloads/generated_grades/TLE 7-Grade 7 CS3A-20260625011201.xlsx
+[2026-06-25 13:12:01] PHPExcel object state before save:
+[2026-06-25 13:12:01]   - Sheet count: 9
+[2026-06-25 13:12:01]   - Memory usage: 833.25 MB
+[2026-06-25 13:12:01] Creating Excel2007 writer...
+[2026-06-25 13:12:01] Writer object created in 0 seconds
+[2026-06-25 13:12:01] Writer setting - Pre-calculate formulas: NO (Excel will calculate on open)
+[2026-06-25 13:12:01] Starting file save operation...
+[2026-06-25 13:16:28] File saved successfully in 266.88 seconds
+[2026-06-25 13:16:28] Cleaning up PHPExcel objects...
+[2026-06-25 13:16:29] PHPExcel objects cleaned up.
+[2026-06-25 13:16:29] Memory after cleanup: 844.75 MB
+[2026-06-25 13:16:29] === FILE SIZE ANALYSIS ===
+[2026-06-25 13:16:29] Original template size: 0.95 MB (991170 bytes)
+[2026-06-25 13:16:29] Generated file size: 3.62 MB (3792911 bytes)
+[2026-06-25 13:16:29] Size increase: 2.67 MB (2801741 bytes)
+[2026-06-25 13:16:29] Percentage increase: 282.7%
+[2026-06-25 13:16:29] WARNING: File size increased by more than 200%! This indicates bloat.
+[2026-06-25 13:16:29] Possible causes:
+[2026-06-25 13:16:29]   - setPreCalculateFormulas(false) was used (adds ~300% bloat)
+[2026-06-25 13:16:29]   - Too many cell styles/formats being created
+[2026-06-25 13:16:29]   - PHPExcel adding unnecessary XML data
+[2026-06-25 13:16:29] === GENERATION COMPLETE - SUMMARY ===
+[2026-06-25 13:16:29] Template: 3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 13:16:29] Generated file: TLE 7-Grade 7 CS3A-20260625011201.xlsx
+[2026-06-25 13:16:29] Download URL: https://cerebrox.thinkfast.app/downloads/generated_grades/TLE 7-Grade 7 CS3A-20260625011201.xlsx
+[2026-06-25 13:16:29] Total execution time: 359.93 seconds
+[2026-06-25 13:16:29] Final memory usage: 844.25 MB
+[2026-06-25 13:16:29] Peak memory usage: 990 MB
+[2026-06-25 13:16:29] Students: 15 boys + 5 girls = 20 total
+[2026-06-25 13:16:29] Hidden rows preserved: 21 total across 9 sheets
+[2026-06-25 13:16:29] --- EXCEL GENERATION SUCCESS ---
+[2026-06-25 13:36:29] --- START EXCEL GENERATION ---
+[2026-06-25 13:36:29] Params: Class ID: 10, Section ID: 20, Subject ID: 46, Template ID: 1
+[2026-06-25 13:36:29] Template File in DB: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 13:36:29] Loading template file from disk: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 13:36:29] Initial memory usage: 3.75 MB
+[2026-06-25 13:36:29] File size: 991170 bytes (0.95 MB)
+[2026-06-25 13:36:29] File magic bytes (hex): 504b0304
+[2026-06-25 13:36:29] System temp dir: /tmp | Writable: YES
+[2026-06-25 13:36:29] Identifying Excel format...
+[2026-06-25 13:36:29] Excel format identified: Excel2007. Creating reader...
+[2026-06-25 13:36:29] Loading workbook into memory...
+[2026-06-25 13:37:49] PHPExcel loaded template successfully.
+[2026-06-25 13:37:49] Memory usage after load: 750.75 MB
+[2026-06-25 13:37:49] Total worksheets in workbook: 9
+[2026-06-25 13:37:49] Initial file size on disk: 0.95 MB (991170 bytes)
+[2026-06-25 13:37:49] Memory after load: 750.75 MB
+[2026-06-25 13:37:49] === PHASE 1: DETECTING HIDDEN ROWS IN ALL SHEETS ===
+[2026-06-25 13:37:49]   Sheet 'INPUT': Row 9 is hidden in template
+[2026-06-25 13:37:49]   Sheet 'INPUT': Row 11 is hidden in template
+[2026-06-25 13:37:49]   Sheet 'INPUT': Row 61 is hidden in template
+[2026-06-25 13:37:49]   Sheet 'INPUT': Row 63 is hidden in template
+[2026-06-25 13:37:49]   Sheet 'INPUT': Row 112 is hidden in template
+[2026-06-25 13:37:49]   Sheet 'INPUT': Stored 5 hidden rows for later use
+[2026-06-25 13:37:49]   Sheet 'TERM1': Row 12 is hidden in template
+[2026-06-25 13:37:49]   Sheet 'TERM1': Row 63 is hidden in template
+[2026-06-25 13:37:49]   Sheet 'TERM1': Row 65 is hidden in template
+[2026-06-25 13:37:49]   Sheet 'TERM1': Row 116 is hidden in template
+[2026-06-25 13:37:49]   Sheet 'TERM1': Stored 4 hidden rows for later use
+[2026-06-25 13:37:49]   Sheet 'TERM2': Row 12 is hidden in template
+[2026-06-25 13:37:49]   Sheet 'TERM2': Row 63 is hidden in template
+[2026-06-25 13:37:49]   Sheet 'TERM2': Row 65 is hidden in template
+[2026-06-25 13:37:49]   Sheet 'TERM2': Row 116 is hidden in template
+[2026-06-25 13:37:49]   Sheet 'TERM2': Stored 4 hidden rows for later use
+[2026-06-25 13:37:49]   Sheet 'TERM3': Row 12 is hidden in template
+[2026-06-25 13:37:49]   Sheet 'TERM3': Row 63 is hidden in template
+[2026-06-25 13:37:49]   Sheet 'TERM3': Row 65 is hidden in template
+[2026-06-25 13:37:49]   Sheet 'TERM3': Row 116 is hidden in template
+[2026-06-25 13:37:49]   Sheet 'TERM3': Stored 4 hidden rows for later use
+[2026-06-25 13:37:49]   Sheet 'SUMMARY OF GRADES': Row 13 is hidden in template
+[2026-06-25 13:37:49]   Sheet 'SUMMARY OF GRADES': Row 64 is hidden in template
+[2026-06-25 13:37:49]   Sheet 'SUMMARY OF GRADES': Row 66 is hidden in template
+[2026-06-25 13:37:49]   Sheet 'SUMMARY OF GRADES': Row 117 is hidden in template
+[2026-06-25 13:37:49]   Sheet 'SUMMARY OF GRADES': Stored 4 hidden rows for later use
+[2026-06-25 13:37:49]   Sheet 'Sheet1': Stored 0 hidden rows for later use
+[2026-06-25 13:37:49]   Sheet 'Sheet2': Stored 0 hidden rows for later use
+[2026-06-25 13:37:49]   Sheet 'Helper (Do Not Delete)': Stored 0 hidden rows for later use
+[2026-06-25 13:37:49]   Sheet 'DO NOT DELETE': Stored 0 hidden rows for later use
+[2026-06-25 13:37:49] Memory after Phase 1: 750.75 MB
+[2026-06-25 13:37:49] === PHASE 2: DATA INSERTION ===
+[2026-06-25 13:37:50] Processing worksheet Index 0: 'INPUT' (Grade Sheet detected)
+[2026-06-25 13:37:50] Worksheet 'INPUT' populated: 3 boys, 1 girls.
+[2026-06-25 13:37:50]   Sheet 'INPUT': Re-hiding 5 originally hidden rows
+[2026-06-25 13:37:50]     Row 9: setVisible(false) called
+[2026-06-25 13:37:50]     Row 11: setVisible(false) called
+[2026-06-25 13:37:50]     Row 61: setVisible(false) called
+[2026-06-25 13:37:50]     Row 63: setVisible(false) called
+[2026-06-25 13:37:50]     Row 112: setVisible(false) called
+[2026-06-25 13:37:51]   Memory after sheet 0: 751.5 MB
+[2026-06-25 13:37:52] Processing worksheet Index 1: 'TERM1' (Grade Sheet detected)
+[2026-06-25 13:37:52] Worksheet 'TERM1' populated: 3 boys, 1 girls.
+[2026-06-25 13:37:52]   Sheet 'TERM1': Re-hiding 4 originally hidden rows
+[2026-06-25 13:37:52]     Row 12: setVisible(false) called
+[2026-06-25 13:37:52]     Row 63: setVisible(false) called
+[2026-06-25 13:37:52]     Row 65: setVisible(false) called
+[2026-06-25 13:37:52]     Row 116: setVisible(false) called
+[2026-06-25 13:37:53]   Memory after sheet 1: 752.75 MB
+[2026-06-25 13:37:53] Processing worksheet Index 2: 'TERM2' (Grade Sheet detected)
+[2026-06-25 13:37:53] Worksheet 'TERM2' populated: 3 boys, 1 girls.
+[2026-06-25 13:37:53]   Sheet 'TERM2': Re-hiding 4 originally hidden rows
+[2026-06-25 13:37:53]     Row 12: setVisible(false) called
+[2026-06-25 13:37:53]     Row 63: setVisible(false) called
+[2026-06-25 13:37:53]     Row 65: setVisible(false) called
+[2026-06-25 13:37:53]     Row 116: setVisible(false) called
+[2026-06-25 13:37:54]   Memory after sheet 2: 754 MB
+[2026-06-25 13:37:54] Processing worksheet Index 3: 'TERM3' (Grade Sheet detected)
+[2026-06-25 13:37:54] Worksheet 'TERM3' populated: 3 boys, 1 girls.
+[2026-06-25 13:37:54]   Sheet 'TERM3': Re-hiding 4 originally hidden rows
+[2026-06-25 13:37:54]     Row 12: setVisible(false) called
+[2026-06-25 13:37:54]     Row 63: setVisible(false) called
+[2026-06-25 13:37:54]     Row 65: setVisible(false) called
+[2026-06-25 13:37:54]     Row 116: setVisible(false) called
+[2026-06-25 13:37:55]   Memory after sheet 3: 755.25 MB
+[2026-06-25 13:37:55] Processing worksheet Index 4: 'SUMMARY OF GRADES' (Grade Sheet detected)
+[2026-06-25 13:37:55] Worksheet 'SUMMARY OF GRADES' populated: 3 boys, 1 girls.
+[2026-06-25 13:37:55]   Sheet 'SUMMARY OF GRADES': Re-hiding 4 originally hidden rows
+[2026-06-25 13:37:55]     Row 13: setVisible(false) called
+[2026-06-25 13:37:55]     Row 64: setVisible(false) called
+[2026-06-25 13:37:55]     Row 66: setVisible(false) called
+[2026-06-25 13:37:55]     Row 117: setVisible(false) called
+[2026-06-25 13:37:56]   Memory after sheet 4: 756.75 MB
+[2026-06-25 13:37:56] Skipping worksheet Index 5: 'Sheet1' (No student grade placeholders found)
+[2026-06-25 13:37:56]   Sheet 'Sheet1': No hidden rows to restore
+[2026-06-25 13:37:57]   Memory after sheet 5: 759.75 MB
+[2026-06-25 13:37:57] Skipping worksheet Index 6: 'Sheet2' (No student grade placeholders found)
+[2026-06-25 13:37:57]   Sheet 'Sheet2': No hidden rows to restore
+[2026-06-25 13:37:59]   Memory after sheet 6: 827 MB
+[2026-06-25 13:37:59] Skipping worksheet Index 7: 'Helper (Do Not Delete)' (No student grade placeholders found)
+[2026-06-25 13:37:59]   Sheet 'Helper (Do Not Delete)': No hidden rows to restore
+[2026-06-25 13:38:00]   Memory after sheet 7: 830 MB
+[2026-06-25 13:38:00] Skipping worksheet Index 8: 'DO NOT DELETE' (No student grade placeholders found)
+[2026-06-25 13:38:00]   Sheet 'DO NOT DELETE': No hidden rows to restore
+[2026-06-25 13:38:01]   Memory after sheet 8: 833 MB
+[2026-06-25 13:38:01] Memory after Phase 2: 833 MB
+[2026-06-25 13:38:01] === PHASE 3: FINAL PASS - ENSURING ALL HIDDEN ROWS ARE PRESERVED ===
+[2026-06-25 13:38:01]   Sheet 'INPUT': Re-applying 5 hidden rows
+[2026-06-25 13:38:01]     Row 9: setVisible(false) applied in final pass
+[2026-06-25 13:38:01]     Row 11: setVisible(false) applied in final pass
+[2026-06-25 13:38:01]     Row 61: setVisible(false) applied in final pass
+[2026-06-25 13:38:01]     Row 63: setVisible(false) applied in final pass
+[2026-06-25 13:38:01]     Row 112: setVisible(false) applied in final pass
+[2026-06-25 13:38:01]   Sheet 'TERM1': Re-applying 4 hidden rows
+[2026-06-25 13:38:01]     Row 12: setVisible(false) applied in final pass
+[2026-06-25 13:38:01]     Row 63: setVisible(false) applied in final pass
+[2026-06-25 13:38:01]     Row 65: setVisible(false) applied in final pass
+[2026-06-25 13:38:01]     Row 116: setVisible(false) applied in final pass
+[2026-06-25 13:38:01]   Sheet 'TERM2': Re-applying 4 hidden rows
+[2026-06-25 13:38:01]     Row 12: setVisible(false) applied in final pass
+[2026-06-25 13:38:01]     Row 63: setVisible(false) applied in final pass
+[2026-06-25 13:38:01]     Row 65: setVisible(false) applied in final pass
+[2026-06-25 13:38:01]     Row 116: setVisible(false) applied in final pass
+[2026-06-25 13:38:01]   Sheet 'TERM3': Re-applying 4 hidden rows
+[2026-06-25 13:38:01]     Row 12: setVisible(false) applied in final pass
+[2026-06-25 13:38:01]     Row 63: setVisible(false) applied in final pass
+[2026-06-25 13:38:01]     Row 65: setVisible(false) applied in final pass
+[2026-06-25 13:38:01]     Row 116: setVisible(false) applied in final pass
+[2026-06-25 13:38:01]   Sheet 'SUMMARY OF GRADES': Re-applying 4 hidden rows
+[2026-06-25 13:38:01]     Row 13: setVisible(false) applied in final pass
+[2026-06-25 13:38:01]     Row 64: setVisible(false) applied in final pass
+[2026-06-25 13:38:01]     Row 66: setVisible(false) applied in final pass
+[2026-06-25 13:38:01]     Row 117: setVisible(false) applied in final pass
+[2026-06-25 13:38:01]   Sheet 'Sheet1': No hidden rows to re-apply
+[2026-06-25 13:38:01]   Sheet 'Sheet2': No hidden rows to re-apply
+[2026-06-25 13:38:01]   Sheet 'Helper (Do Not Delete)': No hidden rows to re-apply
+[2026-06-25 13:38:01]   Sheet 'DO NOT DELETE': No hidden rows to re-apply
+[2026-06-25 13:38:01] Memory after Phase 3: 833 MB
+[2026-06-25 13:38:01] === PHASE 4: SAVING FILE ===
+[2026-06-25 13:38:01] Filename: TLE 7-Grade 7 CS3A-20260625013801.xlsx
+[2026-06-25 13:38:01] Peak memory usage: 833 MB
+[2026-06-25 13:38:01] VERIFICATION: Checking hidden row state immediately before save:
+[2026-06-25 13:38:01]   Sheet 'INPUT': 5 rows STILL HIDDEN: 9, 11, 61, 63, 112
+[2026-06-25 13:38:01]   Sheet 'TERM1': 4 rows STILL HIDDEN: 12, 63, 65, 116
+[2026-06-25 13:38:01]   Sheet 'TERM2': 4 rows STILL HIDDEN: 12, 63, 65, 116
+[2026-06-25 13:38:01]   Sheet 'TERM3': 4 rows STILL HIDDEN: 12, 63, 65, 116
+[2026-06-25 13:38:01]   Sheet 'SUMMARY OF GRADES': 4 rows STILL HIDDEN: 13, 64, 66, 117
+[2026-06-25 13:38:01] Target file path: downloads/generated_grades/TLE 7-Grade 7 CS3A-20260625013801.xlsx
+[2026-06-25 13:38:01] PHPExcel object state before save:
+[2026-06-25 13:38:01]   - Sheet count: 9
+[2026-06-25 13:38:01]   - Memory usage: 833 MB
+[2026-06-25 13:38:01] Creating Excel2007 writer...
+[2026-06-25 13:38:01] Writer object created in 0 seconds
+[2026-06-25 13:38:01] Writer setting - Pre-calculate formulas: YES (formulas will be calculated and cached)
+[2026-06-25 13:38:01] Starting file save operation...
+[2026-06-25 13:54:47] --- START EXCEL GENERATION ---
+[2026-06-25 13:54:47] Params: Class ID: 10, Section ID: 20, Subject ID: 46, Template ID: 1
+[2026-06-25 13:54:47] Template File in DB: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 13:54:47] Loading template file from disk: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 13:54:47] Initial memory usage: 3.75 MB
+[2026-06-25 13:54:47] File size: 991170 bytes (0.95 MB)
+[2026-06-25 13:54:47] File magic bytes (hex): 504b0304
+[2026-06-25 13:54:47] System temp dir: /tmp | Writable: YES
+[2026-06-25 13:54:47] Identifying Excel format...
+[2026-06-25 13:54:47] Excel format identified: Excel2007. Creating reader...
+[2026-06-25 13:54:47] Loading workbook into memory...
+[2026-06-25 13:55:42] --- START EXCEL GENERATION ---
+[2026-06-25 13:55:42] Params: Class ID: 10, Section ID: 20, Subject ID: 46, Template ID: 1
+[2026-06-25 13:55:42] Template File in DB: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 13:55:42] Loading template file from disk: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 13:55:42] Initial memory usage: 3.75 MB
+[2026-06-25 13:55:42] File size: 991170 bytes (0.95 MB)
+[2026-06-25 13:55:42] File magic bytes (hex): 504b0304
+[2026-06-25 13:55:42] System temp dir: /tmp | Writable: YES
+[2026-06-25 13:55:42] Identifying Excel format...
+[2026-06-25 13:55:42] Excel format identified: Excel2007. Creating reader...
+[2026-06-25 13:55:42] Loading workbook into memory...
+[2026-06-25 13:56:06] PHPExcel loaded template successfully.
+[2026-06-25 13:56:06] Memory usage after load: 750.75 MB
+[2026-06-25 13:56:06] Total worksheets in workbook: 9
+[2026-06-25 13:56:06] Initial file size on disk: 0.95 MB (991170 bytes)
+[2026-06-25 13:56:06] Memory after load: 750.75 MB
+[2026-06-25 13:56:06] === PHASE 1: DETECTING HIDDEN ROWS IN ALL SHEETS ===
+[2026-06-25 13:56:06]   Sheet 'INPUT': Row 9 is hidden in template
+[2026-06-25 13:56:06]   Sheet 'INPUT': Row 11 is hidden in template
+[2026-06-25 13:56:06]   Sheet 'INPUT': Row 61 is hidden in template
+[2026-06-25 13:56:06]   Sheet 'INPUT': Row 63 is hidden in template
+[2026-06-25 13:56:06]   Sheet 'INPUT': Row 112 is hidden in template
+[2026-06-25 13:56:06]   Sheet 'INPUT': Stored 5 hidden rows for later use
+[2026-06-25 13:56:06]   Sheet 'TERM1': Row 12 is hidden in template
+[2026-06-25 13:56:06]   Sheet 'TERM1': Row 63 is hidden in template
+[2026-06-25 13:56:06]   Sheet 'TERM1': Row 65 is hidden in template
+[2026-06-25 13:56:06]   Sheet 'TERM1': Row 116 is hidden in template
+[2026-06-25 13:56:06]   Sheet 'TERM1': Stored 4 hidden rows for later use
+[2026-06-25 13:56:06]   Sheet 'TERM2': Row 12 is hidden in template
+[2026-06-25 13:56:06]   Sheet 'TERM2': Row 63 is hidden in template
+[2026-06-25 13:56:06]   Sheet 'TERM2': Row 65 is hidden in template
+[2026-06-25 13:56:06]   Sheet 'TERM2': Row 116 is hidden in template
+[2026-06-25 13:56:06]   Sheet 'TERM2': Stored 4 hidden rows for later use
+[2026-06-25 13:56:06]   Sheet 'TERM3': Row 12 is hidden in template
+[2026-06-25 13:56:06]   Sheet 'TERM3': Row 63 is hidden in template
+[2026-06-25 13:56:06]   Sheet 'TERM3': Row 65 is hidden in template
+[2026-06-25 13:56:06]   Sheet 'TERM3': Row 116 is hidden in template
+[2026-06-25 13:56:06]   Sheet 'TERM3': Stored 4 hidden rows for later use
+[2026-06-25 13:56:06]   Sheet 'SUMMARY OF GRADES': Row 13 is hidden in template
+[2026-06-25 13:56:06]   Sheet 'SUMMARY OF GRADES': Row 64 is hidden in template
+[2026-06-25 13:56:06]   Sheet 'SUMMARY OF GRADES': Row 66 is hidden in template
+[2026-06-25 13:56:06]   Sheet 'SUMMARY OF GRADES': Row 117 is hidden in template
+[2026-06-25 13:56:06]   Sheet 'SUMMARY OF GRADES': Stored 4 hidden rows for later use
+[2026-06-25 13:56:06]   Sheet 'Sheet1': Stored 0 hidden rows for later use
+[2026-06-25 13:56:06]   Sheet 'Sheet2': Stored 0 hidden rows for later use
+[2026-06-25 13:56:06]   Sheet 'Helper (Do Not Delete)': Stored 0 hidden rows for later use
+[2026-06-25 13:56:06]   Sheet 'DO NOT DELETE': Stored 0 hidden rows for later use
+[2026-06-25 13:56:06] Memory after Phase 1: 750.75 MB
+[2026-06-25 13:56:06] === PHASE 2: DATA INSERTION ===
+[2026-06-25 13:56:07] Processing worksheet Index 0: 'INPUT' (Grade Sheet detected)
+[2026-06-25 13:56:19] Worksheet 'INPUT' populated: 3 boys, 1 girls.
+[2026-06-25 13:56:19]   Sheet 'INPUT': Re-hiding 5 originally hidden rows
+[2026-06-25 13:56:19]     Row 9: setVisible(false) called
+[2026-06-25 13:56:19]     Row 11: setVisible(false) called
+[2026-06-25 13:56:19]     Row 61: setVisible(false) called
+[2026-06-25 13:56:19]     Row 63: setVisible(false) called
+[2026-06-25 13:56:19]     Row 112: setVisible(false) called
+[2026-06-25 13:56:20]   Memory after sheet 0: 751.5 MB
+[2026-06-25 13:56:20] Processing worksheet Index 1: 'TERM1' (Grade Sheet detected)
+[2026-06-25 13:56:28] Worksheet 'TERM1' populated: 3 boys, 1 girls.
+[2026-06-25 13:56:28]   Sheet 'TERM1': Re-hiding 4 originally hidden rows
+[2026-06-25 13:56:29]     Row 12: setVisible(false) called
+[2026-06-25 13:56:29]     Row 63: setVisible(false) called
+[2026-06-25 13:56:30]     Row 65: setVisible(false) called
+[2026-06-25 13:56:30]     Row 116: setVisible(false) called
+[2026-06-25 13:56:31]   Memory after sheet 1: 752.75 MB
+[2026-06-25 13:56:31] Processing worksheet Index 2: 'TERM2' (Grade Sheet detected)
+[2026-06-25 13:56:31] Worksheet 'TERM2' populated: 3 boys, 1 girls.
+[2026-06-25 13:56:31]   Sheet 'TERM2': Re-hiding 4 originally hidden rows
+[2026-06-25 13:56:31]     Row 12: setVisible(false) called
+[2026-06-25 13:56:31]     Row 63: setVisible(false) called
+[2026-06-25 13:56:31]     Row 65: setVisible(false) called
+[2026-06-25 13:56:31]     Row 116: setVisible(false) called
+[2026-06-25 13:56:33]   Memory after sheet 2: 754 MB
+[2026-06-25 13:56:33] Processing worksheet Index 3: 'TERM3' (Grade Sheet detected)
+[2026-06-25 13:56:33] Worksheet 'TERM3' populated: 3 boys, 1 girls.
+[2026-06-25 13:56:33]   Sheet 'TERM3': Re-hiding 4 originally hidden rows
+[2026-06-25 13:56:33]     Row 12: setVisible(false) called
+[2026-06-25 13:56:33]     Row 63: setVisible(false) called
+[2026-06-25 13:56:33]     Row 65: setVisible(false) called
+[2026-06-25 13:56:33]     Row 116: setVisible(false) called
+[2026-06-25 13:56:34]   Memory after sheet 3: 755.25 MB
+[2026-06-25 13:56:34] Processing worksheet Index 4: 'SUMMARY OF GRADES' (Grade Sheet detected)
+[2026-06-25 13:56:34] Worksheet 'SUMMARY OF GRADES' populated: 3 boys, 1 girls.
+[2026-06-25 13:56:34]   Sheet 'SUMMARY OF GRADES': Re-hiding 4 originally hidden rows
+[2026-06-25 13:56:34]     Row 13: setVisible(false) called
+[2026-06-25 13:56:34]     Row 64: setVisible(false) called
+[2026-06-25 13:56:34]     Row 66: setVisible(false) called
+[2026-06-25 13:56:34]     Row 117: setVisible(false) called
+[2026-06-25 13:56:35]   Memory after sheet 4: 756.75 MB
+[2026-06-25 13:56:35] Skipping worksheet Index 5: 'Sheet1' (No student grade placeholders found)
+[2026-06-25 13:56:35]   Sheet 'Sheet1': No hidden rows to restore
+[2026-06-25 13:56:36]   Memory after sheet 5: 759.75 MB
+[2026-06-25 13:56:36] Skipping worksheet Index 6: 'Sheet2' (No student grade placeholders found)
+[2026-06-25 13:56:36]   Sheet 'Sheet2': No hidden rows to restore
+[2026-06-25 13:56:37]   Memory after sheet 6: 827 MB
+[2026-06-25 13:56:37] Skipping worksheet Index 7: 'Helper (Do Not Delete)' (No student grade placeholders found)
+[2026-06-25 13:56:37]   Sheet 'Helper (Do Not Delete)': No hidden rows to restore
+[2026-06-25 13:56:38]   Memory after sheet 7: 830 MB
+[2026-06-25 13:56:39] Skipping worksheet Index 8: 'DO NOT DELETE' (No student grade placeholders found)
+[2026-06-25 13:56:39]   Sheet 'DO NOT DELETE': No hidden rows to restore
+[2026-06-25 13:56:40]   Memory after sheet 8: 833 MB
+[2026-06-25 13:56:40] Memory after Phase 2: 833 MB
+[2026-06-25 13:56:40] === PHASE 3: FINAL PASS - ENSURING ALL HIDDEN ROWS ARE PRESERVED ===
+[2026-06-25 13:56:40]   Sheet 'INPUT': Re-applying 5 hidden rows
+[2026-06-25 13:56:40]     Row 9: setVisible(false) applied in final pass
+[2026-06-25 13:56:40]     Row 11: setVisible(false) applied in final pass
+[2026-06-25 13:56:40]     Row 61: setVisible(false) applied in final pass
+[2026-06-25 13:56:40]     Row 63: setVisible(false) applied in final pass
+[2026-06-25 13:56:40]     Row 112: setVisible(false) applied in final pass
+[2026-06-25 13:56:40]   Sheet 'TERM1': Re-applying 4 hidden rows
+[2026-06-25 13:56:40]     Row 12: setVisible(false) applied in final pass
+[2026-06-25 13:56:40]     Row 63: setVisible(false) applied in final pass
+[2026-06-25 13:56:40]     Row 65: setVisible(false) applied in final pass
+[2026-06-25 13:56:40]     Row 116: setVisible(false) applied in final pass
+[2026-06-25 13:56:40]   Sheet 'TERM2': Re-applying 4 hidden rows
+[2026-06-25 13:56:40]     Row 12: setVisible(false) applied in final pass
+[2026-06-25 13:56:40]     Row 63: setVisible(false) applied in final pass
+[2026-06-25 13:56:40]     Row 65: setVisible(false) applied in final pass
+[2026-06-25 13:56:40]     Row 116: setVisible(false) applied in final pass
+[2026-06-25 13:56:40]   Sheet 'TERM3': Re-applying 4 hidden rows
+[2026-06-25 13:56:40]     Row 12: setVisible(false) applied in final pass
+[2026-06-25 13:56:40]     Row 63: setVisible(false) applied in final pass
+[2026-06-25 13:56:40]     Row 65: setVisible(false) applied in final pass
+[2026-06-25 13:56:40]     Row 116: setVisible(false) applied in final pass
+[2026-06-25 13:56:40]   Sheet 'SUMMARY OF GRADES': Re-applying 4 hidden rows
+[2026-06-25 13:56:40]     Row 13: setVisible(false) applied in final pass
+[2026-06-25 13:56:40]     Row 64: setVisible(false) applied in final pass
+[2026-06-25 13:56:40]     Row 66: setVisible(false) applied in final pass
+[2026-06-25 13:56:40]     Row 117: setVisible(false) applied in final pass
+[2026-06-25 13:56:40]   Sheet 'Sheet1': No hidden rows to re-apply
+[2026-06-25 13:56:40]   Sheet 'Sheet2': No hidden rows to re-apply
+[2026-06-25 13:56:40]   Sheet 'Helper (Do Not Delete)': No hidden rows to re-apply
+[2026-06-25 13:56:40]   Sheet 'DO NOT DELETE': No hidden rows to re-apply
+[2026-06-25 13:56:40] Memory after Phase 3: 833 MB
+[2026-06-25 13:56:40] === PHASE 4: SAVING FILE ===
+[2026-06-25 13:56:40] Filename: TLE 7-Grade 7 CS3A-20260625015640.xlsx
+[2026-06-25 13:56:40] Peak memory usage: 833 MB
+[2026-06-25 13:56:40] VERIFICATION: Checking hidden row state immediately before save:
+[2026-06-25 13:56:40]   Sheet 'INPUT': 5 rows STILL HIDDEN: 9, 11, 61, 63, 112
+[2026-06-25 13:56:40]   Sheet 'TERM1': 4 rows STILL HIDDEN: 12, 63, 65, 116
+[2026-06-25 13:56:40]   Sheet 'TERM2': 4 rows STILL HIDDEN: 12, 63, 65, 116
+[2026-06-25 13:56:40]   Sheet 'TERM3': 4 rows STILL HIDDEN: 12, 63, 65, 116
+[2026-06-25 13:56:40]   Sheet 'SUMMARY OF GRADES': 4 rows STILL HIDDEN: 13, 64, 66, 117
+[2026-06-25 13:56:40] Target file path: downloads/generated_grades/TLE 7-Grade 7 CS3A-20260625015640.xlsx
+[2026-06-25 13:56:40] PHPExcel object state before save:
+[2026-06-25 13:56:40]   - Sheet count: 9
+[2026-06-25 13:56:40]   - Memory usage: 833 MB
+[2026-06-25 13:56:40] Creating Excel2007 writer...
+[2026-06-25 13:56:40] Writer object created in 0.02 seconds
+[2026-06-25 13:56:40] Writer setting - Pre-calculate formulas: NO (Excel will calculate on open)
+[2026-06-25 13:56:40] Starting file save operation...
+[2026-06-25 13:57:26] PHPExcel loaded template successfully.
+[2026-06-25 13:57:26] Memory usage after load: 750.75 MB
+[2026-06-25 13:57:26] Total worksheets in workbook: 9
+[2026-06-25 13:57:26] Initial file size on disk: 0.95 MB (991170 bytes)
+[2026-06-25 13:57:26] Memory after load: 750.75 MB
+[2026-06-25 13:57:26] === PHASE 1: DETECTING HIDDEN ROWS IN ALL SHEETS ===
+[2026-06-25 13:57:26]   Sheet 'INPUT': Row 9 is hidden in template
+[2026-06-25 13:57:26]   Sheet 'INPUT': Row 11 is hidden in template
+[2026-06-25 13:57:26]   Sheet 'INPUT': Row 61 is hidden in template
+[2026-06-25 13:57:26]   Sheet 'INPUT': Row 63 is hidden in template
+[2026-06-25 13:57:26]   Sheet 'INPUT': Row 112 is hidden in template
+[2026-06-25 13:57:26]   Sheet 'INPUT': Stored 5 hidden rows for later use
+[2026-06-25 13:57:26]   Sheet 'TERM1': Row 12 is hidden in template
+[2026-06-25 13:57:26]   Sheet 'TERM1': Row 63 is hidden in template
+[2026-06-25 13:57:26]   Sheet 'TERM1': Row 65 is hidden in template
+[2026-06-25 13:57:26]   Sheet 'TERM1': Row 116 is hidden in template
+[2026-06-25 13:57:26]   Sheet 'TERM1': Stored 4 hidden rows for later use
+[2026-06-25 13:57:26]   Sheet 'TERM2': Row 12 is hidden in template
+[2026-06-25 13:57:26]   Sheet 'TERM2': Row 63 is hidden in template
+[2026-06-25 13:57:26]   Sheet 'TERM2': Row 65 is hidden in template
+[2026-06-25 13:57:26]   Sheet 'TERM2': Row 116 is hidden in template
+[2026-06-25 13:57:26]   Sheet 'TERM2': Stored 4 hidden rows for later use
+[2026-06-25 13:57:26]   Sheet 'TERM3': Row 12 is hidden in template
+[2026-06-25 13:57:26]   Sheet 'TERM3': Row 63 is hidden in template
+[2026-06-25 13:57:26]   Sheet 'TERM3': Row 65 is hidden in template
+[2026-06-25 13:57:26]   Sheet 'TERM3': Row 116 is hidden in template
+[2026-06-25 13:57:26]   Sheet 'TERM3': Stored 4 hidden rows for later use
+[2026-06-25 13:57:26]   Sheet 'SUMMARY OF GRADES': Row 13 is hidden in template
+[2026-06-25 13:57:26]   Sheet 'SUMMARY OF GRADES': Row 64 is hidden in template
+[2026-06-25 13:57:26]   Sheet 'SUMMARY OF GRADES': Row 66 is hidden in template
+[2026-06-25 13:57:26]   Sheet 'SUMMARY OF GRADES': Row 117 is hidden in template
+[2026-06-25 13:57:26]   Sheet 'SUMMARY OF GRADES': Stored 4 hidden rows for later use
+[2026-06-25 13:57:26]   Sheet 'Sheet1': Stored 0 hidden rows for later use
+[2026-06-25 13:57:26]   Sheet 'Sheet2': Stored 0 hidden rows for later use
+[2026-06-25 13:57:26]   Sheet 'Helper (Do Not Delete)': Stored 0 hidden rows for later use
+[2026-06-25 13:57:26]   Sheet 'DO NOT DELETE': Stored 0 hidden rows for later use
+[2026-06-25 13:57:26] Memory after Phase 1: 750.75 MB
+[2026-06-25 13:57:26] === PHASE 2: DATA INSERTION ===
+[2026-06-25 13:57:27] Processing worksheet Index 0: 'INPUT' (Grade Sheet detected)
+[2026-06-25 13:57:27] Worksheet 'INPUT' populated: 3 boys, 1 girls.
+[2026-06-25 13:57:27]   Sheet 'INPUT': Re-hiding 5 originally hidden rows
+[2026-06-25 13:57:27]     Row 9: setVisible(false) called
+[2026-06-25 13:57:27]     Row 11: setVisible(false) called
+[2026-06-25 13:57:27]     Row 61: setVisible(false) called
+[2026-06-25 13:57:27]     Row 63: setVisible(false) called
+[2026-06-25 13:57:27]     Row 112: setVisible(false) called
+[2026-06-25 13:57:28]   Memory after sheet 0: 751.5 MB
+[2026-06-25 13:57:28] Processing worksheet Index 1: 'TERM1' (Grade Sheet detected)
+[2026-06-25 13:57:28] Worksheet 'TERM1' populated: 3 boys, 1 girls.
+[2026-06-25 13:57:28]   Sheet 'TERM1': Re-hiding 4 originally hidden rows
+[2026-06-25 13:57:28]     Row 12: setVisible(false) called
+[2026-06-25 13:57:28]     Row 63: setVisible(false) called
+[2026-06-25 13:57:28]     Row 65: setVisible(false) called
+[2026-06-25 13:57:28]     Row 116: setVisible(false) called
+[2026-06-25 13:57:29]   Memory after sheet 1: 752.75 MB
+[2026-06-25 13:57:29] Processing worksheet Index 2: 'TERM2' (Grade Sheet detected)
+[2026-06-25 13:57:29] Worksheet 'TERM2' populated: 3 boys, 1 girls.
+[2026-06-25 13:57:29]   Sheet 'TERM2': Re-hiding 4 originally hidden rows
+[2026-06-25 13:57:29]     Row 12: setVisible(false) called
+[2026-06-25 13:57:29]     Row 63: setVisible(false) called
+[2026-06-25 13:57:29]     Row 65: setVisible(false) called
+[2026-06-25 13:57:29]     Row 116: setVisible(false) called
+[2026-06-25 13:57:30]   Memory after sheet 2: 754 MB
+[2026-06-25 13:57:30] Processing worksheet Index 3: 'TERM3' (Grade Sheet detected)
+[2026-06-25 13:57:30] Worksheet 'TERM3' populated: 3 boys, 1 girls.
+[2026-06-25 13:57:30]   Sheet 'TERM3': Re-hiding 4 originally hidden rows
+[2026-06-25 13:57:30]     Row 12: setVisible(false) called
+[2026-06-25 13:57:30]     Row 63: setVisible(false) called
+[2026-06-25 13:57:30]     Row 65: setVisible(false) called
+[2026-06-25 13:57:30]     Row 116: setVisible(false) called
+[2026-06-25 13:57:31]   Memory after sheet 3: 755.25 MB
+[2026-06-25 13:57:32] Processing worksheet Index 4: 'SUMMARY OF GRADES' (Grade Sheet detected)
+[2026-06-25 13:57:32] Worksheet 'SUMMARY OF GRADES' populated: 3 boys, 1 girls.
+[2026-06-25 13:57:32]   Sheet 'SUMMARY OF GRADES': Re-hiding 4 originally hidden rows
+[2026-06-25 13:57:32]     Row 13: setVisible(false) called
+[2026-06-25 13:57:32]     Row 64: setVisible(false) called
+[2026-06-25 13:57:32]     Row 66: setVisible(false) called
+[2026-06-25 13:57:32]     Row 117: setVisible(false) called
+[2026-06-25 13:57:33]   Memory after sheet 4: 756.75 MB
+[2026-06-25 13:57:33] Skipping worksheet Index 5: 'Sheet1' (No student grade placeholders found)
+[2026-06-25 13:57:33]   Sheet 'Sheet1': No hidden rows to restore
+[2026-06-25 13:57:34]   Memory after sheet 5: 759.75 MB
+[2026-06-25 13:57:34] Skipping worksheet Index 6: 'Sheet2' (No student grade placeholders found)
+[2026-06-25 13:57:34]   Sheet 'Sheet2': No hidden rows to restore
+[2026-06-25 13:57:35]   Memory after sheet 6: 827 MB
+[2026-06-25 13:57:35] Skipping worksheet Index 7: 'Helper (Do Not Delete)' (No student grade placeholders found)
+[2026-06-25 13:57:35]   Sheet 'Helper (Do Not Delete)': No hidden rows to restore
+[2026-06-25 13:57:36]   Memory after sheet 7: 830 MB
+[2026-06-25 13:57:36] Skipping worksheet Index 8: 'DO NOT DELETE' (No student grade placeholders found)
+[2026-06-25 13:57:36]   Sheet 'DO NOT DELETE': No hidden rows to restore
+[2026-06-25 13:57:37]   Memory after sheet 8: 833 MB
+[2026-06-25 13:57:37] Memory after Phase 2: 833 MB
+[2026-06-25 13:57:37] === PHASE 3: FINAL PASS - ENSURING ALL HIDDEN ROWS ARE PRESERVED ===
+[2026-06-25 13:57:37]   Sheet 'INPUT': Re-applying 5 hidden rows
+[2026-06-25 13:57:37]     Row 9: setVisible(false) applied in final pass
+[2026-06-25 13:57:37]     Row 11: setVisible(false) applied in final pass
+[2026-06-25 13:57:37]     Row 61: setVisible(false) applied in final pass
+[2026-06-25 13:57:37]     Row 63: setVisible(false) applied in final pass
+[2026-06-25 13:57:37]     Row 112: setVisible(false) applied in final pass
+[2026-06-25 13:57:37]   Sheet 'TERM1': Re-applying 4 hidden rows
+[2026-06-25 13:57:37]     Row 12: setVisible(false) applied in final pass
+[2026-06-25 13:57:37]     Row 63: setVisible(false) applied in final pass
+[2026-06-25 13:57:37]     Row 65: setVisible(false) applied in final pass
+[2026-06-25 13:57:37]     Row 116: setVisible(false) applied in final pass
+[2026-06-25 13:57:37]   Sheet 'TERM2': Re-applying 4 hidden rows
+[2026-06-25 13:57:37]     Row 12: setVisible(false) applied in final pass
+[2026-06-25 13:57:37]     Row 63: setVisible(false) applied in final pass
+[2026-06-25 13:57:37]     Row 65: setVisible(false) applied in final pass
+[2026-06-25 13:57:37]     Row 116: setVisible(false) applied in final pass
+[2026-06-25 13:57:37]   Sheet 'TERM3': Re-applying 4 hidden rows
+[2026-06-25 13:57:37]     Row 12: setVisible(false) applied in final pass
+[2026-06-25 13:57:37]     Row 63: setVisible(false) applied in final pass
+[2026-06-25 13:57:37]     Row 65: setVisible(false) applied in final pass
+[2026-06-25 13:57:37]     Row 116: setVisible(false) applied in final pass
+[2026-06-25 13:57:37]   Sheet 'SUMMARY OF GRADES': Re-applying 4 hidden rows
+[2026-06-25 13:57:37]     Row 13: setVisible(false) applied in final pass
+[2026-06-25 13:57:37]     Row 64: setVisible(false) applied in final pass
+[2026-06-25 13:57:37]     Row 66: setVisible(false) applied in final pass
+[2026-06-25 13:57:37]     Row 117: setVisible(false) applied in final pass
+[2026-06-25 13:57:37]   Sheet 'Sheet1': No hidden rows to re-apply
+[2026-06-25 13:57:37]   Sheet 'Sheet2': No hidden rows to re-apply
+[2026-06-25 13:57:37]   Sheet 'Helper (Do Not Delete)': No hidden rows to re-apply
+[2026-06-25 13:57:37]   Sheet 'DO NOT DELETE': No hidden rows to re-apply
+[2026-06-25 13:57:37] Memory after Phase 3: 833 MB
+[2026-06-25 13:57:37] === PHASE 4: SAVING FILE ===
+[2026-06-25 13:57:37] Filename: TLE 7-Grade 7 CS3A-20260625015737.xlsx
+[2026-06-25 13:57:37] Peak memory usage: 833 MB
+[2026-06-25 13:57:37] VERIFICATION: Checking hidden row state immediately before save:
+[2026-06-25 13:57:37]   Sheet 'INPUT': 5 rows STILL HIDDEN: 9, 11, 61, 63, 112
+[2026-06-25 13:57:37]   Sheet 'TERM1': 4 rows STILL HIDDEN: 12, 63, 65, 116
+[2026-06-25 13:57:37]   Sheet 'TERM2': 4 rows STILL HIDDEN: 12, 63, 65, 116
+[2026-06-25 13:57:37]   Sheet 'TERM3': 4 rows STILL HIDDEN: 12, 63, 65, 116
+[2026-06-25 13:57:37]   Sheet 'SUMMARY OF GRADES': 4 rows STILL HIDDEN: 13, 64, 66, 117
+[2026-06-25 13:57:37] Target file path: downloads/generated_grades/TLE 7-Grade 7 CS3A-20260625015737.xlsx
+[2026-06-25 13:57:37] PHPExcel object state before save:
+[2026-06-25 13:57:37]   - Sheet count: 9
+[2026-06-25 13:57:37]   - Memory usage: 833 MB
+[2026-06-25 13:57:37] Creating Excel2007 writer...
+[2026-06-25 13:57:37] Writer object created in 0 seconds
+[2026-06-25 13:57:37] Writer setting - Pre-calculate formulas: NO (Excel will calculate on open)
+[2026-06-25 13:57:37] Starting file save operation...
+[2026-06-25 14:01:25] File saved successfully in 285.56 seconds
+[2026-06-25 14:01:25] Cleaning up PHPExcel objects...
+[2026-06-25 14:01:27] PHPExcel objects cleaned up.
+[2026-06-25 14:01:27] Memory after cleanup: 845.5 MB
+[2026-06-25 14:01:27] === FILE SIZE ANALYSIS ===
+[2026-06-25 14:01:27] Original template size: 0.95 MB (991170 bytes)
+[2026-06-25 14:01:27] Generated file size: 3.62 MB (3792911 bytes)
+[2026-06-25 14:01:27] Size increase: 2.67 MB (2801741 bytes)
+[2026-06-25 14:01:27] Percentage increase: 282.7%
+[2026-06-25 14:01:27] WARNING: File size increased by more than 200%! This indicates bloat.
+[2026-06-25 14:01:27] Possible causes:
+[2026-06-25 14:01:27]   - setPreCalculateFormulas(false) was used (adds ~300% bloat)
+[2026-06-25 14:01:27]   - Too many cell styles/formats being created
+[2026-06-25 14:01:27]   - PHPExcel adding unnecessary XML data
+[2026-06-25 14:01:27] === GENERATION COMPLETE - SUMMARY ===
+[2026-06-25 14:01:27] Template: 3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 14:01:27] Generated file: TLE 7-Grade 7 CS3A-20260625015640.xlsx
+[2026-06-25 14:01:27] Download URL: https://cerebrox.thinkfast.app/downloads/generated_grades/TLE 7-Grade 7 CS3A-20260625015640.xlsx
+[2026-06-25 14:01:27] Total execution time: 399.37 seconds
+[2026-06-25 14:01:27] Final memory usage: 845.25 MB
+[2026-06-25 14:01:27] Peak memory usage: 990.25 MB
+[2026-06-25 14:01:27] Students: 15 boys + 5 girls = 20 total
+[2026-06-25 14:01:27] Hidden rows preserved: 21 total across 9 sheets
+[2026-06-25 14:01:27] --- EXCEL GENERATION SUCCESS ---
+[2026-06-25 14:02:10] File saved successfully in 272.37 seconds
+[2026-06-25 14:02:10] Cleaning up PHPExcel objects...
+[2026-06-25 14:02:11] PHPExcel objects cleaned up.
+[2026-06-25 14:02:11] Memory after cleanup: 845.5 MB
+[2026-06-25 14:02:11] === FILE SIZE ANALYSIS ===
+[2026-06-25 14:02:11] Original template size: 0.95 MB (991170 bytes)
+[2026-06-25 14:02:11] Generated file size: 3.62 MB (3792911 bytes)
+[2026-06-25 14:02:11] Size increase: 2.67 MB (2801741 bytes)
+[2026-06-25 14:02:11] Percentage increase: 282.7%
+[2026-06-25 14:02:11] WARNING: File size increased by more than 200%! This indicates bloat.
+[2026-06-25 14:02:11] Possible causes:
+[2026-06-25 14:02:11]   - setPreCalculateFormulas(false) was used (adds ~300% bloat)
+[2026-06-25 14:02:11]   - Too many cell styles/formats being created
+[2026-06-25 14:02:11]   - PHPExcel adding unnecessary XML data
+[2026-06-25 14:02:11] === GENERATION COMPLETE - SUMMARY ===
+[2026-06-25 14:02:11] Template: 3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 14:02:11] Generated file: TLE 7-Grade 7 CS3A-20260625015737.xlsx
+[2026-06-25 14:02:11] Download URL: https://cerebrox.thinkfast.app/downloads/generated_grades/TLE 7-Grade 7 CS3A-20260625015737.xlsx
+[2026-06-25 14:02:11] Total execution time: 388.65 seconds
+[2026-06-25 14:02:11] Final memory usage: 845.25 MB
+[2026-06-25 14:02:11] Peak memory usage: 990.25 MB
+[2026-06-25 14:02:11] Students: 15 boys + 5 girls = 20 total
+[2026-06-25 14:02:11] Hidden rows preserved: 21 total across 9 sheets
+[2026-06-25 14:02:11] --- EXCEL GENERATION SUCCESS ---
+[2026-06-25 14:18:57] --- START EXCEL GENERATION ---
+[2026-06-25 14:18:57] Params: Class ID: 10, Section ID: 20, Subject ID: 46, Template ID: 1
+[2026-06-25 14:18:57] Template File in DB: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 14:18:57] Loading template file from disk: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 14:18:57] Initial memory usage: 3.75 MB
+[2026-06-25 14:18:57] File size: 991170 bytes (0.95 MB)
+[2026-06-25 14:18:57] File magic bytes (hex): 504b0304
+[2026-06-25 14:18:57] System temp dir: /tmp | Writable: YES
+[2026-06-25 14:18:57] Identifying Excel format...
+[2026-06-25 14:18:57] Excel format identified: Excel2007. Creating reader...
+[2026-06-25 14:18:57] Loading workbook into memory...
+[2026-06-25 14:20:26] PHPExcel loaded template successfully.
+[2026-06-25 14:20:26] Memory usage after load: 752.75 MB
+[2026-06-25 14:20:26] Total worksheets in workbook: 9
+[2026-06-25 14:20:26] Initial file size on disk: 0.95 MB (991170 bytes)
+[2026-06-25 14:20:26] Memory after load: 752.75 MB
+[2026-06-25 14:20:26] === PHASE 1: DETECTING HIDDEN ROWS IN ALL SHEETS ===
+[2026-06-25 14:20:26]   Sheet 'INPUT': Row 9 is hidden in template
+[2026-06-25 14:20:26]   Sheet 'INPUT': Row 11 is hidden in template
+[2026-06-25 14:20:26]   Sheet 'INPUT': Row 61 is hidden in template
+[2026-06-25 14:20:26]   Sheet 'INPUT': Row 63 is hidden in template
+[2026-06-25 14:20:26]   Sheet 'INPUT': Row 112 is hidden in template
+[2026-06-25 14:20:26]   Sheet 'INPUT': Stored 5 hidden rows for later use
+[2026-06-25 14:20:26]   Sheet 'TERM1': Row 12 is hidden in template
+[2026-06-25 14:20:26]   Sheet 'TERM1': Row 63 is hidden in template
+[2026-06-25 14:20:26]   Sheet 'TERM1': Row 65 is hidden in template
+[2026-06-25 14:20:26]   Sheet 'TERM1': Row 116 is hidden in template
+[2026-06-25 14:20:26]   Sheet 'TERM1': Stored 4 hidden rows for later use
+[2026-06-25 14:20:26]   Sheet 'TERM2': Row 12 is hidden in template
+[2026-06-25 14:20:26]   Sheet 'TERM2': Row 63 is hidden in template
+[2026-06-25 14:20:26]   Sheet 'TERM2': Row 65 is hidden in template
+[2026-06-25 14:20:26]   Sheet 'TERM2': Row 116 is hidden in template
+[2026-06-25 14:20:26]   Sheet 'TERM2': Stored 4 hidden rows for later use
+[2026-06-25 14:20:26]   Sheet 'TERM3': Row 12 is hidden in template
+[2026-06-25 14:20:26]   Sheet 'TERM3': Row 63 is hidden in template
+[2026-06-25 14:20:26]   Sheet 'TERM3': Row 65 is hidden in template
+[2026-06-25 14:20:26]   Sheet 'TERM3': Row 116 is hidden in template
+[2026-06-25 14:20:26]   Sheet 'TERM3': Stored 4 hidden rows for later use
+[2026-06-25 14:20:26]   Sheet 'SUMMARY OF GRADES': Row 13 is hidden in template
+[2026-06-25 14:20:26]   Sheet 'SUMMARY OF GRADES': Row 64 is hidden in template
+[2026-06-25 14:20:26]   Sheet 'SUMMARY OF GRADES': Row 66 is hidden in template
+[2026-06-25 14:20:26]   Sheet 'SUMMARY OF GRADES': Row 117 is hidden in template
+[2026-06-25 14:20:26]   Sheet 'SUMMARY OF GRADES': Stored 4 hidden rows for later use
+[2026-06-25 14:20:26]   Sheet 'Sheet1': Stored 0 hidden rows for later use
+[2026-06-25 14:20:26]   Sheet 'Sheet2': Stored 0 hidden rows for later use
+[2026-06-25 14:20:26]   Sheet 'Helper (Do Not Delete)': Stored 0 hidden rows for later use
+[2026-06-25 14:20:26]   Sheet 'DO NOT DELETE': Stored 0 hidden rows for later use
+[2026-06-25 14:20:26] Memory after Phase 1: 752.75 MB
+[2026-06-25 14:20:26] === PHASE 2: DATA INSERTION ===
+[2026-06-25 14:20:27] Processing worksheet Index 0: 'INPUT' (Grade Sheet detected)
+[2026-06-25 14:20:27] Worksheet 'INPUT' populated: 3 boys, 1 girls.
+[2026-06-25 14:20:27]   Sheet 'INPUT': Re-hiding 5 originally hidden rows
+[2026-06-25 14:20:27]     Row 9: setVisible(false) called
+[2026-06-25 14:20:27]     Row 11: setVisible(false) called
+[2026-06-25 14:20:27]     Row 61: setVisible(false) called
+[2026-06-25 14:20:27]     Row 63: setVisible(false) called
+[2026-06-25 14:20:27]     Row 112: setVisible(false) called
+[2026-06-25 14:20:28]   Memory after sheet 0: 753.5 MB
+[2026-06-25 14:20:28] Processing worksheet Index 1: 'TERM1' (Grade Sheet detected)
+[2026-06-25 14:20:28] Worksheet 'TERM1' populated: 3 boys, 1 girls.
+[2026-06-25 14:20:28]   Sheet 'TERM1': Re-hiding 4 originally hidden rows
+[2026-06-25 14:20:28]     Row 12: setVisible(false) called
+[2026-06-25 14:20:28]     Row 63: setVisible(false) called
+[2026-06-25 14:20:28]     Row 65: setVisible(false) called
+[2026-06-25 14:20:28]     Row 116: setVisible(false) called
+[2026-06-25 14:20:29]   Memory after sheet 1: 754.75 MB
+[2026-06-25 14:20:29] Processing worksheet Index 2: 'TERM2' (Grade Sheet detected)
+[2026-06-25 14:20:29] Worksheet 'TERM2' populated: 3 boys, 1 girls.
+[2026-06-25 14:20:29]   Sheet 'TERM2': Re-hiding 4 originally hidden rows
+[2026-06-25 14:20:29]     Row 12: setVisible(false) called
+[2026-06-25 14:20:29]     Row 63: setVisible(false) called
+[2026-06-25 14:20:29]     Row 65: setVisible(false) called
+[2026-06-25 14:20:29]     Row 116: setVisible(false) called
+[2026-06-25 14:20:30]   Memory after sheet 2: 756 MB
+[2026-06-25 14:20:30] Processing worksheet Index 3: 'TERM3' (Grade Sheet detected)
+[2026-06-25 14:20:30] Worksheet 'TERM3' populated: 3 boys, 1 girls.
+[2026-06-25 14:20:30]   Sheet 'TERM3': Re-hiding 4 originally hidden rows
+[2026-06-25 14:20:30]     Row 12: setVisible(false) called
+[2026-06-25 14:20:30]     Row 63: setVisible(false) called
+[2026-06-25 14:20:30]     Row 65: setVisible(false) called
+[2026-06-25 14:20:30]     Row 116: setVisible(false) called
+[2026-06-25 14:20:31]   Memory after sheet 3: 757.25 MB
+[2026-06-25 14:20:31] Processing worksheet Index 4: 'SUMMARY OF GRADES' (Grade Sheet detected)
+[2026-06-25 14:20:31] Worksheet 'SUMMARY OF GRADES' populated: 3 boys, 1 girls.
+[2026-06-25 14:20:31]   Sheet 'SUMMARY OF GRADES': Re-hiding 4 originally hidden rows
+[2026-06-25 14:20:31]     Row 13: setVisible(false) called
+[2026-06-25 14:20:31]     Row 64: setVisible(false) called
+[2026-06-25 14:20:31]     Row 66: setVisible(false) called
+[2026-06-25 14:20:31]     Row 117: setVisible(false) called
+[2026-06-25 14:20:32]   Memory after sheet 4: 758.75 MB
+[2026-06-25 14:20:32] Skipping worksheet Index 5: 'Sheet1' (No student grade placeholders found)
+[2026-06-25 14:20:32]   Sheet 'Sheet1': No hidden rows to restore
+[2026-06-25 14:20:33]   Memory after sheet 5: 761.75 MB
+[2026-06-25 14:20:34] Skipping worksheet Index 6: 'Sheet2' (No student grade placeholders found)
+[2026-06-25 14:20:34]   Sheet 'Sheet2': No hidden rows to restore
+[2026-06-25 14:20:35]   Memory after sheet 6: 829 MB
+[2026-06-25 14:20:35] Skipping worksheet Index 7: 'Helper (Do Not Delete)' (No student grade placeholders found)
+[2026-06-25 14:20:35]   Sheet 'Helper (Do Not Delete)': No hidden rows to restore
+[2026-06-25 14:20:36]   Memory after sheet 7: 832 MB
+[2026-06-25 14:20:36] Skipping worksheet Index 8: 'DO NOT DELETE' (No student grade placeholders found)
+[2026-06-25 14:20:36]   Sheet 'DO NOT DELETE': No hidden rows to restore
+[2026-06-25 14:20:37]   Memory after sheet 8: 835 MB
+[2026-06-25 14:20:37] Memory after Phase 2: 835 MB
+[2026-06-25 14:20:37] === PHASE 3: FINAL PASS - ENSURING ALL HIDDEN ROWS ARE PRESERVED ===
+[2026-06-25 14:20:37]   Sheet 'INPUT': Re-applying 5 hidden rows
+[2026-06-25 14:20:37]     Row 9: Re-set height to 18 to force dimension creation
+[2026-06-25 14:20:37]     Row 9: setVisible(false) applied in final pass
+[2026-06-25 14:20:37]     Row 11: Re-set height to 18 to force dimension creation
+[2026-06-25 14:20:37]     Row 11: setVisible(false) applied in final pass
+[2026-06-25 14:20:37]     Row 61: Re-set height to 18 to force dimension creation
+[2026-06-25 14:20:37]     Row 61: setVisible(false) applied in final pass
+[2026-06-25 14:20:37]     Row 63: Re-set height to 18 to force dimension creation
+[2026-06-25 14:20:37]     Row 63: setVisible(false) applied in final pass
+[2026-06-25 14:20:37]     Row 112: Re-set height to 17.45 to force dimension creation
+[2026-06-25 14:20:37]     Row 112: setVisible(false) applied in final pass
+[2026-06-25 14:20:37]   Sheet 'TERM1': Re-applying 4 hidden rows
+[2026-06-25 14:20:37]     Row 12: Re-set height to 18 to force dimension creation
+[2026-06-25 14:20:37]     Row 12: setVisible(false) applied in final pass
+[2026-06-25 14:20:37]     Row 63: Re-set height to 18 to force dimension creation
+[2026-06-25 14:20:37]     Row 63: setVisible(false) applied in final pass
+[2026-06-25 14:20:37]     Row 65: Re-set height to 17.25 to force dimension creation
+[2026-06-25 14:20:37]     Row 65: setVisible(false) applied in final pass
+[2026-06-25 14:20:37]     Row 116: Re-set height to 18 to force dimension creation
+[2026-06-25 14:20:37]     Row 116: setVisible(false) applied in final pass
+[2026-06-25 14:20:37]   Sheet 'TERM2': Re-applying 4 hidden rows
+[2026-06-25 14:20:37]     Row 12: Re-set height to 18 to force dimension creation
+[2026-06-25 14:20:37]     Row 12: setVisible(false) applied in final pass
+[2026-06-25 14:20:37]     Row 63: Re-set height to 18 to force dimension creation
+[2026-06-25 14:20:37]     Row 63: setVisible(false) applied in final pass
+[2026-06-25 14:20:37]     Row 65: Re-set height to 18 to force dimension creation
+[2026-06-25 14:20:37]     Row 65: setVisible(false) applied in final pass
+[2026-06-25 14:20:37]     Row 116: Re-set height to 18 to force dimension creation
+[2026-06-25 14:20:37]     Row 116: setVisible(false) applied in final pass
+[2026-06-25 14:20:37]   Sheet 'TERM3': Re-applying 4 hidden rows
+[2026-06-25 14:20:37]     Row 12: Re-set height to 18 to force dimension creation
+[2026-06-25 14:20:37]     Row 12: setVisible(false) applied in final pass
+[2026-06-25 14:20:37]     Row 63: Re-set height to 18 to force dimension creation
+[2026-06-25 14:20:37]     Row 63: setVisible(false) applied in final pass
+[2026-06-25 14:20:37]     Row 65: Re-set height to 18 to force dimension creation
+[2026-06-25 14:20:37]     Row 65: setVisible(false) applied in final pass
+[2026-06-25 14:20:37]     Row 116: Re-set height to 18 to force dimension creation
+[2026-06-25 14:20:37]     Row 116: setVisible(false) applied in final pass
+[2026-06-25 14:20:37]   Sheet 'SUMMARY OF GRADES': Re-applying 4 hidden rows
+[2026-06-25 14:20:37]     Row 13: Re-set height to 18 to force dimension creation
+[2026-06-25 14:20:37]     Row 13: setVisible(false) applied in final pass
+[2026-06-25 14:20:37]     Row 64: Re-set height to 18 to force dimension creation
+[2026-06-25 14:20:37]     Row 64: setVisible(false) applied in final pass
+[2026-06-25 14:20:37]     Row 66: Re-set height to 18 to force dimension creation
+[2026-06-25 14:20:37]     Row 66: setVisible(false) applied in final pass
+[2026-06-25 14:20:37]     Row 117: Re-set height to 19.5 to force dimension creation
+[2026-06-25 14:20:37]     Row 117: setVisible(false) applied in final pass
+[2026-06-25 14:20:37]   Sheet 'Sheet1': No hidden rows to re-apply
+[2026-06-25 14:20:37]   Sheet 'Sheet2': No hidden rows to re-apply
+[2026-06-25 14:20:37]   Sheet 'Helper (Do Not Delete)': No hidden rows to re-apply
+[2026-06-25 14:20:37]   Sheet 'DO NOT DELETE': No hidden rows to re-apply
+[2026-06-25 14:20:37] Memory after Phase 3: 835 MB
+[2026-06-25 14:20:37] === PHASE 4: SAVING FILE ===
+[2026-06-25 14:20:37] Filename: TLE 7-Grade 7 CS3A-20260625022037.xlsx
+[2026-06-25 14:20:37] Peak memory usage: 835 MB
+[2026-06-25 14:20:37] VERIFICATION: Checking hidden row state immediately before save:
+[2026-06-25 14:20:37]   Sheet 'INPUT': 5 rows STILL HIDDEN: 9, 11, 61, 63, 112
+[2026-06-25 14:20:37]   Sheet 'TERM1': 4 rows STILL HIDDEN: 12, 63, 65, 116
+[2026-06-25 14:20:37]   Sheet 'TERM2': 4 rows STILL HIDDEN: 12, 63, 65, 116
+[2026-06-25 14:20:37]   Sheet 'TERM3': 4 rows STILL HIDDEN: 12, 63, 65, 116
+[2026-06-25 14:20:37]   Sheet 'SUMMARY OF GRADES': 4 rows STILL HIDDEN: 13, 64, 66, 117
+[2026-06-25 14:20:37] Target file path: downloads/generated_grades/TLE 7-Grade 7 CS3A-20260625022037.xlsx
+[2026-06-25 14:20:37] PHPExcel object state before save:
+[2026-06-25 14:20:37]   - Sheet count: 9
+[2026-06-25 14:20:37]   - Memory usage: 835 MB
+[2026-06-25 14:20:37] Creating Excel2007 writer...
+[2026-06-25 14:20:37] Writer object created in 0.01 seconds
+[2026-06-25 14:20:37] Writer setting - Pre-calculate formulas: NO (Excel will calculate on open)
+[2026-06-25 14:20:37] Starting file save operation...
+[2026-06-25 14:25:05] File saved successfully in 268.41 seconds
+[2026-06-25 14:25:05] Cleaning up PHPExcel objects...
+[2026-06-25 14:25:07] PHPExcel objects cleaned up.
+[2026-06-25 14:25:07] Memory after cleanup: 847 MB
+[2026-06-25 14:25:07] === FILE SIZE ANALYSIS ===
+[2026-06-25 14:25:07] Original template size: 0.95 MB (991170 bytes)
+[2026-06-25 14:25:07] Generated file size: 3.62 MB (3792911 bytes)
+[2026-06-25 14:25:07] Size increase: 2.67 MB (2801741 bytes)
+[2026-06-25 14:25:07] Percentage increase: 282.7%
+[2026-06-25 14:25:07] WARNING: File size increased by more than 200%! This indicates bloat.
+[2026-06-25 14:25:07] Possible causes:
+[2026-06-25 14:25:07]   - setPreCalculateFormulas(false) was used (adds ~300% bloat)
+[2026-06-25 14:25:07]   - Too many cell styles/formats being created
+[2026-06-25 14:25:07]   - PHPExcel adding unnecessary XML data
+[2026-06-25 14:25:07] === GENERATION COMPLETE - SUMMARY ===
+[2026-06-25 14:25:07] Template: 3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 14:25:07] Generated file: TLE 7-Grade 7 CS3A-20260625022037.xlsx
+[2026-06-25 14:25:07] Download URL: https://cerebrox.thinkfast.app/downloads/generated_grades/TLE 7-Grade 7 CS3A-20260625022037.xlsx
+[2026-06-25 14:25:07] Total execution time: 369.53 seconds
+[2026-06-25 14:25:07] Final memory usage: 846.5 MB
+[2026-06-25 14:25:07] Peak memory usage: 990.25 MB
+[2026-06-25 14:25:07] Students: 15 boys + 5 girls = 20 total
+[2026-06-25 14:25:07] Hidden rows preserved: 21 total across 9 sheets
+[2026-06-25 14:25:07] --- EXCEL GENERATION SUCCESS ---

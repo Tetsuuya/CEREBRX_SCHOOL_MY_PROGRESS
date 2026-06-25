@@ -12,7 +12,9 @@ class Teacher extends CI_Controller {
         $this->role;
         $this->load->library('auth');
         $this->auth->is_logged_in_idproduction();
+        $this->load->model('teacher_model');
 		$this->load->model('user_model');
+		$this->load->model('idproduction_model');
     }
 	
 	function index() {
@@ -20,6 +22,10 @@ class Teacher extends CI_Controller {
         $this->session->set_userdata('sub_menu', 'teacher/index');
         $data['title'] = 'Add Teacher';
         $teacher_result = $this->teacher_model->get();
+        // Sort teacher list in descending order of ID to show the newest entries at the top
+        usort($teacher_result, function($a, $b) {
+            return $b['id'] - $a['id'];
+        });
         $data['teacherlist'] = $teacher_result;
         $genderList = $this->customlib->getGender();
         $data['genderList'] = $genderList;
@@ -45,6 +51,10 @@ class Teacher extends CI_Controller {
         $this->form_validation->set_rules('file', 'Image', 'callback_handle_upload');
         if ($this->form_validation->run() == FALSE) {
             $teacher_result = $this->teacher_model->get();
+            // Sort teacher list in descending order of ID to show the newest entries at the top
+            usort($teacher_result, function($a, $b) {
+                return $b['id'] - $a['id'];
+            });
             $data['teacherlist'] = $teacher_result;
             $genderList = $this->customlib->getGender();
             $data['genderList'] = $genderList;
@@ -67,10 +77,12 @@ class Teacher extends CI_Controller {
                 'phone' => $this->input->post('phone'),
                 'is_active' => 'yes',
                 'type_teacher' => $type_teacher,
+                'is_teacher' => 'yes', // Set is_teacher as yes
                 'image' => 'uploads/student_images/no_image.png',
             );
 			
             $insert_id = $this->teacher_model->add($data);
+
 			/* if( $type_teacher == 'Advisory'){
 				$class_id = $this->input->post('class_id');
 				if( count($class_id) > 0 ){
@@ -100,9 +112,14 @@ class Teacher extends CI_Controller {
                 $fileInfo = pathinfo($_FILES["file"]["name"]);
                 $img_name = $insert_id . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["file"]["tmp_name"], "./uploads/teacher_images/" . $img_name);
-                $data_img = array('id' => $insert_id, 'image' => 'uploads/teacher_images/' . $img_name);
+                $image_path = 'uploads/teacher_images/' . $img_name;
+                $data_img = array('id' => $insert_id, 'image' => $image_path);
                 $this->teacher_model->add($data_img);
             }
+
+            // sync new teacher details (including photo path if uploaded) to employee/faculties table via model
+            $this->idproduction_model->syncTeacherToEmployee($insert_id);
+
             $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">Teacher added successfully</div>');
             redirect('idproduction/teacher/index');
         }
@@ -171,6 +188,10 @@ class Teacher extends CI_Controller {
         $this->form_validation->set_rules('file', 'Image', 'callback_handle_upload');
         if ($this->form_validation->run() == FALSE) {
             $teacher_result = $this->teacher_model->get();
+            // in descending order of ID 
+            usort($teacher_result, function($a, $b) {
+                return $b['id'] - $a['id'];
+            });
             $data['teacherlist'] = $teacher_result;
             $this->load->view('layout/idproduction/header', $data);
             $this->load->view('idproduction/teacher/teacherEdit', $data);
@@ -192,6 +213,7 @@ class Teacher extends CI_Controller {
                 'phone' => $this->input->post('phone'),
                 'type_teacher' => $type_teacher,
                 'is_active' => $is_active,
+                'is_teacher' => 'yes', // Ensure is_teacher remains yes
             );
             $insert_id = $this->teacher_model->add($data);
 			
@@ -204,7 +226,6 @@ class Teacher extends CI_Controller {
 				$user_id = $login_details[0]->id;
 				$this->user_model->add( array('id' => $user_id, 'is_active' => 'yes'));
 			}
-			
 			
 			/* if( $type_teacher == 'Advisory'){
 				$class_id = $class_id;
@@ -227,9 +248,14 @@ class Teacher extends CI_Controller {
                 $fileInfo = pathinfo($_FILES["file"]["name"]);
                 $img_name = $id . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["file"]["tmp_name"], "./uploads/teacher_images/" . $img_name);
-                $data_img = array('id' => $id, 'image' => 'uploads/teacher_images/' . $img_name);
+                $image_path = 'uploads/teacher_images/' . $img_name;
+                $data_img = array('id' => $id, 'image' => $image_path);
                 $this->teacher_model->add($data_img);
             }
+
+            // Sync updated teacher details (including photo path if uploaded) to employee/faculties table via model
+            $this->idproduction_model->syncTeacherToEmployee($id, $teacher);
+
             $this->session->set_flashdata('msg', '<div class="alert alert-success text-center">Teacher updated successfully</div>');
             redirect('idproduction/teacher/index');
         }
@@ -394,6 +420,7 @@ class Teacher extends CI_Controller {
 		 
 		 redirect('idproduction/teacher/advisers/?session_id='.$get_session_id );
 	}
+
 }
 
 ?>

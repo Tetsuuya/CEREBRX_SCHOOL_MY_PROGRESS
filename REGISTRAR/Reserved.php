@@ -2303,6 +2303,18 @@ class reserved extends CI_Controller {
 			$display_address = $this->input->post('display_address');
 			$display_institution = $this->input->post('display_institution');
 
+			$existing_reserved = $this->reserved_students_model->get( $id );
+			$existing_year = !empty($existing_reserved['year_baptism']) ? $existing_reserved['year_baptism'] : NULL;
+
+			$year_baptism = $display_year_baptized;
+			if ($display_baptized === 'no') {
+				$year_baptism = $existing_year;
+			} else {
+				if ($year_baptism === 'N/A' || empty($year_baptism)) {
+					$year_baptism = NULL;
+				}
+			}
+
 			$data  = array(
 				'id' => $id,
 				'firstname' => $display_first,
@@ -2312,8 +2324,8 @@ class reserved extends CI_Controller {
 				'guardian_phone' => $display_guardiannumber,
 				'religion' => $display_religion,
 				'if_adventist' => $display_baptized,
-				'year_baptism' => $display_year_baptized === 'N/A' ? NULL : $display_year_baptized,
-				'email_address' => $display_email,
+				'year_baptism' => $year_baptism,
+				'email_address' => $display_email === 'N/A' ? NULL : $display_email,
 				'lrn' => $display_lrn === 'N/A' ? NULL : $display_lrn,
 				'guardian_name' => $display_guardianfirst,
 				'guardian_midname' => $display_guardianmiddlename,
@@ -2340,10 +2352,10 @@ class reserved extends CI_Controller {
 					'guardian_relation' => $display_relation,
 					'guardian_address' => $display_address,
 					'religion' => $display_religion,
-					'email' => $display_email, 
+					'email' => $display_email === 'N/A' ? NULL : $display_email, 
 					'lrn' => $display_lrn === 'N/A' ? NULL : $display_lrn,
 					'if_adventist' => $display_baptized,
-					'year_baptism' => $display_year_baptized === 'N/A' ? NULL : $display_year_baptized,
+					'year_baptism' => $year_baptism,
 					'institution' => $display_institution === 'N/A' ? NULL : $display_institution
 				);
 				$this->student_model->add( $student_data );

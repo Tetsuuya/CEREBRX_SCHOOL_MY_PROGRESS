@@ -672,7 +672,7 @@ input[type=number] {
 
 							</div>
 
-							<div class="col-md-3" id="display_religion" style="display:none;">
+							<div class="col-md-3" id="display_religion_group" style="display:none;">
 
 								<label for="exampleInputEmail1" class="col-sm-12 title">Enter Religion<span style="color:red;">*</span></label>
 
@@ -1885,11 +1885,7 @@ $(document).on('click', '.click_modal', function (e) {
 
                 var year_baptism = json.year_baptism;
 
-                if( subsidized == 'yes'){
-                     $('#display_institution').val(json.institution ? json.institution : "N/A"); 
-                } else {
-                     $('#display_institution').val("N/A"); 
-                }
+                $('#display_institution').val(json.institution ? json.institution : "N/A");
 
                 var is_baptized = json.if_adventist ? json.if_adventist.toLowerCase() : "no";
                 $('#display_baptized').val(is_baptized); 
@@ -1930,15 +1926,7 @@ $(document).on('click', '.click_modal', function (e) {
 
                 $('#display_modular').val(modality); 
 
-                 if( modality == 'Modular A'  ){  
-
-                     $('#display_email').val(email_address);
-
-                } else {
-
-                    $('#display_email').val("N/A");
-
-                }
+                 $('#display_email').val(email_address ? email_address : "N/A");
 
 
 
@@ -2036,11 +2024,11 @@ $(document).on('click', '.click_modal', function (e) {
 
                 }
 
-                var guardian_address = json.guardian_address;
+                var guardian_address = json.guardian_address || "";
 
-                var guardian_address1 = json.guardian_address2;
+                var guardian_address1 = json.guardian_address2 || "";
 
-                 $('#display_address').val(guardian_address+' '+guardian_address1); 
+                 $('#display_address').val((guardian_address + ' ' + guardian_address1).trim()); 
 
 
 
@@ -2556,13 +2544,13 @@ $(document).ready(function () {
 
 			if(religion == 'other'){
 
-				$('#display_religion').show(100);
+				$('#display_religion_group').show(100);
 
 				$('#other_religion').attr('required',true);
 
 			} else {
 
-				$('#display_religion').hide(100);
+				$('#display_religion_group').hide(100);
 
 				$('#other_religion').attr('required',false);
 

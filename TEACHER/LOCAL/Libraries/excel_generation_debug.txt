@@ -1,0 +1,961 @@
+
+2026-06-24 07:05:51 | Excel Generation Started
+2026-06-24 07:05:52 | Cell search completed
+2026-06-24 07:05:52 | Loading Excel file...
+2026-06-24 07:14:25 | Excel file loaded successfully
+2026-06-24 07:14:25 | Processing 9 sheets
+2026-06-24 07:14:25 | Processing sheet 1/9
+2026-06-24 07:14:28 | Processing sheet 2/9
+2026-06-24 07:14:30 | Processing sheet 3/9
+2026-06-24 07:14:33 | Processing sheet 4/9
+2026-06-24 07:14:35 | Processing sheet 5/9
+2026-06-24 07:14:38 | Processing sheet 6/9
+2026-06-24 07:14:40 | Processing sheet 7/9
+2026-06-24 07:14:43 | Processing sheet 8/9
+2026-06-24 07:14:46 | Processing sheet 9/9
+2026-06-24 07:14:48 | Memory used: 2318.25MB | Saving file...
+
+2026-06-24 07:27:04 | DIRECT DOWNLOAD Started
+2026-06-24 07:27:04 | Template found, downloading...
+2026-06-24 07:27:05 | Download complete!
+
+2026-06-24 08:12:51 | PhpSpreadsheet Generation Started
+2026-06-24 08:12:52 | Cell search completed
+2026-06-24 08:12:52 | Loading Excel with PhpSpreadsheet...
+
+2026-06-24 08:18:20 | Excel Generation Started
+2026-06-24 08:18:21 | Cell search completed
+2026-06-24 08:18:21 | Loading Excel file...
+2026-06-24 08:26:41 | Excel file loaded successfully
+2026-06-24 08:26:41 | Processing 9 sheets
+2026-06-24 08:26:41 | Processing sheet 1/9
+2026-06-24 08:26:43 | Processing sheet 2/9
+2026-06-24 08:26:46 | Processing sheet 3/9
+2026-06-24 08:26:48 | Processing sheet 4/9
+2026-06-24 08:26:51 | Processing sheet 5/9
+2026-06-24 08:26:53 | Processing sheet 6/9
+2026-06-24 08:26:56 | Processing sheet 7/9
+2026-06-24 08:26:58 | Processing sheet 8/9
+2026-06-24 08:27:01 | Processing sheet 9/9
+2026-06-24 08:27:03 | Memory used: 2318.5MB | Saving file...
+
+2026-06-24 08:32:47 | Excel Generation Started
+2026-06-24 08:32:49 | Cell search completed
+2026-06-24 08:32:49 | Loading Excel file...
+2026-06-24 08:41:17 | Excel file loaded successfully
+2026-06-24 08:41:17 | Processing 9 sheets
+2026-06-24 08:41:17 | Processing sheet 1/9
+2026-06-24 08:41:20 | Processing sheet 2/9
+2026-06-24 08:41:23 | Processing sheet 3/9
+2026-06-24 08:41:26 | Processing sheet 4/9
+2026-06-24 08:41:29 | Processing sheet 5/9
+2026-06-24 08:41:32 | Processing sheet 6/9
+2026-06-24 08:41:34 | Processing sheet 7/9
+2026-06-24 08:41:37 | Processing sheet 8/9
+2026-06-24 08:41:40 | Processing sheet 9/9
+2026-06-24 08:41:42 | Memory used: 2318.75MB | Saving to temp file...
+2026-06-24 09:11:04 | Temp file saved. Starting download...
+
+2026-06-24 10:54:07 | === Generation Started ===
+2026-06-24 10:54:07 | Params: Class=10, Section=20, Subject=46, Template=1
+2026-06-24 10:54:07 | Template file: uploads/template_documents/academic_subjects/3-term_New_Grade_Template.xlsx
+2026-06-24 10:54:08 | Cell search completed
+2026-06-24 10:54:08 | Loading Excel file: uploads/template_documents/academic_subjects/3-term_New_Grade_Template.xlsx
+
+2026-06-24 10:54:38 | === Generation Started ===
+2026-06-24 10:54:38 | Params: Class=10, Section=20, Subject=46, Template=1
+2026-06-24 10:54:39 | Template file: uploads/template_documents/academic_subjects/3-term_New_Grade_Template.xlsx
+2026-06-24 10:54:40 | Cell search completed
+2026-06-24 10:54:40 | Loading Excel file: uploads/template_documents/academic_subjects/3-term_New_Grade_Template.xlsx
+[2026-06-24 11:22:01] --- START EXCEL GENERATION ---
+[2026-06-24 11:22:01] Params: Class ID: 10, Section ID: 20, Subject ID: 46, Template ID: 1
+[2026-06-24 11:22:01] Template File in DB: uploads/template_documents/academic_subjects/3-term_New_Grade_Template.xlsx
+[2026-06-24 11:22:02] Spout search_cells complete. Placeholders found: {school_name}, {class}, {subject_teacher}, {subject_name}, {start_boys_numbering}, {start_boys}, {end_boys_numbering}, {end_boys}, {start_girls_numbering}, {start_girls}, {end_girls_numbering}, {end_girls}
+[2026-06-24 11:22:02] Loading template file from disk: uploads/template_documents/academic_subjects/3-term_New_Grade_Template.xlsx
+[2026-06-24 11:22:02] Initial memory usage: 8.25 MB
+[2026-06-24 11:22:36] --- START EXCEL GENERATION ---
+[2026-06-24 11:22:36] Params: Class ID: 10, Section ID: 20, Subject ID: 46, Template ID: 1
+[2026-06-24 11:22:36] Template File in DB: uploads/template_documents/academic_subjects/3-term_New_Grade_Template.xlsx
+[2026-06-24 11:22:37] Spout search_cells complete. Placeholders found: {school_name}, {class}, {subject_teacher}, {subject_name}, {start_boys_numbering}, {start_boys}, {end_boys_numbering}, {end_boys}, {start_girls_numbering}, {start_girls}, {end_girls_numbering}, {end_girls}
+[2026-06-24 11:22:37] Loading template file from disk: uploads/template_documents/academic_subjects/3-term_New_Grade_Template.xlsx
+[2026-06-24 11:22:37] Initial memory usage: 8.25 MB
+[2026-06-24 11:32:19] --- START EXCEL GENERATION ---
+[2026-06-24 11:32:19] Params: Class ID: 10, Section ID: 20, Subject ID: 46, Template ID: 1
+[2026-06-24 11:32:19] Template File in DB: uploads/template_documents/academic_subjects/3-term_New_Grade_Template.xlsx
+[2026-06-24 11:32:19] Loading template file from disk: uploads/template_documents/academic_subjects/3-term_New_Grade_Template.xlsx
+[2026-06-24 11:32:19] Initial memory usage: 4 MB
+[2026-06-24 11:52:26] --- START EXCEL GENERATION ---
+[2026-06-24 11:52:26] Params: Class ID: 10, Section ID: 20, Subject ID: 46, Template ID: 1
+[2026-06-24 11:52:26] Template File in DB: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_CLEAN.xlsx
+[2026-06-24 11:52:26] Loading template file from disk: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_CLEAN.xlsx
+[2026-06-24 11:52:26] Initial memory usage: 4.25 MB
+[2026-06-24 11:52:26] PHPExcel loaded template successfully.
+[2026-06-24 11:52:26] Memory usage after load: 8.75 MB
+[2026-06-24 11:52:26] Total worksheets in workbook: 9
+[2026-06-24 11:52:26] Skipping worksheet Index 0: 'INPUT' (No student grade placeholders found)
+[2026-06-24 11:52:26] Skipping worksheet Index 1: 'TERM1' (No student grade placeholders found)
+[2026-06-24 11:52:26] Skipping worksheet Index 2: 'TERM2' (No student grade placeholders found)
+[2026-06-24 11:52:26] Skipping worksheet Index 3: 'TERM3' (No student grade placeholders found)
+[2026-06-24 11:52:26] Skipping worksheet Index 4: 'SUMMARY OF GRADES' (No student grade placeholders found)
+[2026-06-24 11:52:27] Skipping worksheet Index 5: 'Sheet1' (No student grade placeholders found)
+[2026-06-24 11:52:27] Skipping worksheet Index 6: 'Sheet2' (No student grade placeholders found)
+[2026-06-24 11:52:27] Skipping worksheet Index 7: 'Helper (Do Not Delete)' (No student grade placeholders found)
+[2026-06-24 11:52:27] Skipping worksheet Index 8: 'DO NOT DELETE' (No student grade placeholders found)
+[2026-06-24 11:52:27] Saving final file to output. Filename: TLE 7-Grade 7 CS3A-20260624115227.xlsx
+[2026-06-24 11:52:27] Peak memory usage: 43.25 MB
+[2026-06-24 11:52:31] --- EXCEL GENERATION SUCCESS ---
+[2026-06-24 11:53:32] --- START EXCEL GENERATION ---
+[2026-06-24 11:53:32] Params: Class ID: 10, Section ID: 20, Subject ID: 46, Template ID: 1
+[2026-06-24 11:53:32] Template File in DB: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_CLEAN.xlsx
+[2026-06-24 11:53:32] Loading template file from disk: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_CLEAN.xlsx
+[2026-06-24 11:53:32] Initial memory usage: 4.25 MB
+[2026-06-24 11:53:32] PHPExcel loaded template successfully.
+[2026-06-24 11:53:32] Memory usage after load: 8.75 MB
+[2026-06-24 11:53:32] Total worksheets in workbook: 9
+[2026-06-24 11:53:32] Skipping worksheet Index 0: 'INPUT' (No student grade placeholders found)
+[2026-06-24 11:53:32] Skipping worksheet Index 1: 'TERM1' (No student grade placeholders found)
+[2026-06-24 11:53:33] Skipping worksheet Index 2: 'TERM2' (No student grade placeholders found)
+[2026-06-24 11:53:33] Skipping worksheet Index 3: 'TERM3' (No student grade placeholders found)
+[2026-06-24 11:53:33] Skipping worksheet Index 4: 'SUMMARY OF GRADES' (No student grade placeholders found)
+[2026-06-24 11:53:33] Skipping worksheet Index 5: 'Sheet1' (No student grade placeholders found)
+[2026-06-24 11:53:33] Skipping worksheet Index 6: 'Sheet2' (No student grade placeholders found)
+[2026-06-24 11:53:33] Skipping worksheet Index 7: 'Helper (Do Not Delete)' (No student grade placeholders found)
+[2026-06-24 11:53:33] Skipping worksheet Index 8: 'DO NOT DELETE' (No student grade placeholders found)
+[2026-06-24 11:53:33] Saving final file to output. Filename: TLE 7-Grade 7 CS3A-20260624115333.xlsx
+[2026-06-24 11:53:33] Peak memory usage: 43.25 MB
+[2026-06-24 11:53:37] --- EXCEL GENERATION SUCCESS ---
+[2026-06-24 12:02:32] --- START EXCEL GENERATION ---
+[2026-06-24 12:02:32] Params: Class ID: 10, Section ID: 20, Subject ID: 46, Template ID: 1
+[2026-06-24 12:02:32] Template File in DB: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_CLEAN.xlsx
+[2026-06-24 12:02:32] Loading template file from disk: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_CLEAN.xlsx
+[2026-06-24 12:02:32] Initial memory usage: 4 MB
+[2026-06-24 12:08:55] --- START EXCEL GENERATION ---
+[2026-06-24 12:08:55] Params: Class ID: 10, Section ID: 20, Subject ID: 46, Template ID: 1
+[2026-06-24 12:08:55] Template File in DB: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_CLEAN.xlsx
+[2026-06-24 12:08:55] Loading template file from disk: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_CLEAN.xlsx
+[2026-06-24 12:08:55] Initial memory usage: 4 MB
+[2026-06-24 12:36:46] --- START EXCEL GENERATION ---
+[2026-06-24 12:36:46] Params: Class ID: 10, Section ID: 20, Subject ID: 46, Template ID: 1
+[2026-06-24 12:36:46] Template File in DB: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_CLEAN.xlsx
+[2026-06-24 12:36:46] Loading template file from disk: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_CLEAN.xlsx
+[2026-06-24 12:36:46] Initial memory usage: 4 MB
+[2026-06-24 12:36:46] File size: 1636725 bytes (1.56 MB)
+[2026-06-24 12:36:46] File magic bytes (hex): 504b0304
+[2026-06-24 12:36:46] System temp dir: /tmp | Writable: YES
+[2026-06-24 12:36:46] Cell caching (phpTemp) initialized.
+[2026-06-24 12:36:46] Identifying Excel format...
+[2026-06-24 12:36:46] Excel format identified: Excel2007. Creating reader...
+[2026-06-24 12:36:46] Loading workbook into memory...
+[2026-06-24 12:49:06] --- START EXCEL GENERATION ---
+[2026-06-24 12:49:06] Params: Class ID: 10, Section ID: 20, Subject ID: 46, Template ID: 1
+[2026-06-24 12:49:06] Template File in DB: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_CLEAN.xlsx
+[2026-06-24 12:49:06] Loading template file from disk: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_CLEAN.xlsx
+[2026-06-24 12:49:06] Initial memory usage: 4 MB
+[2026-06-24 12:49:06] File size: 1637078 bytes (1.56 MB)
+[2026-06-24 12:49:06] File magic bytes (hex): 504b0304
+[2026-06-24 12:49:06] System temp dir: /tmp | Writable: YES
+[2026-06-24 12:49:06] Cell caching (phpTemp) initialized.
+[2026-06-24 12:49:06] Identifying Excel format...
+[2026-06-24 12:49:06] Excel format identified: Excel2007. Creating reader...
+[2026-06-24 12:49:06] Loading workbook into memory...
+[2026-06-24 12:49:34] --- START EXCEL GENERATION ---
+[2026-06-24 12:49:34] Params: Class ID: 10, Section ID: 20, Subject ID: 46, Template ID: 1
+[2026-06-24 12:49:34] Template File in DB: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_CLEAN.xlsx
+[2026-06-24 12:49:34] Loading template file from disk: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_CLEAN.xlsx
+[2026-06-24 12:49:34] Initial memory usage: 4 MB
+[2026-06-24 12:49:34] File size: 1637078 bytes (1.56 MB)
+[2026-06-24 12:49:34] File magic bytes (hex): 504b0304
+[2026-06-24 12:49:34] System temp dir: /tmp | Writable: YES
+[2026-06-24 12:49:34] Cell caching (phpTemp) initialized.
+[2026-06-24 12:49:34] Identifying Excel format...
+[2026-06-24 12:49:34] Excel format identified: Excel2007. Creating reader...
+[2026-06-24 12:49:34] Loading workbook into memory...
+[2026-06-24 12:49:37] PHPExcel loaded template successfully.
+[2026-06-24 12:49:37] Memory usage after load: 470.25 MB
+[2026-06-24 12:49:37] Total worksheets in workbook: 9
+[2026-06-24 12:49:37] Processing worksheet Index 0: 'INPUT' (Grade Sheet detected)
+[2026-06-24 12:49:37] Worksheet 'INPUT' populated: 3 boys, 1 girls.
+[2026-06-24 12:49:38] Skipping worksheet Index 1: 'TERM1' (No student grade placeholders found)
+[2026-06-24 12:50:06] PHPExcel loaded template successfully.
+[2026-06-24 12:50:06] Memory usage after load: 470.75 MB
+[2026-06-24 12:50:06] Total worksheets in workbook: 9
+[2026-06-24 12:50:06] Processing worksheet Index 0: 'INPUT' (Grade Sheet detected)
+[2026-06-24 12:50:06] Worksheet 'INPUT' populated: 3 boys, 1 girls.
+[2026-06-24 12:50:07] Skipping worksheet Index 1: 'TERM1' (No student grade placeholders found)
+[2026-06-24 12:50:08] Skipping worksheet Index 2: 'TERM2' (No student grade placeholders found)
+[2026-06-24 12:50:09] Skipping worksheet Index 3: 'TERM3' (No student grade placeholders found)
+[2026-06-24 12:50:09] Skipping worksheet Index 4: 'SUMMARY OF GRADES' (No student grade placeholders found)
+[2026-06-24 12:50:10] Skipping worksheet Index 5: 'Sheet1' (No student grade placeholders found)
+[2026-06-24 12:50:11] Skipping worksheet Index 6: 'Sheet2' (No student grade placeholders found)
+[2026-06-24 12:50:11] Skipping worksheet Index 7: 'Helper (Do Not Delete)' (No student grade placeholders found)
+[2026-06-24 12:50:12] Skipping worksheet Index 8: 'DO NOT DELETE' (No student grade placeholders found)
+[2026-06-24 12:50:13] Saving final file to output. Filename: TLE 7-Grade 7 CS3A-20260624125013.xlsx
+[2026-06-24 12:50:13] Peak memory usage: 496.5 MB
+[2026-06-24 12:52:06] --- EXCEL GENERATION SUCCESS ---
+[2026-06-24 12:53:19] --- START EXCEL GENERATION ---
+[2026-06-24 12:53:19] Params: Class ID: 10, Section ID: 20, Subject ID: 46, Template ID: 1
+[2026-06-24 12:53:19] Template File in DB: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_CLEAN.xlsx
+[2026-06-24 12:53:19] Loading template file from disk: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_CLEAN.xlsx
+[2026-06-24 12:53:19] Initial memory usage: 4 MB
+[2026-06-24 12:53:19] File size: 1637035 bytes (1.56 MB)
+[2026-06-24 12:53:19] File magic bytes (hex): 504b0304
+[2026-06-24 12:53:19] System temp dir: /tmp | Writable: YES
+[2026-06-24 12:53:19] Cell caching (phpTemp) initialized.
+[2026-06-24 12:53:19] Identifying Excel format...
+[2026-06-24 12:53:19] Excel format identified: Excel2007. Creating reader...
+[2026-06-24 12:53:19] Loading workbook into memory...
+[2026-06-24 13:01:20] --- START EXCEL GENERATION ---
+[2026-06-24 13:01:20] Params: Class ID: 10, Section ID: 20, Subject ID: 46, Template ID: 1
+[2026-06-24 13:01:20] Template File in DB: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_CLEAN.xlsx
+[2026-06-24 13:01:20] Loading template file from disk: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_CLEAN.xlsx
+[2026-06-24 13:01:20] Initial memory usage: 4 MB
+[2026-06-24 13:01:20] File size: 1637035 bytes (1.56 MB)
+[2026-06-24 13:01:20] File magic bytes (hex): 504b0304
+[2026-06-24 13:01:20] System temp dir: /tmp | Writable: YES
+[2026-06-24 13:01:20] Identifying Excel format...
+[2026-06-24 13:01:20] Excel format identified: Excel2007. Creating reader...
+[2026-06-24 13:01:20] Loading workbook into memory...
+[2026-06-24 13:11:54] --- START EXCEL GENERATION ---
+[2026-06-24 13:11:54] Params: Class ID: 10, Section ID: 20, Subject ID: 46, Template ID: 1
+[2026-06-24 13:11:54] Template File in DB: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_CLEAN.xlsx
+[2026-06-24 13:11:54] Loading template file from disk: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_CLEAN.xlsx
+[2026-06-24 13:11:54] Initial memory usage: 4 MB
+[2026-06-24 13:11:54] File size: 1592679 bytes (1.52 MB)
+[2026-06-24 13:11:54] File magic bytes (hex): 504b0304
+[2026-06-24 13:11:54] System temp dir: /tmp | Writable: YES
+[2026-06-24 13:11:54] Identifying Excel format...
+[2026-06-24 13:11:54] Excel format identified: Excel2007. Creating reader...
+[2026-06-24 13:11:54] Loading workbook into memory...
+[2026-06-24 13:18:51] PHPExcel loaded template successfully.
+[2026-06-24 13:39:31] --- START EXCEL GENERATION ---
+[2026-06-24 13:39:31] Params: Class ID: 10, Section ID: 20, Subject ID: 46, Template ID: 1
+[2026-06-24 13:39:31] Template File in DB: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_FINAL.xlsx
+[2026-06-24 13:39:31] Loading template file from disk: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_FINAL.xlsx
+[2026-06-24 13:39:31] Initial memory usage: 4 MB
+[2026-06-24 13:39:31] File size: 1006482 bytes (0.96 MB)
+[2026-06-24 13:39:31] File magic bytes (hex): 504b0304
+[2026-06-24 13:39:31] System temp dir: /tmp | Writable: YES
+[2026-06-24 13:39:31] Identifying Excel format...
+[2026-06-24 13:39:31] Excel format identified: Excel2007. Creating reader...
+[2026-06-24 13:39:31] Loading workbook into memory...
+[2026-06-24 13:40:51] PHPExcel loaded template successfully.
+[2026-06-24 13:40:51] Memory usage after load: 750.75 MB
+[2026-06-24 13:40:51] Total worksheets in workbook: 9
+[2026-06-24 13:40:52] Processing worksheet Index 0: 'INPUT' (Grade Sheet detected)
+[2026-06-24 13:40:52] Worksheet 'INPUT' populated: 3 boys, 1 girls.
+[2026-06-24 13:40:53] Processing worksheet Index 1: 'TERM1' (Grade Sheet detected)
+[2026-06-24 13:40:53] Worksheet 'TERM1' populated: 3 boys, 1 girls.
+[2026-06-24 13:40:54] Processing worksheet Index 2: 'TERM2' (Grade Sheet detected)
+[2026-06-24 13:40:54] Worksheet 'TERM2' populated: 3 boys, 1 girls.
+[2026-06-24 13:40:55] Processing worksheet Index 3: 'TERM3' (Grade Sheet detected)
+[2026-06-24 13:40:55] Worksheet 'TERM3' populated: 3 boys, 1 girls.
+[2026-06-24 13:40:56] Processing worksheet Index 4: 'SUMMARY OF GRADES' (Grade Sheet detected)
+[2026-06-24 13:40:56] Worksheet 'SUMMARY OF GRADES' populated: 3 boys, 1 girls.
+[2026-06-24 13:40:57] Skipping worksheet Index 5: 'Sheet1' (No student grade placeholders found)
+[2026-06-24 13:40:58] Skipping worksheet Index 6: 'Sheet2' (No student grade placeholders found)
+[2026-06-24 13:40:59] Skipping worksheet Index 7: 'Helper (Do Not Delete)' (No student grade placeholders found)
+[2026-06-24 13:41:00] Skipping worksheet Index 8: 'DO NOT DELETE' (No student grade placeholders found)
+[2026-06-24 13:41:01] Saving final file to output. Filename: TLE 7-Grade 7 CS3A-20260624014101.xlsx
+[2026-06-24 13:41:01] Peak memory usage: 832.75 MB
+[2026-06-24 13:45:32] --- EXCEL GENERATION SUCCESS ---
+[2026-06-24 13:50:09] --- START EXCEL GENERATION ---
+[2026-06-24 13:50:09] Params: Class ID: 10, Section ID: 20, Subject ID: 46, Template ID: 1
+[2026-06-24 13:50:09] Template File in DB: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_FINAL.xlsx
+[2026-06-24 13:50:09] Loading template file from disk: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_FINAL.xlsx
+[2026-06-24 13:50:09] Initial memory usage: 4 MB
+[2026-06-24 13:50:09] File size: 1006482 bytes (0.96 MB)
+[2026-06-24 13:50:09] File magic bytes (hex): 504b0304
+[2026-06-24 13:50:09] System temp dir: /tmp | Writable: YES
+[2026-06-24 13:50:09] Identifying Excel format...
+[2026-06-24 13:50:09] Excel format identified: Excel2007. Creating reader...
+[2026-06-24 13:50:09] Loading workbook into memory...
+[2026-06-24 13:51:43] PHPExcel loaded template successfully.
+[2026-06-24 13:51:43] Memory usage after load: 750.75 MB
+[2026-06-24 13:51:43] Total worksheets in workbook: 9
+[2026-06-24 13:51:44] Processing worksheet Index 0: 'INPUT' (Grade Sheet detected)
+[2026-06-24 13:51:44] Worksheet 'INPUT' populated: 3 boys, 1 girls.
+[2026-06-24 13:51:45] Processing worksheet Index 1: 'TERM1' (Grade Sheet detected)
+[2026-06-24 13:51:45] Worksheet 'TERM1' populated: 3 boys, 1 girls.
+[2026-06-24 13:51:47] Processing worksheet Index 2: 'TERM2' (Grade Sheet detected)
+[2026-06-24 13:51:47] Worksheet 'TERM2' populated: 3 boys, 1 girls.
+[2026-06-24 13:51:48] Processing worksheet Index 3: 'TERM3' (Grade Sheet detected)
+[2026-06-24 13:51:48] Worksheet 'TERM3' populated: 3 boys, 1 girls.
+[2026-06-24 13:51:49] Processing worksheet Index 4: 'SUMMARY OF GRADES' (Grade Sheet detected)
+[2026-06-24 13:51:49] Worksheet 'SUMMARY OF GRADES' populated: 3 boys, 1 girls.
+[2026-06-24 13:51:50] Skipping worksheet Index 5: 'Sheet1' (No student grade placeholders found)
+[2026-06-24 13:51:51] Skipping worksheet Index 6: 'Sheet2' (No student grade placeholders found)
+[2026-06-24 13:51:52] Skipping worksheet Index 7: 'Helper (Do Not Delete)' (No student grade placeholders found)
+[2026-06-24 13:51:53] Skipping worksheet Index 8: 'DO NOT DELETE' (No student grade placeholders found)
+[2026-06-24 13:51:54] Saving final file to output. Filename: TLE 7-Grade 7 CS3A-20260624015154.xlsx
+[2026-06-24 13:51:54] Peak memory usage: 832.75 MB
+[2026-06-24 13:55:51] --- START EXCEL GENERATION ---
+[2026-06-24 13:55:51] Params: Class ID: 10, Section ID: 20, Subject ID: 46, Template ID: 1
+[2026-06-24 13:55:51] Template File in DB: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_FINAL.xlsx
+[2026-06-24 13:55:51] Loading template file from disk: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_FINAL.xlsx
+[2026-06-24 13:55:51] Initial memory usage: 4 MB
+[2026-06-24 13:55:51] File size: 1006482 bytes (0.96 MB)
+[2026-06-24 13:55:51] File magic bytes (hex): 504b0304
+[2026-06-24 13:55:51] System temp dir: /tmp | Writable: YES
+[2026-06-24 13:55:51] Identifying Excel format...
+[2026-06-24 13:55:51] Excel format identified: Excel2007. Creating reader...
+[2026-06-24 13:55:51] Loading workbook into memory...
+[2026-06-24 13:57:10] PHPExcel loaded template successfully.
+[2026-06-24 13:57:10] Memory usage after load: 750.75 MB
+[2026-06-24 13:57:10] Total worksheets in workbook: 9
+[2026-06-24 13:57:11] Processing worksheet Index 0: 'INPUT' (Grade Sheet detected)
+[2026-06-24 13:57:11] Worksheet 'INPUT' populated: 3 boys, 1 girls.
+[2026-06-24 13:57:12] Processing worksheet Index 1: 'TERM1' (Grade Sheet detected)
+[2026-06-24 13:57:12] Worksheet 'TERM1' populated: 3 boys, 1 girls.
+[2026-06-24 13:57:13] Processing worksheet Index 2: 'TERM2' (Grade Sheet detected)
+[2026-06-24 13:57:13] Worksheet 'TERM2' populated: 3 boys, 1 girls.
+[2026-06-24 13:57:14] Processing worksheet Index 3: 'TERM3' (Grade Sheet detected)
+[2026-06-24 13:57:14] Worksheet 'TERM3' populated: 3 boys, 1 girls.
+[2026-06-24 13:57:15] Processing worksheet Index 4: 'SUMMARY OF GRADES' (Grade Sheet detected)
+[2026-06-24 13:57:15] Worksheet 'SUMMARY OF GRADES' populated: 3 boys, 1 girls.
+[2026-06-24 13:57:16] Skipping worksheet Index 5: 'Sheet1' (No student grade placeholders found)
+[2026-06-24 13:57:17] Skipping worksheet Index 6: 'Sheet2' (No student grade placeholders found)
+[2026-06-24 13:57:18] Skipping worksheet Index 7: 'Helper (Do Not Delete)' (No student grade placeholders found)
+[2026-06-24 13:57:19] Skipping worksheet Index 8: 'DO NOT DELETE' (No student grade placeholders found)
+[2026-06-24 13:57:20] Saving final file to output. Filename: TLE 7-Grade 7 CS3A-20260624015720.xlsx
+[2026-06-24 13:57:20] Peak memory usage: 833 MB
+[2026-06-24 14:06:20] --- START EXCEL GENERATION ---
+[2026-06-24 14:06:21] Params: Class ID: 10, Section ID: 20, Subject ID: 46, Template ID: 1
+[2026-06-24 14:06:21] Template File in DB: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_FINAL.xlsx
+[2026-06-24 14:06:21] Loading template file from disk: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_FINAL.xlsx
+[2026-06-24 14:06:21] Initial memory usage: 4 MB
+[2026-06-24 14:06:21] File size: 1006482 bytes (0.96 MB)
+[2026-06-24 14:06:21] File magic bytes (hex): 504b0304
+[2026-06-24 14:06:21] System temp dir: /tmp | Writable: YES
+[2026-06-24 14:06:21] Identifying Excel format...
+[2026-06-24 14:06:21] Excel format identified: Excel2007. Creating reader...
+[2026-06-24 14:06:21] Loading workbook into memory...
+[2026-06-24 14:06:44] --- START EXCEL GENERATION ---
+[2026-06-24 14:06:44] Params: Class ID: 10, Section ID: 20, Subject ID: 46, Template ID: 1
+[2026-06-24 14:06:44] Template File in DB: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_FINAL.xlsx
+[2026-06-24 14:06:44] Loading template file from disk: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_FINAL.xlsx
+[2026-06-24 14:06:44] Initial memory usage: 3.75 MB
+[2026-06-24 14:06:44] File size: 1006482 bytes (0.96 MB)
+[2026-06-24 14:06:44] File magic bytes (hex): 504b0304
+[2026-06-24 14:06:44] System temp dir: /tmp | Writable: YES
+[2026-06-24 14:06:44] Identifying Excel format...
+[2026-06-24 14:06:44] Excel format identified: Excel2007. Creating reader...
+[2026-06-24 14:06:44] Loading workbook into memory...
+[2026-06-24 14:07:44] PHPExcel loaded template successfully.
+[2026-06-24 14:07:44] Memory usage after load: 753 MB
+[2026-06-24 14:07:44] Total worksheets in workbook: 9
+[2026-06-24 14:07:45] Processing worksheet Index 0: 'INPUT' (Grade Sheet detected)
+[2026-06-24 14:07:45] Worksheet 'INPUT' populated: 3 boys, 1 girls.
+[2026-06-24 14:07:46] Processing worksheet Index 1: 'TERM1' (Grade Sheet detected)
+[2026-06-24 14:07:46] Worksheet 'TERM1' populated: 3 boys, 1 girls.
+[2026-06-24 14:07:47] Processing worksheet Index 2: 'TERM2' (Grade Sheet detected)
+[2026-06-24 14:07:47] Worksheet 'TERM2' populated: 3 boys, 1 girls.
+[2026-06-24 14:07:48] Processing worksheet Index 3: 'TERM3' (Grade Sheet detected)
+[2026-06-24 14:07:48] Worksheet 'TERM3' populated: 3 boys, 1 girls.
+[2026-06-24 14:07:49] Processing worksheet Index 4: 'SUMMARY OF GRADES' (Grade Sheet detected)
+[2026-06-24 14:07:49] Worksheet 'SUMMARY OF GRADES' populated: 3 boys, 1 girls.
+[2026-06-24 14:07:50] Skipping worksheet Index 5: 'Sheet1' (No student grade placeholders found)
+[2026-06-24 14:07:51] Skipping worksheet Index 6: 'Sheet2' (No student grade placeholders found)
+[2026-06-24 14:07:52] Skipping worksheet Index 7: 'Helper (Do Not Delete)' (No student grade placeholders found)
+[2026-06-24 14:07:53] Skipping worksheet Index 8: 'DO NOT DELETE' (No student grade placeholders found)
+[2026-06-24 14:07:54] Saving final file to output. Filename: TLE 7-Grade 7 CS3A-20260624020754.xlsx
+[2026-06-24 14:07:54] Peak memory usage: 835 MB
+[2026-06-24 14:08:10] PHPExcel loaded template successfully.
+[2026-06-24 14:08:10] Memory usage after load: 752.75 MB
+[2026-06-24 14:08:10] Total worksheets in workbook: 9
+[2026-06-24 14:08:11] Processing worksheet Index 0: 'INPUT' (Grade Sheet detected)
+[2026-06-24 14:08:11] Worksheet 'INPUT' populated: 3 boys, 1 girls.
+[2026-06-24 14:08:12] Processing worksheet Index 1: 'TERM1' (Grade Sheet detected)
+[2026-06-24 14:08:12] Worksheet 'TERM1' populated: 3 boys, 1 girls.
+[2026-06-24 14:08:13] Processing worksheet Index 2: 'TERM2' (Grade Sheet detected)
+[2026-06-24 14:08:13] Worksheet 'TERM2' populated: 3 boys, 1 girls.
+[2026-06-24 14:08:14] Processing worksheet Index 3: 'TERM3' (Grade Sheet detected)
+[2026-06-24 14:08:14] Worksheet 'TERM3' populated: 3 boys, 1 girls.
+[2026-06-24 14:08:15] Processing worksheet Index 4: 'SUMMARY OF GRADES' (Grade Sheet detected)
+[2026-06-24 14:08:15] Worksheet 'SUMMARY OF GRADES' populated: 3 boys, 1 girls.
+[2026-06-24 14:08:16] Skipping worksheet Index 5: 'Sheet1' (No student grade placeholders found)
+[2026-06-24 14:08:17] Skipping worksheet Index 6: 'Sheet2' (No student grade placeholders found)
+[2026-06-24 14:08:19] Skipping worksheet Index 7: 'Helper (Do Not Delete)' (No student grade placeholders found)
+[2026-06-24 14:08:20] Skipping worksheet Index 8: 'DO NOT DELETE' (No student grade placeholders found)
+[2026-06-24 14:08:21] Saving final file to output. Filename: TLE 7-Grade 7 CS3A-20260624020821.xlsx
+[2026-06-24 14:08:21] Peak memory usage: 834.75 MB
+[2026-06-24 14:13:42] --- START EXCEL GENERATION ---
+[2026-06-24 14:13:42] Params: Class ID: 10, Section ID: 20, Subject ID: 46, Template ID: 1
+[2026-06-24 14:13:42] Template File in DB: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_FINAL.xlsx
+[2026-06-24 14:13:42] Loading template file from disk: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_FINAL.xlsx
+[2026-06-24 14:13:42] Initial memory usage: 4 MB
+[2026-06-24 14:13:42] File size: 1006482 bytes (0.96 MB)
+[2026-06-24 14:13:42] File magic bytes (hex): 504b0304
+[2026-06-24 14:13:42] System temp dir: /tmp | Writable: YES
+[2026-06-24 14:13:42] Identifying Excel format...
+[2026-06-24 14:13:42] Excel format identified: Excel2007. Creating reader...
+[2026-06-24 14:13:42] Loading workbook into memory...
+[2026-06-24 14:15:00] PHPExcel loaded template successfully.
+[2026-06-24 14:15:00] Memory usage after load: 753.25 MB
+[2026-06-24 14:15:00] Total worksheets in workbook: 9
+[2026-06-24 14:15:01] Processing worksheet Index 0: 'INPUT' (Grade Sheet detected)
+[2026-06-24 14:15:01] Worksheet 'INPUT' populated: 3 boys, 1 girls.
+[2026-06-24 14:15:02] Processing worksheet Index 1: 'TERM1' (Grade Sheet detected)
+[2026-06-24 14:15:02] Worksheet 'TERM1' populated: 3 boys, 1 girls.
+[2026-06-24 14:15:03] Processing worksheet Index 2: 'TERM2' (Grade Sheet detected)
+[2026-06-24 14:15:03] Worksheet 'TERM2' populated: 3 boys, 1 girls.
+[2026-06-24 14:15:04] Processing worksheet Index 3: 'TERM3' (Grade Sheet detected)
+[2026-06-24 14:15:04] Worksheet 'TERM3' populated: 3 boys, 1 girls.
+[2026-06-24 14:15:05] Processing worksheet Index 4: 'SUMMARY OF GRADES' (Grade Sheet detected)
+[2026-06-24 14:15:05] Worksheet 'SUMMARY OF GRADES' populated: 3 boys, 1 girls.
+[2026-06-24 14:15:06] Skipping worksheet Index 5: 'Sheet1' (No student grade placeholders found)
+[2026-06-24 14:15:08] Skipping worksheet Index 6: 'Sheet2' (No student grade placeholders found)
+[2026-06-24 14:15:09] Skipping worksheet Index 7: 'Helper (Do Not Delete)' (No student grade placeholders found)
+[2026-06-24 14:15:10] Skipping worksheet Index 8: 'DO NOT DELETE' (No student grade placeholders found)
+[2026-06-24 14:15:11] Saving final file to output. Filename: TLE 7-Grade 7 CS3A-20260624021511.xlsx
+[2026-06-24 14:15:11] Peak memory usage: 835.25 MB
+[2026-06-24 14:22:55] --- START EXCEL GENERATION ---
+[2026-06-24 14:22:55] Params: Class ID: 10, Section ID: 20, Subject ID: 46, Template ID: 1
+[2026-06-24 14:22:55] Template File in DB: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_FINAL.xlsx
+[2026-06-24 14:22:55] Loading template file from disk: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_FINAL.xlsx
+[2026-06-24 14:22:55] Initial memory usage: 4 MB
+[2026-06-24 14:22:55] File size: 1006482 bytes (0.96 MB)
+[2026-06-24 14:22:55] File magic bytes (hex): 504b0304
+[2026-06-24 14:22:55] System temp dir: /tmp | Writable: YES
+[2026-06-24 14:22:55] Identifying Excel format...
+[2026-06-24 14:22:55] Excel format identified: Excel2007. Creating reader...
+[2026-06-24 14:22:55] Loading workbook into memory...
+[2026-06-24 14:24:12] PHPExcel loaded template successfully.
+[2026-06-24 14:24:12] Memory usage after load: 750.75 MB
+[2026-06-24 14:24:12] Total worksheets in workbook: 9
+[2026-06-24 14:24:13] Processing worksheet Index 0: 'INPUT' (Grade Sheet detected)
+[2026-06-24 14:24:13] Worksheet 'INPUT' populated: 3 boys, 1 girls.
+[2026-06-24 14:24:14] Processing worksheet Index 1: 'TERM1' (Grade Sheet detected)
+[2026-06-24 14:24:14] Worksheet 'TERM1' populated: 3 boys, 1 girls.
+[2026-06-24 14:24:15] Processing worksheet Index 2: 'TERM2' (Grade Sheet detected)
+[2026-06-24 14:24:15] Worksheet 'TERM2' populated: 3 boys, 1 girls.
+[2026-06-24 14:24:16] Processing worksheet Index 3: 'TERM3' (Grade Sheet detected)
+[2026-06-24 14:24:16] Worksheet 'TERM3' populated: 3 boys, 1 girls.
+[2026-06-24 14:24:17] Processing worksheet Index 4: 'SUMMARY OF GRADES' (Grade Sheet detected)
+[2026-06-24 14:24:17] Worksheet 'SUMMARY OF GRADES' populated: 3 boys, 1 girls.
+[2026-06-24 14:24:18] Skipping worksheet Index 5: 'Sheet1' (No student grade placeholders found)
+[2026-06-24 14:24:19] Skipping worksheet Index 6: 'Sheet2' (No student grade placeholders found)
+[2026-06-24 14:24:20] Skipping worksheet Index 7: 'Helper (Do Not Delete)' (No student grade placeholders found)
+[2026-06-24 14:24:21] Skipping worksheet Index 8: 'DO NOT DELETE' (No student grade placeholders found)
+[2026-06-24 14:24:22] Saving final file to output. Filename: TLE 7-Grade 7 CS3A-20260624022422.xlsx
+[2026-06-24 14:24:22] Peak memory usage: 833 MB
+[2026-06-24 14:33:46] --- START EXCEL GENERATION ---
+[2026-06-24 14:33:46] Params: Class ID: 10, Section ID: 20, Subject ID: 46, Template ID: 1
+[2026-06-24 14:33:46] Template File in DB: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-24 14:33:46] Loading template file from disk: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-24 14:33:46] Initial memory usage: 4 MB
+[2026-06-24 14:33:46] File size: 991170 bytes (0.95 MB)
+[2026-06-24 14:33:46] File magic bytes (hex): 504b0304
+[2026-06-24 14:33:46] System temp dir: /tmp | Writable: YES
+[2026-06-24 14:33:46] Identifying Excel format...
+[2026-06-24 14:33:46] Excel format identified: Excel2007. Creating reader...
+[2026-06-24 14:33:46] Loading workbook into memory...
+[2026-06-24 14:35:10] PHPExcel loaded template successfully.
+[2026-06-24 14:35:10] Memory usage after load: 751 MB
+[2026-06-24 14:35:10] Total worksheets in workbook: 9
+[2026-06-24 14:35:11] Processing worksheet Index 0: 'INPUT' (Grade Sheet detected)
+[2026-06-24 14:35:11] Worksheet 'INPUT' populated: 3 boys, 1 girls.
+[2026-06-24 14:35:12] Processing worksheet Index 1: 'TERM1' (Grade Sheet detected)
+[2026-06-24 14:35:12] Worksheet 'TERM1' populated: 3 boys, 1 girls.
+[2026-06-24 14:35:13] Processing worksheet Index 2: 'TERM2' (Grade Sheet detected)
+[2026-06-24 14:35:13] Worksheet 'TERM2' populated: 3 boys, 1 girls.
+[2026-06-24 14:35:14] Processing worksheet Index 3: 'TERM3' (Grade Sheet detected)
+[2026-06-24 14:35:14] Worksheet 'TERM3' populated: 3 boys, 1 girls.
+[2026-06-24 14:35:15] Processing worksheet Index 4: 'SUMMARY OF GRADES' (Grade Sheet detected)
+[2026-06-24 14:35:15] Worksheet 'SUMMARY OF GRADES' populated: 3 boys, 1 girls.
+[2026-06-24 14:35:16] Skipping worksheet Index 5: 'Sheet1' (No student grade placeholders found)
+[2026-06-24 14:35:18] Skipping worksheet Index 6: 'Sheet2' (No student grade placeholders found)
+[2026-06-24 14:35:19] Skipping worksheet Index 7: 'Helper (Do Not Delete)' (No student grade placeholders found)
+[2026-06-24 14:35:20] Skipping worksheet Index 8: 'DO NOT DELETE' (No student grade placeholders found)
+[2026-06-24 14:35:21] Saving final file to output. Filename: TLE 7-Grade 7 CS3A-20260624023521.xlsx
+[2026-06-24 14:35:21] Peak memory usage: 833 MB
+[2026-06-24 22:58:26] --- START EXCEL GENERATION ---
+[2026-06-24 22:58:26] Params: Class ID: 10, Section ID: 20, Subject ID: 46, Template ID: 1
+[2026-06-24 22:58:26] Template File in DB: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-24 22:58:26] Loading template file from disk: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-24 22:58:26] Initial memory usage: 4 MB
+[2026-06-24 22:58:26] File size: 991170 bytes (0.95 MB)
+[2026-06-24 22:58:26] File magic bytes (hex): 504b0304
+[2026-06-24 22:58:26] System temp dir: /tmp | Writable: YES
+[2026-06-24 22:58:26] Identifying Excel format...
+[2026-06-24 22:58:26] Excel format identified: Excel2007. Creating reader...
+[2026-06-24 22:58:26] Loading workbook into memory...
+[2026-06-24 22:59:38] PHPExcel loaded template successfully.
+[2026-06-24 22:59:38] Memory usage after load: 750.75 MB
+[2026-06-24 22:59:38] Total worksheets in workbook: 9
+[2026-06-24 22:59:39] Processing worksheet Index 0: 'INPUT' (Grade Sheet detected)
+[2026-06-24 22:59:39] Worksheet 'INPUT' populated: 3 boys, 1 girls.
+[2026-06-24 22:59:40] Processing worksheet Index 1: 'TERM1' (Grade Sheet detected)
+[2026-06-24 22:59:40] Worksheet 'TERM1' populated: 3 boys, 1 girls.
+[2026-06-24 22:59:40] Processing worksheet Index 2: 'TERM2' (Grade Sheet detected)
+[2026-06-24 22:59:40] Worksheet 'TERM2' populated: 3 boys, 1 girls.
+[2026-06-24 22:59:41] Processing worksheet Index 3: 'TERM3' (Grade Sheet detected)
+[2026-06-24 22:59:41] Worksheet 'TERM3' populated: 3 boys, 1 girls.
+[2026-06-24 22:59:42] Processing worksheet Index 4: 'SUMMARY OF GRADES' (Grade Sheet detected)
+[2026-06-24 22:59:42] Worksheet 'SUMMARY OF GRADES' populated: 3 boys, 1 girls.
+[2026-06-24 22:59:43] Skipping worksheet Index 5: 'Sheet1' (No student grade placeholders found)
+[2026-06-24 22:59:44] Skipping worksheet Index 6: 'Sheet2' (No student grade placeholders found)
+[2026-06-24 22:59:45] Skipping worksheet Index 7: 'Helper (Do Not Delete)' (No student grade placeholders found)
+[2026-06-24 22:59:46] Skipping worksheet Index 8: 'DO NOT DELETE' (No student grade placeholders found)
+[2026-06-24 22:59:46] Saving final file to output. Filename: TLE 7-Grade 7 CS3A-20260624105946.xlsx
+[2026-06-24 22:59:46] Peak memory usage: 832.75 MB
+[2026-06-25 00:06:58] --- START EXCEL GENERATION ---
+[2026-06-25 00:06:58] Params: Class ID: 10, Section ID: 20, Subject ID: 46, Template ID: 1
+[2026-06-25 00:06:58] Template File in DB: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 00:06:58] Loading template file from disk: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 00:06:58] Initial memory usage: 4 MB
+[2026-06-25 00:06:58] File size: 991170 bytes (0.95 MB)
+[2026-06-25 00:06:58] File magic bytes (hex): 504b0304
+[2026-06-25 00:06:58] System temp dir: /tmp | Writable: YES
+[2026-06-25 00:06:58] Identifying Excel format...
+[2026-06-25 00:06:58] Excel format identified: Excel2007. Creating reader...
+[2026-06-25 00:06:58] Loading workbook into memory...
+[2026-06-25 00:08:19] PHPExcel loaded template successfully.
+[2026-06-25 00:08:19] Memory usage after load: 750.75 MB
+[2026-06-25 00:08:19] Total worksheets in workbook: 9
+[2026-06-25 00:08:20] Processing worksheet Index 0: 'INPUT' (Grade Sheet detected)
+[2026-06-25 00:08:20] Worksheet 'INPUT' populated: 3 boys, 1 girls.
+[2026-06-25 00:08:21] Processing worksheet Index 1: 'TERM1' (Grade Sheet detected)
+[2026-06-25 00:08:21] Worksheet 'TERM1' populated: 3 boys, 1 girls.
+[2026-06-25 00:08:21] Processing worksheet Index 2: 'TERM2' (Grade Sheet detected)
+[2026-06-25 00:08:21] Worksheet 'TERM2' populated: 3 boys, 1 girls.
+[2026-06-25 00:08:22] Processing worksheet Index 3: 'TERM3' (Grade Sheet detected)
+[2026-06-25 00:08:22] Worksheet 'TERM3' populated: 3 boys, 1 girls.
+[2026-06-25 00:08:23] Processing worksheet Index 4: 'SUMMARY OF GRADES' (Grade Sheet detected)
+[2026-06-25 00:08:23] Worksheet 'SUMMARY OF GRADES' populated: 3 boys, 1 girls.
+[2026-06-25 00:08:24] Skipping worksheet Index 5: 'Sheet1' (No student grade placeholders found)
+[2026-06-25 00:08:25] Skipping worksheet Index 6: 'Sheet2' (No student grade placeholders found)
+[2026-06-25 00:08:26] Skipping worksheet Index 7: 'Helper (Do Not Delete)' (No student grade placeholders found)
+[2026-06-25 00:08:27] Skipping worksheet Index 8: 'DO NOT DELETE' (No student grade placeholders found)
+[2026-06-25 00:08:28] Saving final file to output. Filename: TLE 7-Grade 7 CS3A-20260625120828.xlsx
+[2026-06-25 00:08:28] Peak memory usage: 832.75 MB
+[2026-06-25 00:08:28] Creating Excel writer...
+[2026-06-25 00:08:28] Streaming file to browser...
+[2026-06-25 00:29:31] --- START EXCEL GENERATION ---
+[2026-06-25 00:29:31] Params: Class ID: 10, Section ID: 20, Subject ID: 46, Template ID: 1
+[2026-06-25 00:29:31] Template File in DB: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 00:29:31] Loading template file from disk: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 00:29:31] Initial memory usage: 4 MB
+[2026-06-25 00:29:31] File size: 991170 bytes (0.95 MB)
+[2026-06-25 00:29:31] File magic bytes (hex): 504b0304
+[2026-06-25 00:29:31] System temp dir: /tmp | Writable: YES
+[2026-06-25 00:29:31] Identifying Excel format...
+[2026-06-25 00:29:31] Excel format identified: Excel2007. Creating reader...
+[2026-06-25 00:29:31] Loading workbook into memory...
+[2026-06-25 00:30:54] PHPExcel loaded template successfully.
+[2026-06-25 00:30:54] Memory usage after load: 751 MB
+[2026-06-25 00:30:54] Total worksheets in workbook: 9
+[2026-06-25 00:30:55] Processing worksheet Index 0: 'INPUT' (Grade Sheet detected)
+[2026-06-25 00:30:55] Worksheet 'INPUT' populated: 3 boys, 1 girls.
+[2026-06-25 00:30:56] Processing worksheet Index 1: 'TERM1' (Grade Sheet detected)
+[2026-06-25 00:30:56] Worksheet 'TERM1' populated: 3 boys, 1 girls.
+[2026-06-25 00:30:57] Processing worksheet Index 2: 'TERM2' (Grade Sheet detected)
+[2026-06-25 00:30:57] Worksheet 'TERM2' populated: 3 boys, 1 girls.
+[2026-06-25 00:30:58] Processing worksheet Index 3: 'TERM3' (Grade Sheet detected)
+[2026-06-25 00:30:58] Worksheet 'TERM3' populated: 3 boys, 1 girls.
+[2026-06-25 00:30:59] Processing worksheet Index 4: 'SUMMARY OF GRADES' (Grade Sheet detected)
+[2026-06-25 00:30:59] Worksheet 'SUMMARY OF GRADES' populated: 3 boys, 1 girls.
+[2026-06-25 00:31:00] Skipping worksheet Index 5: 'Sheet1' (No student grade placeholders found)
+[2026-06-25 00:31:02] Skipping worksheet Index 6: 'Sheet2' (No student grade placeholders found)
+[2026-06-25 00:31:03] Skipping worksheet Index 7: 'Helper (Do Not Delete)' (No student grade placeholders found)
+[2026-06-25 00:31:04] Skipping worksheet Index 8: 'DO NOT DELETE' (No student grade placeholders found)
+[2026-06-25 00:31:05] Saving final file to output. Filename: TLE 7-Grade 7 CS3A-20260625123105.xlsx
+[2026-06-25 00:31:05] Peak memory usage: 833.25 MB
+[2026-06-25 00:31:05] Saving to temp file: /tmp/grade_sheet_6a3c2971676f7.xlsx
+[2026-06-25 00:35:14] Temp file saved successfully.
+[2026-06-25 00:35:15] PHPExcel objects cleaned up. Memory freed.
+[2026-06-25 00:35:15] Temp file size: 3.62 MB
+[2026-06-25 00:35:15] Sending headers and streaming file...
+[2026-06-25 00:40:00] --- START EXCEL GENERATION ---
+[2026-06-25 00:40:00] Params: Class ID: 10, Section ID: 20, Subject ID: 46, Template ID: 1
+[2026-06-25 00:40:00] Template File in DB: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 00:40:00] Loading template file from disk: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 00:40:00] Initial memory usage: 4 MB
+[2026-06-25 00:40:00] File size: 991170 bytes (0.95 MB)
+[2026-06-25 00:40:00] File magic bytes (hex): 504b0304
+[2026-06-25 00:40:00] System temp dir: /tmp | Writable: YES
+[2026-06-25 00:40:00] Identifying Excel format...
+[2026-06-25 00:40:00] Excel format identified: Excel2007. Creating reader...
+[2026-06-25 00:40:00] Loading workbook into memory...
+[2026-06-25 00:41:23] PHPExcel loaded template successfully.
+[2026-06-25 00:41:23] Memory usage after load: 751 MB
+[2026-06-25 00:41:23] Total worksheets in workbook: 9
+[2026-06-25 00:41:24] Processing worksheet Index 0: 'INPUT' (Grade Sheet detected)
+[2026-06-25 00:41:24] Worksheet 'INPUT' populated: 3 boys, 1 girls.
+[2026-06-25 00:41:25] Processing worksheet Index 1: 'TERM1' (Grade Sheet detected)
+[2026-06-25 00:41:25] Worksheet 'TERM1' populated: 3 boys, 1 girls.
+[2026-06-25 00:41:26] Processing worksheet Index 2: 'TERM2' (Grade Sheet detected)
+[2026-06-25 00:41:26] Worksheet 'TERM2' populated: 3 boys, 1 girls.
+[2026-06-25 00:41:27] Processing worksheet Index 3: 'TERM3' (Grade Sheet detected)
+[2026-06-25 00:41:27] Worksheet 'TERM3' populated: 3 boys, 1 girls.
+[2026-06-25 00:41:29] Processing worksheet Index 4: 'SUMMARY OF GRADES' (Grade Sheet detected)
+[2026-06-25 00:41:29] Worksheet 'SUMMARY OF GRADES' populated: 3 boys, 1 girls.
+[2026-06-25 00:41:30] Skipping worksheet Index 5: 'Sheet1' (No student grade placeholders found)
+[2026-06-25 00:41:31] Skipping worksheet Index 6: 'Sheet2' (No student grade placeholders found)
+[2026-06-25 00:41:32] Skipping worksheet Index 7: 'Helper (Do Not Delete)' (No student grade placeholders found)
+[2026-06-25 00:41:33] Skipping worksheet Index 8: 'DO NOT DELETE' (No student grade placeholders found)
+[2026-06-25 00:41:34] Saving final file to output. Filename: TLE 7-Grade 7 CS3A-20260625124134.xlsx
+[2026-06-25 00:41:34] Peak memory usage: 833 MB
+[2026-06-25 00:41:34] Saving to temp file: /tmp/grade_sheet_6a3c2be681f9f.xlsx
+[2026-06-25 00:45:57] Temp file saved successfully.
+[2026-06-25 00:45:58] PHPExcel objects cleaned up. Memory freed.
+[2026-06-25 00:45:58] Temp file size: 3.62 MB
+[2026-06-25 00:45:58] Sending headers and streaming file...
+[2026-06-25 00:55:01] --- START EXCEL GENERATION ---
+[2026-06-25 00:55:01] Params: Class ID: 10, Section ID: 20, Subject ID: 46, Template ID: 1
+[2026-06-25 00:55:01] Template File in DB: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 00:55:01] Loading template file from disk: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 00:55:01] Initial memory usage: 4 MB
+[2026-06-25 00:55:01] File size: 991170 bytes (0.95 MB)
+[2026-06-25 00:55:01] File magic bytes (hex): 504b0304
+[2026-06-25 00:55:01] System temp dir: /tmp | Writable: YES
+[2026-06-25 00:55:01] Identifying Excel format...
+[2026-06-25 00:55:01] Excel format identified: Excel2007. Creating reader...
+[2026-06-25 00:55:01] Loading workbook into memory...
+[2026-06-25 00:56:17] PHPExcel loaded template successfully.
+[2026-06-25 00:56:17] Memory usage after load: 751 MB
+[2026-06-25 00:56:17] Total worksheets in workbook: 9
+[2026-06-25 00:56:18] Processing worksheet Index 0: 'INPUT' (Grade Sheet detected)
+[2026-06-25 00:56:18] Worksheet 'INPUT' populated: 3 boys, 1 girls.
+[2026-06-25 00:56:19] Processing worksheet Index 1: 'TERM1' (Grade Sheet detected)
+[2026-06-25 00:56:19] Worksheet 'TERM1' populated: 3 boys, 1 girls.
+[2026-06-25 00:56:20] Processing worksheet Index 2: 'TERM2' (Grade Sheet detected)
+[2026-06-25 00:56:20] Worksheet 'TERM2' populated: 3 boys, 1 girls.
+[2026-06-25 00:56:21] Processing worksheet Index 3: 'TERM3' (Grade Sheet detected)
+[2026-06-25 00:56:21] Worksheet 'TERM3' populated: 3 boys, 1 girls.
+[2026-06-25 00:56:22] Processing worksheet Index 4: 'SUMMARY OF GRADES' (Grade Sheet detected)
+[2026-06-25 00:56:22] Worksheet 'SUMMARY OF GRADES' populated: 3 boys, 1 girls.
+[2026-06-25 00:56:23] Skipping worksheet Index 5: 'Sheet1' (No student grade placeholders found)
+[2026-06-25 00:56:24] Skipping worksheet Index 6: 'Sheet2' (No student grade placeholders found)
+[2026-06-25 00:56:25] Skipping worksheet Index 7: 'Helper (Do Not Delete)' (No student grade placeholders found)
+[2026-06-25 00:56:27] Skipping worksheet Index 8: 'DO NOT DELETE' (No student grade placeholders found)
+[2026-06-25 00:56:28] Saving final file to output. Filename: TLE 7-Grade 7 CS3A-20260625125628.xlsx
+[2026-06-25 00:56:28] Peak memory usage: 833.25 MB
+[2026-06-25 00:56:28] Saving to temp file: /tmp/grade_sheet_6a3c2f64087d1.xlsx
+[2026-06-25 01:00:35] Temp file saved successfully.
+[2026-06-25 01:00:36] PHPExcel objects cleaned up. Memory freed.
+[2026-06-25 01:00:36] Temp file size: 3.62 MB
+[2026-06-25 01:00:36] Sending headers and streaming file...
+[2026-06-25 01:00:36] Starting file stream...
+[2026-06-25 01:07:06] --- START EXCEL GENERATION ---
+[2026-06-25 01:07:06] Params: Class ID: 10, Section ID: 20, Subject ID: 46, Template ID: 1
+[2026-06-25 01:07:06] Template File in DB: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 01:07:06] Loading template file from disk: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 01:07:06] Initial memory usage: 4 MB
+[2026-06-25 01:07:06] File size: 991170 bytes (0.95 MB)
+[2026-06-25 01:07:06] File magic bytes (hex): 504b0304
+[2026-06-25 01:07:06] System temp dir: /tmp | Writable: YES
+[2026-06-25 01:07:06] Identifying Excel format...
+[2026-06-25 01:07:06] Excel format identified: Excel2007. Creating reader...
+[2026-06-25 01:07:06] Loading workbook into memory...
+[2026-06-25 01:08:22] PHPExcel loaded template successfully.
+[2026-06-25 01:08:22] Memory usage after load: 751 MB
+[2026-06-25 01:08:22] Total worksheets in workbook: 9
+[2026-06-25 01:08:23] Processing worksheet Index 0: 'INPUT' (Grade Sheet detected)
+[2026-06-25 01:08:23] Worksheet 'INPUT' populated: 3 boys, 1 girls.
+[2026-06-25 01:08:24] Processing worksheet Index 1: 'TERM1' (Grade Sheet detected)
+[2026-06-25 01:08:24] Worksheet 'TERM1' populated: 3 boys, 1 girls.
+[2026-06-25 01:08:25] Processing worksheet Index 2: 'TERM2' (Grade Sheet detected)
+[2026-06-25 01:08:25] Worksheet 'TERM2' populated: 3 boys, 1 girls.
+[2026-06-25 01:08:26] Processing worksheet Index 3: 'TERM3' (Grade Sheet detected)
+[2026-06-25 01:08:26] Worksheet 'TERM3' populated: 3 boys, 1 girls.
+[2026-06-25 01:08:27] Processing worksheet Index 4: 'SUMMARY OF GRADES' (Grade Sheet detected)
+[2026-06-25 01:08:27] Worksheet 'SUMMARY OF GRADES' populated: 3 boys, 1 girls.
+[2026-06-25 01:08:28] Skipping worksheet Index 5: 'Sheet1' (No student grade placeholders found)
+[2026-06-25 01:08:29] Skipping worksheet Index 6: 'Sheet2' (No student grade placeholders found)
+[2026-06-25 01:08:30] Skipping worksheet Index 7: 'Helper (Do Not Delete)' (No student grade placeholders found)
+[2026-06-25 01:08:31] Skipping worksheet Index 8: 'DO NOT DELETE' (No student grade placeholders found)
+[2026-06-25 01:08:32] Saving final file to output. Filename: TLE 7-Grade 7 CS3A-20260625010832.xlsx
+[2026-06-25 01:08:32] Peak memory usage: 833 MB
+[2026-06-25 01:08:32] Saving to temp file: /tmp/grade_sheet_6a3c32387d637.xlsx
+[2026-06-25 01:12:43] Temp file saved successfully.
+[2026-06-25 01:12:44] PHPExcel objects cleaned up. Memory freed.
+[2026-06-25 01:12:44] Temp file size: 3.62 MB
+[2026-06-25 01:12:44] Sending headers and streaming file...
+[2026-06-25 01:12:44] About to readfile...
+[2026-06-25 05:56:55] --- START EXCEL GENERATION ---
+[2026-06-25 05:56:55] Params: Class ID: 10, Section ID: 20, Subject ID: 46, Template ID: 1
+[2026-06-25 05:56:55] Template File in DB: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 05:56:55] Loading template file from disk: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 05:56:55] Initial memory usage: 4 MB
+[2026-06-25 05:56:55] File size: 991170 bytes (0.95 MB)
+[2026-06-25 05:56:55] File magic bytes (hex): 504b0304
+[2026-06-25 05:56:55] System temp dir: /tmp | Writable: YES
+[2026-06-25 05:56:55] Identifying Excel format...
+[2026-06-25 05:56:55] Excel format identified: Excel2007. Creating reader...
+[2026-06-25 05:56:55] Loading workbook into memory...
+[2026-06-25 05:58:06] PHPExcel loaded template successfully.
+[2026-06-25 05:58:06] Memory usage after load: 751.25 MB
+[2026-06-25 05:58:06] Total worksheets in workbook: 9
+[2026-06-25 05:58:07] Processing worksheet Index 0: 'INPUT' (Grade Sheet detected)
+[2026-06-25 05:58:07] Worksheet 'INPUT' populated: 3 boys, 1 girls.
+[2026-06-25 05:58:08] Processing worksheet Index 1: 'TERM1' (Grade Sheet detected)
+[2026-06-25 05:58:08] Worksheet 'TERM1' populated: 3 boys, 1 girls.
+[2026-06-25 05:58:09] Processing worksheet Index 2: 'TERM2' (Grade Sheet detected)
+[2026-06-25 05:58:09] Worksheet 'TERM2' populated: 3 boys, 1 girls.
+[2026-06-25 05:58:10] Processing worksheet Index 3: 'TERM3' (Grade Sheet detected)
+[2026-06-25 05:58:10] Worksheet 'TERM3' populated: 3 boys, 1 girls.
+[2026-06-25 05:58:11] Processing worksheet Index 4: 'SUMMARY OF GRADES' (Grade Sheet detected)
+[2026-06-25 05:58:11] Worksheet 'SUMMARY OF GRADES' populated: 3 boys, 1 girls.
+[2026-06-25 05:58:12] Skipping worksheet Index 5: 'Sheet1' (No student grade placeholders found)
+[2026-06-25 05:58:13] Skipping worksheet Index 6: 'Sheet2' (No student grade placeholders found)
+[2026-06-25 05:58:14] Skipping worksheet Index 7: 'Helper (Do Not Delete)' (No student grade placeholders found)
+[2026-06-25 05:58:15] Skipping worksheet Index 8: 'DO NOT DELETE' (No student grade placeholders found)
+[2026-06-25 05:58:16] Saving final file to output. Filename: TLE 7-Grade 7 CS3A-20260625055816.xlsx
+[2026-06-25 05:58:16] Peak memory usage: 833.25 MB
+[2026-06-25 05:58:16] Saving to public folder: downloads/generated_grades/TLE 7-Grade 7 CS3A-20260625055816.xlsx
+[2026-06-25 06:02:09] File saved successfully.
+[2026-06-25 06:02:11] PHPExcel objects cleaned up.
+[2026-06-25 06:02:11] File size: 3.62 MB
+[2026-06-25 06:02:11] Redirecting to: https://cerebrox.thinkfast.app/downloads/generated_grades/TLE 7-Grade 7 CS3A-20260625055816.xlsx
+[2026-06-25 06:02:11] --- EXCEL GENERATION SUCCESS ---
+[2026-06-25 06:21:26] --- START EXCEL GENERATION ---
+[2026-06-25 06:21:26] Params: Class ID: 10, Section ID: 20, Subject ID: 46, Template ID: 1
+[2026-06-25 06:21:26] Template File in DB: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 06:21:26] Loading template file from disk: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 06:21:26] Initial memory usage: 4 MB
+[2026-06-25 06:21:26] File size: 991170 bytes (0.95 MB)
+[2026-06-25 06:21:26] File magic bytes (hex): 504b0304
+[2026-06-25 06:21:26] System temp dir: /tmp | Writable: YES
+[2026-06-25 06:21:26] Identifying Excel format...
+[2026-06-25 06:21:26] Excel format identified: Excel2007. Creating reader...
+[2026-06-25 06:21:26] Loading workbook into memory...
+[2026-06-25 06:21:50] --- START EXCEL GENERATION ---
+[2026-06-25 06:21:50] Params: Class ID: 10, Section ID: 20, Subject ID: 46, Template ID: 1
+[2026-06-25 06:21:50] Template File in DB: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 06:21:50] Loading template file from disk: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 06:21:50] Initial memory usage: 4 MB
+[2026-06-25 06:21:50] File size: 991170 bytes (0.95 MB)
+[2026-06-25 06:21:50] File magic bytes (hex): 504b0304
+[2026-06-25 06:21:50] System temp dir: /tmp | Writable: YES
+[2026-06-25 06:21:50] Identifying Excel format...
+[2026-06-25 06:21:50] Excel format identified: Excel2007. Creating reader...
+[2026-06-25 06:21:50] Loading workbook into memory...
+[2026-06-25 06:22:43] PHPExcel loaded template successfully.
+[2026-06-25 06:22:43] Memory usage after load: 751 MB
+[2026-06-25 06:22:43] Total worksheets in workbook: 9
+[2026-06-25 06:22:44] Processing worksheet Index 0: 'INPUT' (Grade Sheet detected)
+[2026-06-25 06:22:44] Worksheet 'INPUT' populated: 3 boys, 1 girls.
+[2026-06-25 06:22:45] Processing worksheet Index 1: 'TERM1' (Grade Sheet detected)
+[2026-06-25 06:22:45] Worksheet 'TERM1' populated: 3 boys, 1 girls.
+[2026-06-25 06:22:46] Processing worksheet Index 2: 'TERM2' (Grade Sheet detected)
+[2026-06-25 06:22:46] Worksheet 'TERM2' populated: 3 boys, 1 girls.
+[2026-06-25 06:22:47] Processing worksheet Index 3: 'TERM3' (Grade Sheet detected)
+[2026-06-25 06:22:47] Worksheet 'TERM3' populated: 3 boys, 1 girls.
+[2026-06-25 06:22:48] Processing worksheet Index 4: 'SUMMARY OF GRADES' (Grade Sheet detected)
+[2026-06-25 06:22:48] Worksheet 'SUMMARY OF GRADES' populated: 3 boys, 1 girls.
+[2026-06-25 06:22:49] Skipping worksheet Index 5: 'Sheet1' (No student grade placeholders found)
+[2026-06-25 06:22:50] Skipping worksheet Index 6: 'Sheet2' (No student grade placeholders found)
+[2026-06-25 06:22:51] Skipping worksheet Index 7: 'Helper (Do Not Delete)' (No student grade placeholders found)
+[2026-06-25 06:22:52] Skipping worksheet Index 8: 'DO NOT DELETE' (No student grade placeholders found)
+[2026-06-25 06:22:53] Saving final file to output. Filename: TLE 7-Grade 7 CS3A-20260625062253.xlsx
+[2026-06-25 06:22:53] Peak memory usage: 833 MB
+[2026-06-25 06:22:53] Saving to public folder: downloads/generated_grades/TLE 7-Grade 7 CS3A-20260625062253.xlsx
+[2026-06-25 06:23:08] PHPExcel loaded template successfully.
+[2026-06-25 06:23:08] Memory usage after load: 750.75 MB
+[2026-06-25 06:23:08] Total worksheets in workbook: 9
+[2026-06-25 06:23:09] Processing worksheet Index 0: 'INPUT' (Grade Sheet detected)
+[2026-06-25 06:23:09] Worksheet 'INPUT' populated: 3 boys, 1 girls.
+[2026-06-25 06:23:10] Processing worksheet Index 1: 'TERM1' (Grade Sheet detected)
+[2026-06-25 06:23:10] Worksheet 'TERM1' populated: 3 boys, 1 girls.
+[2026-06-25 06:23:11] Processing worksheet Index 2: 'TERM2' (Grade Sheet detected)
+[2026-06-25 06:23:11] Worksheet 'TERM2' populated: 3 boys, 1 girls.
+[2026-06-25 06:23:12] Processing worksheet Index 3: 'TERM3' (Grade Sheet detected)
+[2026-06-25 06:23:12] Worksheet 'TERM3' populated: 3 boys, 1 girls.
+[2026-06-25 06:23:13] Processing worksheet Index 4: 'SUMMARY OF GRADES' (Grade Sheet detected)
+[2026-06-25 06:23:13] Worksheet 'SUMMARY OF GRADES' populated: 3 boys, 1 girls.
+[2026-06-25 06:23:14] Skipping worksheet Index 5: 'Sheet1' (No student grade placeholders found)
+[2026-06-25 06:23:15] Skipping worksheet Index 6: 'Sheet2' (No student grade placeholders found)
+[2026-06-25 06:23:16] Skipping worksheet Index 7: 'Helper (Do Not Delete)' (No student grade placeholders found)
+[2026-06-25 06:23:17] Skipping worksheet Index 8: 'DO NOT DELETE' (No student grade placeholders found)
+[2026-06-25 06:23:18] Saving final file to output. Filename: TLE 7-Grade 7 CS3A-20260625062318.xlsx
+[2026-06-25 06:23:18] Peak memory usage: 833 MB
+[2026-06-25 06:23:18] Saving to public folder: downloads/generated_grades/TLE 7-Grade 7 CS3A-20260625062318.xlsx
+[2026-06-25 06:26:55] File saved successfully.
+[2026-06-25 06:26:56] PHPExcel objects cleaned up.
+[2026-06-25 06:26:56] File size: 3.62 MB
+[2026-06-25 06:26:56] Redirecting to: https://cerebrox.thinkfast.app/downloads/generated_grades/TLE 7-Grade 7 CS3A-20260625062253.xlsx
+[2026-06-25 06:26:56] --- EXCEL GENERATION SUCCESS ---
+[2026-06-25 06:27:20] File saved successfully.
+[2026-06-25 06:27:21] PHPExcel objects cleaned up.
+[2026-06-25 06:27:21] File size: 3.62 MB
+[2026-06-25 06:27:21] Redirecting to: https://cerebrox.thinkfast.app/downloads/generated_grades/TLE 7-Grade 7 CS3A-20260625062318.xlsx
+[2026-06-25 06:27:21] --- EXCEL GENERATION SUCCESS ---
+[2026-06-25 06:40:53] --- START EXCEL GENERATION ---
+[2026-06-25 06:40:53] Params: Class ID: 10, Section ID: 20, Subject ID: 46, Template ID: 1
+[2026-06-25 06:40:53] Template File in DB: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 06:40:53] Loading template file from disk: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 06:40:53] Initial memory usage: 4 MB
+[2026-06-25 06:40:53] File size: 991170 bytes (0.95 MB)
+[2026-06-25 06:40:53] File magic bytes (hex): 504b0304
+[2026-06-25 06:40:53] System temp dir: /tmp | Writable: YES
+[2026-06-25 06:40:53] Identifying Excel format...
+[2026-06-25 06:40:53] Excel format identified: Excel2007. Creating reader...
+[2026-06-25 06:40:53] Loading workbook into memory...
+[2026-06-25 06:42:06] PHPExcel loaded template successfully.
+[2026-06-25 06:42:06] Memory usage after load: 751 MB
+[2026-06-25 06:42:06] Total worksheets in workbook: 9
+[2026-06-25 06:42:07] Processing worksheet Index 0: 'INPUT' (Grade Sheet detected)
+[2026-06-25 06:42:07] Worksheet 'INPUT' populated: 3 boys, 1 girls.
+[2026-06-25 06:42:08] Processing worksheet Index 1: 'TERM1' (Grade Sheet detected)
+[2026-06-25 06:42:08] Worksheet 'TERM1' populated: 3 boys, 1 girls.
+[2026-06-25 06:42:09] Processing worksheet Index 2: 'TERM2' (Grade Sheet detected)
+[2026-06-25 06:42:09] Worksheet 'TERM2' populated: 3 boys, 1 girls.
+[2026-06-25 06:42:10] Processing worksheet Index 3: 'TERM3' (Grade Sheet detected)
+[2026-06-25 06:42:10] Worksheet 'TERM3' populated: 3 boys, 1 girls.
+[2026-06-25 06:42:11] Processing worksheet Index 4: 'SUMMARY OF GRADES' (Grade Sheet detected)
+[2026-06-25 06:42:11] Worksheet 'SUMMARY OF GRADES' populated: 3 boys, 1 girls.
+[2026-06-25 06:42:12] Skipping worksheet Index 5: 'Sheet1' (No student grade placeholders found)
+[2026-06-25 06:42:13] Skipping worksheet Index 6: 'Sheet2' (No student grade placeholders found)
+[2026-06-25 06:42:14] Skipping worksheet Index 7: 'Helper (Do Not Delete)' (No student grade placeholders found)
+[2026-06-25 06:42:15] Skipping worksheet Index 8: 'DO NOT DELETE' (No student grade placeholders found)
+[2026-06-25 06:42:16] Saving final file to output. Filename: TLE 7-Grade 7 CS3A-20260625064216.xlsx
+[2026-06-25 06:42:16] Peak memory usage: 833.25 MB
+[2026-06-25 06:42:16] Saving to public folder: downloads/generated_grades/TLE 7-Grade 7 CS3A-20260625064216.xlsx
+[2026-06-25 06:46:20] File saved successfully.
+[2026-06-25 06:46:21] PHPExcel objects cleaned up.
+[2026-06-25 06:46:21] File size: 3.62 MB
+[2026-06-25 06:46:21] Redirecting to: https://cerebrox.thinkfast.app/downloads/generated_grades/TLE 7-Grade 7 CS3A-20260625064216.xlsx
+[2026-06-25 06:46:21] --- EXCEL GENERATION SUCCESS ---
+[2026-06-25 06:49:29] --- START EXCEL GENERATION ---
+[2026-06-25 06:49:29] Params: Class ID: 10, Section ID: 20, Subject ID: 46, Template ID: 1
+[2026-06-25 06:49:29] Template File in DB: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 06:49:29] Loading template file from disk: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 06:49:29] Initial memory usage: 4 MB
+[2026-06-25 06:49:29] File size: 991170 bytes (0.95 MB)
+[2026-06-25 06:49:29] File magic bytes (hex): 504b0304
+[2026-06-25 06:49:29] System temp dir: /tmp | Writable: YES
+[2026-06-25 06:49:29] Identifying Excel format...
+[2026-06-25 06:49:29] Excel format identified: Excel2007. Creating reader...
+[2026-06-25 06:49:29] Loading workbook into memory...
+[2026-06-25 06:50:42] PHPExcel loaded template successfully.
+[2026-06-25 06:50:42] Memory usage after load: 751 MB
+[2026-06-25 06:50:42] Total worksheets in workbook: 9
+[2026-06-25 06:50:43] Processing worksheet Index 0: 'INPUT' (Grade Sheet detected)
+[2026-06-25 06:50:43] Worksheet 'INPUT' populated: 3 boys, 1 girls.
+[2026-06-25 06:50:43] Processing worksheet Index 1: 'TERM1' (Grade Sheet detected)
+[2026-06-25 06:50:43] Worksheet 'TERM1' populated: 3 boys, 1 girls.
+[2026-06-25 06:50:44] Processing worksheet Index 2: 'TERM2' (Grade Sheet detected)
+[2026-06-25 06:50:44] Worksheet 'TERM2' populated: 3 boys, 1 girls.
+[2026-06-25 06:50:45] Processing worksheet Index 3: 'TERM3' (Grade Sheet detected)
+[2026-06-25 06:50:45] Worksheet 'TERM3' populated: 3 boys, 1 girls.
+[2026-06-25 06:50:46] Processing worksheet Index 4: 'SUMMARY OF GRADES' (Grade Sheet detected)
+[2026-06-25 06:50:46] Worksheet 'SUMMARY OF GRADES' populated: 3 boys, 1 girls.
+[2026-06-25 06:50:47] Skipping worksheet Index 5: 'Sheet1' (No student grade placeholders found)
+[2026-06-25 06:50:48] Skipping worksheet Index 6: 'Sheet2' (No student grade placeholders found)
+[2026-06-25 06:50:49] Skipping worksheet Index 7: 'Helper (Do Not Delete)' (No student grade placeholders found)
+[2026-06-25 06:50:50] Skipping worksheet Index 8: 'DO NOT DELETE' (No student grade placeholders found)
+[2026-06-25 06:50:51] Saving final file to output. Filename: TLE 7-Grade 7 CS3A-20260625065051.xlsx
+[2026-06-25 06:50:51] Peak memory usage: 833.25 MB
+[2026-06-25 06:50:51] Saving to public folder: downloads/generated_grades/TLE 7-Grade 7 CS3A-20260625065051.xlsx
+[2026-06-25 06:54:49] File saved successfully.
+[2026-06-25 06:54:50] PHPExcel objects cleaned up.
+[2026-06-25 06:54:50] File size: 3.62 MB
+[2026-06-25 06:54:50] Redirecting to: https://cerebrox.thinkfast.app/downloads/generated_grades/TLE 7-Grade 7 CS3A-20260625065051.xlsx
+[2026-06-25 06:54:50] --- EXCEL GENERATION SUCCESS ---
+[2026-06-25 07:01:25] --- START EXCEL GENERATION ---
+[2026-06-25 07:01:25] Params: Class ID: 10, Section ID: 20, Subject ID: 46, Template ID: 1
+[2026-06-25 07:01:25] Template File in DB: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 07:01:25] Loading template file from disk: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 07:01:25] Initial memory usage: 4 MB
+[2026-06-25 07:01:25] File size: 991170 bytes (0.95 MB)
+[2026-06-25 07:01:25] File magic bytes (hex): 504b0304
+[2026-06-25 07:01:25] System temp dir: /tmp | Writable: YES
+[2026-06-25 07:01:25] Identifying Excel format...
+[2026-06-25 07:01:25] Excel format identified: Excel2007. Creating reader...
+[2026-06-25 07:01:25] Loading workbook into memory...
+[2026-06-25 07:02:35] PHPExcel loaded template successfully.
+[2026-06-25 07:02:35] Memory usage after load: 751 MB
+[2026-06-25 07:02:35] Total worksheets in workbook: 9
+[2026-06-25 07:02:36] Processing worksheet Index 0: 'INPUT' (Grade Sheet detected)
+[2026-06-25 07:02:36] Worksheet 'INPUT' populated: 3 boys, 1 girls.
+[2026-06-25 07:02:37] Processing worksheet Index 1: 'TERM1' (Grade Sheet detected)
+[2026-06-25 07:02:37] Worksheet 'TERM1' populated: 3 boys, 1 girls.
+[2026-06-25 07:02:38] Processing worksheet Index 2: 'TERM2' (Grade Sheet detected)
+[2026-06-25 07:02:38] Worksheet 'TERM2' populated: 3 boys, 1 girls.
+[2026-06-25 07:02:39] Processing worksheet Index 3: 'TERM3' (Grade Sheet detected)
+[2026-06-25 07:02:39] Worksheet 'TERM3' populated: 3 boys, 1 girls.
+[2026-06-25 07:02:40] Processing worksheet Index 4: 'SUMMARY OF GRADES' (Grade Sheet detected)
+[2026-06-25 07:02:40] Worksheet 'SUMMARY OF GRADES' populated: 3 boys, 1 girls.
+[2026-06-25 07:02:41] Skipping worksheet Index 5: 'Sheet1' (No student grade placeholders found)
+[2026-06-25 07:02:42] Skipping worksheet Index 6: 'Sheet2' (No student grade placeholders found)
+[2026-06-25 07:02:43] Skipping worksheet Index 7: 'Helper (Do Not Delete)' (No student grade placeholders found)
+[2026-06-25 07:02:44] Skipping worksheet Index 8: 'DO NOT DELETE' (No student grade placeholders found)
+[2026-06-25 07:02:44] Saving final file to output. Filename: TLE 7-Grade 7 CS3A-20260625070244.xlsx
+[2026-06-25 07:02:44] Peak memory usage: 833.25 MB
+[2026-06-25 07:02:44] Saving to public folder: downloads/generated_grades/TLE 7-Grade 7 CS3A-20260625070244.xlsx
+[2026-06-25 07:06:46] File saved successfully.
+[2026-06-25 07:06:47] PHPExcel objects cleaned up.
+[2026-06-25 07:06:47] File size: 3.62 MB
+[2026-06-25 07:06:47] File URL: https://cerebrox.thinkfast.app/downloads/generated_grades/TLE 7-Grade 7 CS3A-20260625070244.xlsx
+[2026-06-25 07:06:47] --- EXCEL GENERATION SUCCESS ---
+[2026-06-25 07:21:46] --- START EXCEL GENERATION ---
+[2026-06-25 07:21:46] Params: Class ID: 10, Section ID: 20, Subject ID: 46, Template ID: 1
+[2026-06-25 07:21:46] Template File in DB: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 07:21:46] Loading template file from disk: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 07:21:46] Initial memory usage: 3.75 MB
+[2026-06-25 07:21:46] File size: 991170 bytes (0.95 MB)
+[2026-06-25 07:21:46] File magic bytes (hex): 504b0304
+[2026-06-25 07:21:46] System temp dir: /tmp | Writable: YES
+[2026-06-25 07:21:46] Identifying Excel format...
+[2026-06-25 07:21:46] Excel format identified: Excel2007. Creating reader...
+[2026-06-25 07:21:46] Loading workbook into memory...
+[2026-06-25 07:22:54] PHPExcel loaded template successfully.
+[2026-06-25 07:22:54] Memory usage after load: 750.5 MB
+[2026-06-25 07:22:54] Total worksheets in workbook: 9
+[2026-06-25 07:22:55] Processing worksheet Index 0: 'INPUT' (Grade Sheet detected)
+[2026-06-25 07:22:55] Worksheet 'INPUT' populated: 3 boys, 1 girls.
+[2026-06-25 07:22:56] Processing worksheet Index 1: 'TERM1' (Grade Sheet detected)
+[2026-06-25 07:22:56] Worksheet 'TERM1' populated: 3 boys, 1 girls.
+[2026-06-25 07:22:57] Processing worksheet Index 2: 'TERM2' (Grade Sheet detected)
+[2026-06-25 07:22:57] Worksheet 'TERM2' populated: 3 boys, 1 girls.
+[2026-06-25 07:22:58] Processing worksheet Index 3: 'TERM3' (Grade Sheet detected)
+[2026-06-25 07:22:58] Worksheet 'TERM3' populated: 3 boys, 1 girls.
+[2026-06-25 07:22:59] Processing worksheet Index 4: 'SUMMARY OF GRADES' (Grade Sheet detected)
+[2026-06-25 07:22:59] Worksheet 'SUMMARY OF GRADES' populated: 3 boys, 1 girls.
+[2026-06-25 07:23:00] Skipping worksheet Index 5: 'Sheet1' (No student grade placeholders found)
+[2026-06-25 07:23:01] Skipping worksheet Index 6: 'Sheet2' (No student grade placeholders found)
+[2026-06-25 07:23:02] Skipping worksheet Index 7: 'Helper (Do Not Delete)' (No student grade placeholders found)
+[2026-06-25 07:23:03] Skipping worksheet Index 8: 'DO NOT DELETE' (No student grade placeholders found)
+[2026-06-25 07:23:03] Saving final file to output. Filename: TLE 7-Grade 7 CS3A-20260625072303.xlsx
+[2026-06-25 07:23:03] Peak memory usage: 832.5 MB
+[2026-06-25 07:23:03] Saving to public folder: downloads/generated_grades/TLE 7-Grade 7 CS3A-20260625072303.xlsx
+[2026-06-25 07:26:56] File saved successfully.
+[2026-06-25 07:26:58] PHPExcel objects cleaned up.
+[2026-06-25 07:26:58] File size: 3.62 MB
+[2026-06-25 07:26:58] Starting download...
+[2026-06-25 07:35:14] --- START EXCEL GENERATION ---
+[2026-06-25 07:35:14] Params: Class ID: 10, Section ID: 20, Subject ID: 46, Template ID: 1
+[2026-06-25 07:35:14] Template File in DB: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 07:35:14] Loading template file from disk: uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+[2026-06-25 07:35:14] Initial memory usage: 3.75 MB
+[2026-06-25 07:35:14] File size: 991170 bytes (0.95 MB)
+[2026-06-25 07:35:14] File magic bytes (hex): 504b0304
+[2026-06-25 07:35:14] System temp dir: /tmp | Writable: YES
+[2026-06-25 07:35:14] Identifying Excel format...
+[2026-06-25 07:35:14] Excel format identified: Excel2007. Creating reader...
+[2026-06-25 07:35:14] Loading workbook into memory...
+[2026-06-25 07:36:27] PHPExcel loaded template successfully.
+[2026-06-25 07:36:27] Memory usage after load: 752.75 MB
+[2026-06-25 07:36:27] Total worksheets in workbook: 9
+[2026-06-25 07:36:28] Processing worksheet Index 0: 'INPUT' (Grade Sheet detected)
+[2026-06-25 07:36:28] Worksheet 'INPUT' populated: 3 boys, 1 girls.
+[2026-06-25 07:36:29] Processing worksheet Index 1: 'TERM1' (Grade Sheet detected)
+[2026-06-25 07:36:29] Worksheet 'TERM1' populated: 3 boys, 1 girls.
+[2026-06-25 07:36:30] Processing worksheet Index 2: 'TERM2' (Grade Sheet detected)
+[2026-06-25 07:36:30] Worksheet 'TERM2' populated: 3 boys, 1 girls.
+[2026-06-25 07:36:31] Processing worksheet Index 3: 'TERM3' (Grade Sheet detected)
+[2026-06-25 07:36:31] Worksheet 'TERM3' populated: 3 boys, 1 girls.
+[2026-06-25 07:36:32] Processing worksheet Index 4: 'SUMMARY OF GRADES' (Grade Sheet detected)
+[2026-06-25 07:36:32] Worksheet 'SUMMARY OF GRADES' populated: 3 boys, 1 girls.
+[2026-06-25 07:36:33] Skipping worksheet Index 5: 'Sheet1' (No student grade placeholders found)
+[2026-06-25 07:36:34] Skipping worksheet Index 6: 'Sheet2' (No student grade placeholders found)
+[2026-06-25 07:36:35] Skipping worksheet Index 7: 'Helper (Do Not Delete)' (No student grade placeholders found)
+[2026-06-25 07:36:36] Skipping worksheet Index 8: 'DO NOT DELETE' (No student grade placeholders found)
+[2026-06-25 07:36:37] Saving final file to output. Filename: TLE 7-Grade 7 CS3A-20260625073637.xlsx
+[2026-06-25 07:36:37] Peak memory usage: 835 MB
+[2026-06-25 07:36:37] Saving to public folder: downloads/generated_grades/TLE 7-Grade 7 CS3A-20260625073637.xlsx
+[2026-06-25 07:40:39] File saved successfully.
+[2026-06-25 07:40:40] PHPExcel objects cleaned up.
+[2026-06-25 07:40:40] File size: 3.62 MB
+[2026-06-25 07:40:40] Starting download...
+[2026-06-25 07:40:40] Using chunked streaming

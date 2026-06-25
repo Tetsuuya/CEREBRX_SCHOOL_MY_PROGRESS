@@ -1642,6 +1642,13 @@ class Grade extends CI_Controller {
 		$data['subjectlist'] = $this->subject_model->get();
 		$data['getquarter'] = $this->customlib->getQuarter();
 		$data['templatelist'] = $this->template_model->get();
+		$setting_result = $this->setting_model->get();
+		$import_grade_settings = $setting_result[0]['import_grade'];
+		$data['import_grade_settings'] = $import_grade_settings;
+		$data['firstqsettings'] = $setting_result[0]['import_first'];
+		$data['secondqsettings'] = $setting_result[0]['import_second'];
+		$data['thirdqsettings'] = $setting_result[0]['import_third'];
+		$data['fourthqsettings'] = $setting_result[0]['import_fourth'];
 		$this->form_validation->set_rules('class_id', 'Class', 'trim|required|xss_clean');
 		$this->form_validation->set_rules('section_id', 'Section', 'trim|xss_clean');
 		$this->form_validation->set_rules('subject_id', 'Subject', 'trim|required|xss_clean');
@@ -1650,17 +1657,92 @@ class Grade extends CI_Controller {
 			$this->load->view('teacher/grade/import', $data);
 			$this->load->view('layout/teacher/footer', $data);
 		} else {
-			$class_id = $this->input->post('class_id');
-			$section_id = $this->input->post('section_id');
-			$subject_id = $this->input->post('subject_id');
-			$template_id = $this->input->post('template_id');
-			$parameters = array(
-				'class_id' => $class_id,
-				'section_id' => $section_id,
-				'subject_id' => $subject_id,
-				'template_id' => $template_id
-			);
-			$this->excelwithspout->generate_spreadsheet( $parameters );
+			// Check if this is an AJAX request
+			if ($this->input->is_ajax_request()) {
+				// AJAX request - start generation and return job ID immediately
+				$class_id = $this->input->post('class_id');
+				$section_id = $this->input->post('section_id');
+				$subject_id = $this->input->post('subject_id');
+				$template_id = $this->input->post('template_id');
+				
+				// Generate unique job ID
+				$job_id = 'job_' . date('Ymdhis') . '_' . uniqid();
+				
+				// Create job status file
+				$status_dir = 'downloads/generated_grades/status';
+				if (!is_dir($status_dir)) {
+					mkdir($status_dir, 0755, true);
+				}
+				
+				$status_file = $status_dir . '/' . $job_id . '.json';
+				file_put_contents($status_file, json_encode([
+					'status' => 'processing',
+					'progress' => 0,
+					'started_at' => date('Y-m-d H:i:s')
+				]));
+				
+				// Return job ID immediately
+				header('Content-Type: application/json');
+				echo json_encode([
+					'status' => 'started',
+					'job_id' => $job_id,
+					'message' => 'Generation started in background'
+				]);
+				
+				// Close connection to browser but keep PHP running
+				if (function_exists('fastcgi_finish_request')) {
+					fastcgi_finish_request();
+				} else {
+					ignore_user_abort(true);
+					ob_end_flush();
+					flush();
+				}
+				
+				// Now generate the file in background
+				$parameters = array(
+					'class_id' => $class_id,
+					'section_id' => $section_id,
+					'subject_id' => $subject_id,
+					'template_id' => $template_id,
+					'job_id' => $job_id,
+					'status_file' => $status_file
+				);
+				$this->excelwithspout->generate_spreadsheet($parameters);
+				
+			} else {
+				// Regular form submission (fallback)
+				$class_id = $this->input->post('class_id');
+				$section_id = $this->input->post('section_id');
+				$subject_id = $this->input->post('subject_id');
+				$template_id = $this->input->post('template_id');
+				$parameters = array(
+					'class_id' => $class_id,
+					'section_id' => $section_id,
+					'subject_id' => $subject_id,
+					'template_id' => $template_id
+				);
+				$this->excelwithspout->generate_spreadsheet($parameters);
+			}
+		}
+	}
+	
+	// AJAX endpoint to check job status
+	public function check_job_status() {
+		$job_id = $this->input->get('job_id');
+		if (empty($job_id)) {
+			header('Content-Type: application/json');
+			echo json_encode(['status' => 'error', 'message' => 'No job ID provided']);
+			return;
+		}
+		
+		$status_file = 'downloads/generated_grades/status/' . $job_id . '.json';
+		
+		header('Content-Type: application/json');
+		if (file_exists($status_file)) {
+			$status_data = json_decode(file_get_contents($status_file), true);
+			echo json_encode($status_data);
+		} else {
+			echo json_encode(['status' => 'error', 'message' => 'Job not found']);
 		}
 	}
 	
@@ -1706,8 +1788,11 @@ class Grade extends CI_Controller {
 				'subject_id' => $subject_id,
 				'template_id' => $template_id
 			);
-			ob_end_clean();
+			while (ob_get_level()) {
+				ob_end_clean();
+			}
 			$this->excelwithspout->generate_spreadsheet_custom( $parameters );
+			exit;
 		}
 	}
 	

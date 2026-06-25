@@ -711,3 +711,251 @@ Complete technical documentation of:
 6. ✅ Background generation with progress tracking
 7. ✅ Detailed debug logging
 
+
+
+---
+
+## 10. Code Approach Selection - Single Sheet vs Multi-Sheet Population
+
+### 10.1 Two Approaches Available in Excelwithspout.php
+
+The `Libraries/Excelwithspout.php` file now contains **two different approaches** for populating the Excel template. Both approaches are fully documented in the code with clear markers for switching between them.
+
+#### Current Active Approach: **Multi-Sheet Population (All Sheets)**
+**Location**: Lines ~185-480 in `TEACHER/LOCAL/Libraries/Excelwithspout.php`
+
+**How It Works**:
+- Loops through **ALL sheets** in the workbook (9 sheets total)
+- Scans each sheet for placeholders like `{school_name}`, `{start_boys}`, etc.
+- Populates data in every sheet that contains student placeholders
+- Processes: INPUT, TERM1, TERM2, TERM3, SUMMARY OF GRADES, and any other sheets
+
+**Code Structure**:
+```php
+// CURRENT APPROACH: Process ALL SHEETS
+for ($sheetIndex = 0; $sheetIndex < $totalSheets; $sheetIndex++) {
+    // Scan for placeholders in this sheet
+    // Populate school name, class, subject, teacher
+    // Insert boys list
+    // Insert girls list
+}
+```
+
+**Pros**:
+- ✅ Works with any template structure
+- ✅ Populates all sheets that have placeholders
+- ✅ No need for Excel formulas between sheets
+
+**Cons**:
+- ❌ Slower (processes all 9 sheets)
+- ❌ Destroys any formulas that reference other sheets (e.g., `=INPUT!B12`)
+- ❌ More complex code with nested loops
+
+**When to Use**:
+- Template has placeholders in multiple sheets
+- You want PHP to populate all sheets directly
+- You don't have formulas referencing between sheets
+
+---
+
+#### Alternative Approach: **Single Sheet Population (INPUT Only)** - COMMENTED OUT
+**Location**: Lines ~485-650 in `TEACHER/LOCAL/Libraries/Excelwithspout.php` (inside block comment `/* ... */`)
+
+**How It Works**:
+- Populates **ONLY the INPUT sheet** (sheet index 0)
+- INPUT sheet must have both "ID NO." and "LEARNERS' NAMES" columns
+- Other sheets (TERM1, TERM2, TERM3, SUMMARY) use Excel formulas like `=INPUT!B12` to reference INPUT data
+- Much faster because it only touches one sheet
+
+**Code Structure**:
+```php
+/* COMMENTED OUT - OLD BACKUP APPROACH
+// Process ONLY sheet 0 (INPUT)
+$objPHPExcel->setActiveSheetIndex(0);
+$sheetInsertData = $objPHPExcel->getActiveSheet();
+
+// Populate school name, class, subject, teacher
+// Insert boys list with ID and names
+// Insert girls list with ID and names
+// Done - other sheets reference this via formulas
+*/
+```
+
+**Pros**:
+- ✅ Much faster (only processes 1 sheet vs 9 sheets)
+- ✅ Preserves Excel formulas in TERM1, TERM2, TERM3, SUMMARY sheets
+- ✅ Simpler code (no nested loops)
+- ✅ Smaller PHP processing time
+
+**Cons**:
+- ❌ Requires template to have formulas set up correctly
+- ❌ INPUT sheet MUST have "ID NO." column added manually
+- ❌ Only works if all other sheets reference INPUT via formulas
+
+**When to Use**:
+- You have a template where INPUT is the master sheet
+- Other sheets use formulas like `=INPUT!B12` to pull data
+- You want fastest generation time
+- Template has "ID NO." column in INPUT sheet
+
+---
+
+### 10.2 How to Switch Between Approaches
+
+#### To Use Single Sheet (INPUT Only) Approach:
+
+**Step 1**: Open `TEACHER/LOCAL/Libraries/Excelwithspout.php`
+
+**Step 2**: Comment out the CURRENT APPROACH (lines ~185-480):
+```php
+/*
+// CURRENT APPROACH: Process ALL SHEETS (TERM1, TERM2, TERM3, SUMMARY, etc.)
+// ... (all the multi-sheet code)
+*/
+```
+
+**Step 3**: Uncomment the OLD BACKUP APPROACH (lines ~485-650):
+```php
+// Remove the /* at the beginning and */ at the end of the block
+```
+
+**Step 4**: Ensure your template:
+- Has "ID NO." column in INPUT sheet
+- Has formulas in TERM1, TERM2, TERM3, SUMMARY that reference INPUT
+  - Example: Cell B12 in TERM1 = `=INPUT!B12`
+  - Example: Cell C12 in TERM1 = `=INPUT!C12`
+
+**Step 5**: Upload updated `Excelwithspout.php` to server
+
+**Step 6**: Upload updated template (with formulas) to server
+
+---
+
+#### To Revert to Multi-Sheet Approach:
+
+**Step 1**: Open `TEACHER/LOCAL/Libraries/Excelwithspout.php`
+
+**Step 2**: Uncomment the CURRENT APPROACH (lines ~185-480):
+```php
+// Remove the /* */ around the multi-sheet code
+```
+
+**Step 3**: Comment out the OLD BACKUP APPROACH (lines ~485-650):
+```php
+/*
+// OLD BACKUP APPROACH - Single sheet processing
+// ... (all the single-sheet code)
+*/
+```
+
+**Step 4**: Upload updated `Excelwithspout.php` to server
+
+---
+
+### 10.3 Template Requirements for Each Approach
+
+#### Multi-Sheet Approach Template Requirements:
+- INPUT sheet: Has `{school_name}`, `{class}`, `{subject_name}`, `{start_boys}`, `{start_girls}`, etc.
+- TERM1 sheet: Has `{school_name}`, `{class}`, `{subject_name}`, `{start_boys}`, `{start_girls}`, etc.
+- TERM2 sheet: Has `{school_name}`, `{class}`, `{subject_name}`, `{start_boys}`, `{start_girls}`, etc.
+- TERM3 sheet: Has `{school_name}`, `{class}`, `{subject_name}`, `{start_boys}`, `{start_girls}`, etc.
+- Each sheet has its own placeholders and gets populated independently
+
+#### Single Sheet Approach Template Requirements:
+- INPUT sheet: Has `{school_name}`, `{class}`, `{subject_name}`, `{start_boys}`, `{start_girls}`, **{boys_start_id}**, **{girls_start_id}**
+  - **MUST have "ID NO." column** (referenced by `{boys_start_id}` and `{girls_start_id}`)
+- TERM1 sheet: Uses formulas like `=INPUT!A12`, `=INPUT!B12`, `=INPUT!C12` (NO placeholders)
+- TERM2 sheet: Uses formulas like `=INPUT!A12`, `=INPUT!B12`, `=INPUT!C12` (NO placeholders)
+- TERM3 sheet: Uses formulas like `=INPUT!A12`, `=INPUT!B12`, `=INPUT!C12` (NO placeholders)
+- SUMMARY sheet: Uses formulas referencing INPUT or other sheets
+
+---
+
+### 10.4 Performance Comparison
+
+| Metric | Multi-Sheet Approach | Single Sheet Approach |
+|--------|---------------------|----------------------|
+| **Sheets Processed** | 9 sheets (INPUT + TERM1 + TERM2 + TERM3 + SUMMARY + 4 others) | 1 sheet (INPUT only) |
+| **PHP Execution Time** | ~6 minutes | ~2-3 minutes (estimated) |
+| **Generated File Size** | 3.62 MB | 3.62 MB (same, depends on setPreCalculateFormulas) |
+| **Memory Usage** | 750 MB | 500 MB (estimated lower) |
+| **Formula Preservation** | ❌ Destroys formulas | ✅ Preserves formulas |
+| **Code Complexity** | Complex (nested loops) | Simple (linear flow) |
+
+---
+
+### 10.5 Data Source Reference - Where Bracket Data Comes From
+
+All bracket placeholders get their data from the database:
+
+#### From `sch_settings` table (id=1):
+- **`{school_name}`** = `name` column
+
+#### From `sessions` table (active session):
+- **`{school_year}`** = ⚠️ **NOT YET IMPLEMENTED** - needs to be added
+
+#### From `classes` table:
+- **`{class}`** (part 1) = `class` column
+
+#### From `sections` table:
+- **`{class}`** (part 2) = `section` column (combined with class name)
+
+#### From `subjects` table:
+- **`{subject_name}`** = `name` column
+- **`{written_work}`** = `written_work` column ÷ 100 (converted to decimal)
+- **`{performance_tasks}`** = `performance_task` column ÷ 100
+- **`{quarterly_assessment}`** = `quarterly_assessment` column ÷ 100
+
+#### From `teachers` table:
+- **`{subject_teacher}`** = Formatted as `lastname, firstname middlename`
+
+#### From `students` table (via Student_model):
+- **Student lists** = Retrieved via `getstudentsByClassSectionGender()`
+- **Boys**: `admission_no` (ID), `lastname`, `firstname`
+- **Girls**: `admission_no` (ID), `lastname`, `firstname`
+
+**Database Queries to Check Data**:
+```sql
+-- Check school name
+SELECT name FROM sch_settings WHERE id = 1;
+
+-- Check active session (for school year - not yet implemented)
+SELECT * FROM sessions WHERE id = (SELECT session_id FROM sch_settings LIMIT 1);
+
+-- Check class data
+SELECT * FROM classes WHERE id = YOUR_CLASS_ID;
+
+-- Check section data
+SELECT * FROM sections WHERE id = YOUR_SECTION_ID;
+
+-- Check subject data
+SELECT name, written_work, performance_task, quarterly_assessment 
+FROM subjects WHERE id = YOUR_SUBJECT_ID;
+
+-- Check teacher data
+SELECT lastname, name as firstname, middlename 
+FROM teachers WHERE id = YOUR_TEACHER_ID;
+```
+
+---
+
+### 10.6 Recommendation
+
+**Current Status**: Multi-Sheet approach is ACTIVE
+
+**Senior's Preference**: Keep both approaches in code with clear comments
+
+**Future Decision**:
+1. **If you need fast generation** → Switch to Single Sheet approach + update template with formulas
+2. **If you need flexibility** → Keep Multi-Sheet approach (current)
+3. **If you're unsure** → Keep current Multi-Sheet approach until you test Single Sheet performance
+
+**To Test Single Sheet Approach**:
+1. Create test template with INPUT as master + formulas in other sheets
+2. Add "ID NO." column to INPUT sheet
+3. Switch to Single Sheet approach in code
+4. Generate test file
+5. Compare speed and verify all sheets display data correctly via formulas
+
+---
+

@@ -1,0 +1,187 @@
+================================================================================
+TERM1 AS MASTER SHEET - June 25, 2026
+================================================================================
+
+CHANGE SUMMARY:
+Modified PHP code to populate TERM1 sheet instead of INPUT sheet.
+TERM1 has both ID NO. and LEARNERS' NAMES columns, making it the ideal master sheet.
+
+================================================================================
+THE PROBLEM:
+================================================================================
+
+BEFORE THIS CHANGE:
+- PHP populated INPUT sheet with student names ✓
+- INPUT sheet does NOT have "ID NO." column ✗
+- TERM1/TERM2/TERM3 sheets have "ID NO." column but were empty ✗
+- Formulas in TERM1/2/3 referenced INPUT, so names appeared but IDs were missing
+- Teachers need both ID and names in TERM1 for grading
+
+TEMPLATE STRUCTURE:
+- INPUT sheet: Only has LEARNERS' NAMES (column B), no ID NO. column
+- TERM1 sheet: Has ID NO. (column B) AND LEARNERS' NAMES (column C)
+- TERM2/3/SUMMARY: Have ID NO. and LEARNERS' NAMES columns
+
+THE ISSUE:
+When PHP populated INPUT only, TERM1 had:
+✓ Names (via formula =INPUT!B12)
+✗ IDs (no data, INPUT doesn't have IDs)
+
+================================================================================
+THE SOLUTION:
+================================================================================
+
+USE TERM1 AS MASTER SHEET:
+1. PHP populates TERM1 sheet (has both ID NO. and LEARNERS' NAMES)
+2. INPUT/TERM2/TERM3/SUMMARY reference TERM1 via formulas
+
+This way:
+✅ TERM1 has both student IDs and names
+✅ INPUT pulls names from TERM1 (via formulas)
+✅ TERM2/3/SUMMARY pull IDs and names from TERM1 (via formulas)
+
+================================================================================
+CHANGES MADE:
+================================================================================
+
+FILE: C:\Users\Rhenel Jhon Sajol\Desktop\CEREB_SCHOOL_BACKUP\TEACHER\LOCAL\Libraries\Excelwithspout.php
+
+CHANGE 1 - Phase 1 (line 191):
+From: for ($sheetIndex = 0; $sheetIndex <= 0; $sheetIndex++)  // INPUT
+To:   for ($sheetIndex = 1; $sheetIndex <= 1; $sheetIndex++)  // TERM1
+
+CHANGE 2 - Phase 2 (line 221):
+From: for ($sheetIndex = 0; $sheetIndex <= 0; $sheetIndex++)  // INPUT
+To:   for ($sheetIndex = 1; $sheetIndex <= 1; $sheetIndex++)  // TERM1
+
+Updated comments to reflect:
+- "We populate TERM1 sheet (sheet index 1)"
+- "TERM1 has both ID NO. and LEARNERS' NAMES columns"
+- "INPUT doesn't have ID NO., so we use TERM1 as master sheet"
+
+================================================================================
+WHAT HAPPENS NOW:
+================================================================================
+
+WHEN PHP RUNS:
+1. Loads template
+2. Scans TERM1 sheet (index 1) for hidden rows
+3. Populates TERM1 with:
+   - Student IDs in column B (boys_start_id placeholder)
+   - Student names in column C (start_boys placeholder)
+4. Skips all other sheets (INPUT, TERM2, TERM3, SUMMARY)
+5. Saves file with XML post-processing
+
+SHEET STRUCTURE AFTER GENERATION:
+- TERM1: ✅ Has student IDs and names (populated by PHP)
+- INPUT: Will have student names IF formulas reference TERM1
+- TERM2: Will have IDs and names IF formulas reference TERM1
+- TERM3: Will have IDs and names IF formulas reference TERM1
+- SUMMARY: Will have IDs and names IF formulas reference TERM1
+
+================================================================================
+NEXT STEP: TEMPLATE MODIFICATION
+================================================================================
+
+The PHP code now populates TERM1, but the template formulas need updating:
+
+CURRENT TEMPLATE (probably):
+- INPUT!B12: empty (waiting for PHP)
+- TERM1!C14: =INPUT!B12 (references INPUT)
+- TERM2!C14: =INPUT!B12 (references INPUT)
+- TERM3!C14: =INPUT!B12 (references INPUT)
+
+NEEDED TEMPLATE:
+- TERM1!B14: empty (PHP will populate)
+- TERM1!C14: empty (PHP will populate)
+- INPUT!B12: =TERM1!C14 (reference TERM1 names)
+- TERM2!B14: =TERM1!B14 (reference TERM1 IDs)
+- TERM2!C14: =TERM1!C14 (reference TERM1 names)
+- TERM3!B14: =TERM1!B14 (reference TERM1 IDs)
+- TERM3!C14: =TERM1!C14 (reference TERM1 names)
+- SUMMARY: same pattern (reference TERM1)
+
+TO UPDATE TEMPLATE:
+1. Open ULTRA_OPTIMIZED template in Excel
+2. Remove formulas from TERM1 (it will be populated by PHP)
+3. Add formulas to INPUT/TERM2/TERM3/SUMMARY referencing TERM1
+4. Save template
+5. Test generation
+
+================================================================================
+TESTING CHECKLIST:
+================================================================================
+
+After uploading this PHP file to server:
+
+1. [ ] Generate new Excel file
+2. [ ] Open generated file
+3. [ ] Check TERM1 sheet:
+   - Column B (ID NO.) should have student IDs
+   - Column C (LEARNERS' NAMES) should have student names
+4. [ ] Check if INPUT/TERM2/TERM3 show data (depends on template formulas)
+5. [ ] Verify hidden rows are preserved
+6. [ ] Check generation time (should be similar to before)
+
+EXPECTED RESULTS:
+- TERM1 populated with IDs and names ✅
+- Other sheets may be empty UNTIL template is updated with formulas
+- Generation time: ~2-3 minutes (unchanged)
+- File size: ~3.5 MB (unchanged)
+
+================================================================================
+ROLLBACK INSTRUCTIONS:
+================================================================================
+
+If TERM1 population doesn't work, revert to INPUT:
+
+Line 191: Change from 1 back to 0
+Line 221: Change from 1 back to 0
+
+This will restore the previous behavior (populate INPUT only).
+
+================================================================================
+SHEET INDICES (for reference):
+================================================================================
+
+Sheet Index | Sheet Name
+------------|----------------
+0           | INPUT
+1           | TERM1
+2           | TERM2
+3           | TERM3
+4           | SUMMARY OF GRADES
+5           | Sheet1
+6           | Sheet2
+7           | Helper (Do Not Delete)
+8           | DO NOT DELETE
+
+We changed from index 0 (INPUT) to index 1 (TERM1).
+
+================================================================================
+FILES MODIFIED:
+================================================================================
+
+Modified:
+- C:\Users\Rhenel Jhon Sajol\Desktop\CEREB_SCHOOL_BACKUP\TEACHER\LOCAL\Libraries\Excelwithspout.php
+
+Lines Changed:
+- Line 186-191: Phase 1 - scan TERM1 instead of INPUT
+- Line 217-221: Phase 2 - populate TERM1 instead of INPUT
+- Line 434: Phase 3 comment updated
+
+Documentation:
+- TERM1_AS_MASTER_SHEET.txt (this file)
+
+================================================================================
+CONCLUSION:
+================================================================================
+
+PHP now populates TERM1 (which has ID NO. column) instead of INPUT (which doesn't).
+
+This solves the missing ID problem. Once the template is updated with formulas
+referencing TERM1, all sheets will display both IDs and names correctly.
+
+The PHP change is complete. The template formulas need to be updated next.
+
+================================================================================

@@ -1,0 +1,139 @@
+================================================================================
+SINGLE-SHEET POPULATION FIX - June 25, 2026
+================================================================================
+
+CHANGE SUMMARY:
+Modified Excelwithspout.php to only populate INPUT sheet (sheet 0), preserving
+formulas in TERM1/TERM2/TERM3/SUMMARY sheets.
+
+================================================================================
+THE PROBLEM:
+================================================================================
+
+BEFORE THIS FIX:
+- PHP code detected {start_boys} placeholders in ALL sheets (INPUT, TERM1, TERM2, TERM3, SUMMARY)
+- PHP populated student names in ALL 5 sheets
+- This OVERWROTE 1,671 formulas in TERM1/TERM2/TERM3/SUMMARY
+- Formulas like =INPUT!B12 were destroyed and replaced with static text
+- File size bloated due to duplicate data in all sheets
+
+TEMPLATE DESIGN:
+The ULTRA_OPTIMIZED template was designed with:
+- INPUT sheet: Empty cells where PHP fills student names
+- TERM1/TERM2/TERM3/SUMMARY: Formulas like =INPUT!B12 that automatically reference INPUT
+
+When PHP populated all sheets, it destroyed this formula-based design.
+
+================================================================================
+THE FIX:
+================================================================================
+
+FILE: C:\Users\Rhenel Jhon Sajol\Desktop\CEREB_SCHOOL_BACKUP\TEACHER\LOCAL\Libraries\Excelwithspout.php
+
+CHANGED LINE 218:
+From: for ($sheetIndex = 0; $sheetIndex < $totalSheets; $sheetIndex++) {
+To:   for ($sheetIndex = 0; $sheetIndex <= 0; $sheetIndex++) {
+
+Added explanatory comments:
+// Only populate INPUT sheet (sheet 0). TERM1/TERM2/TERM3/SUMMARY have formulas that reference INPUT
+// If we populate all sheets, we destroy the formulas (e.g., =INPUT!B12) with static text
+
+IMPACT:
+- Phase 1 (line 181): Still scans ALL sheets for hidden rows ✓
+- Phase 2 (line 218): NOW only populates INPUT sheet ✓ FIXED
+- Phase 3 (line 434): Still restores hidden rows in ALL sheets ✓
+- Verification: Still checks ALL sheets ✓
+
+================================================================================
+EXPECTED RESULTS:
+================================================================================
+
+AFTER THIS FIX:
+✅ INPUT sheet: Populated with student names (as before)
+✅ TERM1 sheet: Formulas =INPUT!B12, =INPUT!B13, etc. PRESERVED
+✅ TERM2 sheet: Formulas PRESERVED
+✅ TERM3 sheet: Formulas PRESERVED
+✅ SUMMARY sheet: Formulas PRESERVED
+✅ File size: SMALLER (no duplicate data, only INPUT has student names)
+✅ Generation speed: FASTER (only 1 sheet populated vs 5)
+✅ Hidden rows: Still preserved in all sheets (XML post-processing still works)
+✅ Template design: Respected and preserved
+
+BENEFITS:
+1. Preserves all 1,671 formulas in TERM1/TERM2/TERM3/SUMMARY
+2. Reduces file size (estimated 20-30% smaller)
+3. Faster generation (only processes 1 sheet vs 5)
+4. Respects template designer's formula-based design
+5. TERM sheets automatically update when INPUT changes
+
+================================================================================
+TESTING STEPS:
+================================================================================
+
+1. Generate a new Excel file using the system
+2. Download the generated file
+3. Open in Excel
+4. Check INPUT sheet:
+   - Should have student names in column B (rows 12-60 for boys, 64-111 for girls)
+5. Check TERM1 sheet:
+   - Click cell C14 - should show formula =INPUT!B12 (not static text)
+   - Should display student name from INPUT automatically
+6. Check hidden rows:
+   - INPUT row 12 should be hidden
+   - TERM1 row 12 should be hidden
+7. Check file size:
+   - Should be smaller than previous 3.6 MB files (estimate: 2.5-3 MB)
+8. Check generation time:
+   - Should complete in 4-6 minutes (possibly faster)
+
+================================================================================
+ROLLBACK INSTRUCTIONS (if needed):
+================================================================================
+
+If this change causes issues, revert line 218 in Excelwithspout.php:
+
+From: for ($sheetIndex = 0; $sheetIndex <= 0; $sheetIndex++) {
+To:   for ($sheetIndex = 0; $sheetIndex < $totalSheets; $sheetIndex++) {
+
+This will restore the previous behavior (populate all sheets, destroy formulas).
+
+================================================================================
+RELATED FILES:
+================================================================================
+
+Modified:
+- C:\Users\Rhenel Jhon Sajol\Desktop\CEREB_SCHOOL_BACKUP\TEACHER\LOCAL\Libraries\Excelwithspout.php
+
+Template:
+- C:\Users\Rhenel Jhon Sajol\Desktop\CEREB_SCHOOL_BACKUP\TEACHER\LOCAL\Uploads\3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx
+
+Analysis Scripts:
+- check_template_design.py
+- check_placeholder_locations.py
+- check_row12_vs_row14.py
+- TEMPLATE_DESIGN_ANALYSIS.txt
+
+Documentation:
+- C:\Users\Rhenel Jhon Sajol\Desktop\CEREB_SCHOOL_BACKUP\TEACHER\TEACHER_CHANGES.md
+
+================================================================================
+CONCLUSION:
+================================================================================
+
+This fix implements the user's original intuition:
+
+"all the brackets in input are also in term1,2,3 and summary of grades too,
+ so I think it makes sense to just only put in sheet 0? then just reference
+ all the other tabs"
+
+The analysis confirmed this was correct - the template was designed with formulas
+in TERM1/TERM2/TERM3/SUMMARY that reference INPUT. By only populating INPUT, we:
+- Preserve the template's formula-based design
+- Reduce file size
+- Speed up generation
+- Avoid data duplication
+
+The fix is minimal (2-line change), safe (other phases unchanged), and respects
+the template designer's intent.
+
+================================================================================

@@ -182,6 +182,14 @@ class Excelwithspout extends PHPExcel {
 		$this->log_debug("Initial file size on disk: " . round(filesize($inputFileName) / 1024 / 1024, 2) . " MB (" . filesize($inputFileName) . " bytes)");
 		$this->log_debug("Memory after load: " . round(memory_get_usage(true) / 1024 / 1024, 2) . " MB");
 
+		// ========================================
+		// APPROACH SELECTION: Choose one of the two approaches below
+		// ========================================
+		// CURRENT APPROACH: Process ALL SHEETS (TERM1, TERM2, TERM3, SUMMARY, etc.)
+		// This destroys formulas in sheets that reference INPUT sheet
+		// Use this if your template has placeholders in ALL sheets
+		// ========================================
+		
 		// Store hidden rows for ALL sheets before processing
 		$allSheetsHiddenRows = array();
 		
@@ -470,6 +478,173 @@ class Excelwithspout extends PHPExcel {
 		}
 		
 		$this->log_debug("Memory after Phase 3: " . round(memory_get_usage(true) / 1024 / 1024, 2) . " MB");
+		
+		// ========================================
+		// ALTERNATIVE APPROACH (COMMENTED OUT): OLD BACKUP WAY
+		// ========================================
+		// This is the original simple approach from BACKUP folder
+		// It does NOT loop through sheets - processes only the active sheet (sheet 0)
+		// PROS: Faster, simpler code
+		// CONS: Only works if template has placeholders in one sheet only
+		// 
+		// TO USE THIS APPROACH:
+		// 1. Comment out the entire "CURRENT APPROACH" section above (lines ~185-480)
+		// 2. Uncomment the code block below
+		// 3. Make sure your template has all formulas set up correctly
+		// ========================================
+		
+		/*
+		// OLD BACKUP APPROACH - Single sheet processing (no loops)
+		$allSheetsHiddenRows = array();
+		
+		// Set active sheet to first sheet (index 0 = INPUT sheet)
+		$objPHPExcel->setActiveSheetIndex(0);
+		$sheetInsertData = $objPHPExcel->getActiveSheet();
+		
+		// Get placeholder positions from Spout scan
+		$foundInCells = $this->spout->search_cells($inputFileName);
+		
+		$school_name_cell = isset($foundInCells['{school_name}'])?$foundInCells['{school_name}']:null;
+		$subject_name_cell = isset($foundInCells['{subject_name}'])?$foundInCells['{subject_name}']:null;
+		$class_cell = isset($foundInCells['{class}'])?$foundInCells['{class}']:null; 
+		$subject_teacher_cell = isset($foundInCells['{subject_teacher}'])?$foundInCells['{subject_teacher}']:null;
+		$written_work_cell = isset($foundInCells['{written_work}'])?$foundInCells['{written_work}']:null;
+		$performance_tasks_cell = isset($foundInCells['{performance_tasks}'])?$foundInCells['{performance_tasks}']:null;
+		$quarterly_assesment_cell = isset($foundInCells['{quarterly_assessment}'])?$foundInCells['{quarterly_assessment}']:null;
+		
+		if( $school_name_cell != null ){
+			$school_name_cell_x = $school_name_cell['rownumber'];
+			$school_name_cell_y = $school_name_cell['columnnumber'];
+			$sheetInsertData->setCellValueByColumnAndRow($school_name_cell_y,$school_name_cell_x, $get_school_name );
+		}
+		
+		if( $class_cell != null ){
+			$class_cell_x = $class_cell['rownumber'];
+			$class_cell_y = $class_cell['columnnumber'];
+			$sheetInsertData->setCellValueByColumnAndRow($class_cell_y,$class_cell_x, $class_name.' '.$section_name );
+		}
+		
+		if( $subject_name_cell != null ){
+			$subject_name_cell_x = $subject_name_cell['rownumber'];
+			$subject_name_cell_y = $subject_name_cell['columnnumber'];
+			$sheetInsertData->setCellValueByColumnAndRow($subject_name_cell_y,$subject_name_cell_x, $subject_name );
+		}
+		
+		if( $written_work_cell != null && $written_work  ){
+			$written_work = $written_work / 100;
+			$written_work_cell_x = $written_work_cell['rownumber'];
+			$written_work_cell_y = $written_work_cell['columnnumber'];
+			$sheetInsertData->setCellValueByColumnAndRow($written_work_cell_y,$written_work_cell_x, $written_work );
+		}
+		
+		if( $performance_tasks_cell != null && $performance_task ){
+			$performance_task = $performance_task / 100;
+			$performance_tasks_cell_x = $performance_tasks_cell['rownumber'];
+			$performance_tasks_cell_y = $performance_tasks_cell['columnnumber'];
+			$sheetInsertData->setCellValueByColumnAndRow($performance_tasks_cell_y,$performance_tasks_cell_x, $performance_task );
+		}
+		
+		if( $quarterly_assesment_cell != null && $quarterly_assesment ){
+			$quarterly_assesment = $quarterly_assesment / 100;
+			$quarterly_assesment_cell_x = $quarterly_assesment_cell['rownumber'];
+			$quarterly_assesment_cell_y = $quarterly_assesment_cell['columnnumber'];
+			$sheetInsertData->setCellValueByColumnAndRow($quarterly_assesment_cell_y,$quarterly_assesment_cell_x, $quarterly_assesment );
+		}
+		
+		if( $subject_teacher_cell != null  ){
+			$subject_teacher_cell_x = $subject_teacher_cell['rownumber'];
+			$subject_teacher_cell_y = $subject_teacher_cell['columnnumber'];
+			if( $teacher_result ){
+				$firstname = $teacher_result['name'];
+				$lastname = $teacher_result['lastname'];
+				$middlename = $teacher_result['middlename'];
+				if( $middlename ){
+				  $fullname = $lastname.', '.$firstname.' '.$middlename;	
+				} else {
+					$fullname = $lastname.', '.$firstname;	
+				}
+				$sheetInsertData->setCellValueByColumnAndRow($subject_teacher_cell_y,$subject_teacher_cell_x, $fullname );
+			}
+		}
+
+		// BOYS
+		$start_boys_numbering = isset($foundInCells['{start_boys_numbering}'])?$foundInCells['{start_boys_numbering}']:null;
+		$end_boys_numbering = isset($foundInCells['{end_boys_numbering}'])?$foundInCells['{end_boys_numbering}']:null;
+		$start_boys = isset($foundInCells['{start_boys}'])?$foundInCells['{start_boys}']:null;
+		$end_boys = isset($foundInCells['{end_boys}'])?$foundInCells['{end_boys}']:null;
+		$boys_start_id = isset($foundInCells['{boys_start_id}'])?$foundInCells['{boys_start_id}']:null;
+		
+		if ($start_boys_numbering && $end_boys_numbering && $start_boys && $end_boys && $boys_start_id) {
+			$start_boys_numbering_x = $start_boys_numbering['rownumber'];
+			$start_boys_numbering_y = $start_boys_numbering['columnnumber'];
+			$end_boys_numbering_x = $end_boys_numbering['rownumber'];
+			$start_boys_x = $start_boys['rownumber'];
+			$start_boys_y = $start_boys['columnnumber'];
+			$end_boys_x = $end_boys['rownumber'];
+			$end_boys_y = $end_boys['columnnumber'];
+			$boys_start_id_x = $boys_start_id['rownumber'];
+			$boys_start_id_y = $boys_start_id['columnnumber'];
+			$n=1;
+			$start_boys_numbering_x++;
+			$boys_start_id_x++;
+			$start_boys_x++;
+			for( $b=0; $start_boys_numbering_x < $end_boys_numbering_x ; $b++ )
+			{
+				set_time_limit(0);
+				if( !empty( $boys_students[$b] ) ){
+					$boy_details  = $boys_students[$b];
+					$sheetInsertData->setCellValueByColumnAndRow($start_boys_numbering_y,$start_boys_numbering_x, $n );
+					$sheetInsertData->setCellValueByColumnAndRow($boys_start_id_y,$boys_start_id_x, $boy_details['admission_no'] ); 
+					$sheetInsertData->setCellValueByColumnAndRow($start_boys_y,$start_boys_x, $boy_details['lastname'].", ".$boy_details['firstname'] );
+				}
+				$start_boys_numbering_x++;
+				$boys_start_id_x++;
+				$start_boys_x++;
+				$n++;
+			}
+		}
+		
+		// GIRLS
+		$start_girls_numbering = isset($foundInCells['{start_girls_numbering}'])?$foundInCells['{start_girls_numbering}']:null;
+		$end_girls_numbering = isset($foundInCells['{end_girls_numbering}'])?$foundInCells['{end_girls_numbering}']:null;
+		$start_girls = isset($foundInCells['{start_girls}'])?$foundInCells['{start_girls}']:null;
+		$end_girls = isset($foundInCells['{end_girls}'])?$foundInCells['{end_girls}']:null;
+		$girls_start_id = isset($foundInCells['{girls_start_id}'])?$foundInCells['{girls_start_id}']:null;
+
+		if ($start_girls_numbering && $end_girls_numbering && $start_girls && $end_girls && $girls_start_id) {
+			$start_girls_numbering_x = $start_girls_numbering['rownumber'];
+			$start_girls_numbering_y = $start_girls_numbering['columnnumber'];
+			$end_girls_numbering_x = $end_girls_numbering['rownumber'];
+			$start_girls_x = $start_girls['rownumber'];
+			$start_girls_y = $start_girls['columnnumber'];
+			$end_girls_x = $end_girls['rownumber'];
+			$end_girls_y = $end_girls['columnnumber'];
+			$girls_start_id_x = $girls_start_id['rownumber'];
+			$girls_start_id_y = $girls_start_id['columnnumber'];
+			
+			$n=1;
+			$start_girls_numbering_x++;
+			$girls_start_id_x++;
+			$start_girls_x++;
+			for( $b=0; $start_girls_numbering_x < $end_girls_numbering_x ; $b++ )
+			{
+				set_time_limit(0);
+				if( !empty( $girl_students[$b] ) ){
+					$girl_details  = $girl_students[$b];
+					$sheetInsertData->setCellValueByColumnAndRow($start_girls_numbering_y,$start_girls_numbering_x, $n );
+					$sheetInsertData->setCellValueByColumnAndRow($girls_start_id_y,$girls_start_id_x, $girl_details['admission_no'] ); 
+					$sheetInsertData->setCellValueByColumnAndRow($start_girls_y,$start_girls_x, $girl_details['lastname'].", ".$girl_details['firstname'] );
+				}
+				$start_girls_numbering_x++;
+				$girls_start_id_x++;
+				$start_girls_x++;
+				$n++;
+			}
+		}
+		*/
+		// ========================================
+		// END OF OLD BACKUP APPROACH
+		// ========================================
 				
 		$date = date('Ymdhis');
 		$filename = $subject_name.'-'.$class_name.' '.$section_name.'-'.$date;

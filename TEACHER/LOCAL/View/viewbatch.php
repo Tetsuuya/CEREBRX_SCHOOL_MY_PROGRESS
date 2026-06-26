@@ -51,7 +51,21 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 													?>
 													</span></h4>
 												</td>
-												<td align="right"><h4><small><b>Quarter:</b></small>&nbsp;<span class="label label-success"><?php echo $this->setting_model->getquarter($importgrades['quarter']); ?></span></h4></td>
+												<td align="right"><h4><small><b>Term:</b></small>&nbsp;<span class="label label-success">
+													<?php 
+													$term_display = '';
+													if ($importgrades['quarter'] == 1) {
+														$term_display = 'Term 1';
+													} elseif ($importgrades['quarter'] == 2) {
+														$term_display = 'Term 2';
+													} elseif ($importgrades['quarter'] == 3) {
+														$term_display = 'Term 3';
+													} else {
+														$term_display = $importgrades['quarter'];
+													}
+													echo $term_display;
+													?>
+												</span></h4></td>
 											</tr>
 											<tr>
 												<th style="background-color:#ffff;" ><a href="<?php echo site_url('teacher/grade/imported') ?>" class="btn btn-sm btn-default">Back</a></th>

@@ -125,7 +125,7 @@ class Grade extends CI_Controller {
 		$data['fourthqsettings'] = $setting_result[0]['import_fourth'];
 		$this->form_validation->set_rules('class_id', 'Class', 'trim|required|xss_clean');
 		$this->form_validation->set_rules('section_id', 'Section', 'trim|required|xss_clean');
-		$this->form_validation->set_rules('quarter', 'Quarter', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('quarter', 'Term', 'trim|required|xss_clean');
 		$this->form_validation->set_rules('subject_id', 'Subject', 'trim|required|xss_clean');
 		if ($this->form_validation->run() == FALSE) {
 			$this->load->view('layout/teacher/header', $data);
@@ -1005,7 +1005,7 @@ class Grade extends CI_Controller {
 		$data['fourthqsettings'] = $setting_result[0]['import_fourth'];
 		$this->form_validation->set_rules('class_id', 'Class', 'trim|required|xss_clean');
 		$this->form_validation->set_rules('section_id', 'Section', 'trim|required|xss_clean');
-		$this->form_validation->set_rules('quarter', 'quarter', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('quarter', 'Term', 'trim|required|xss_clean');
 		$this->form_validation->set_rules('subject_id', 'Subject', 'trim|required|xss_clean');
 		if ($this->form_validation->run() == FALSE) {
 			$this->load->view('layout/teacher/header', $data);
@@ -1832,7 +1832,7 @@ class Grade extends CI_Controller {
 		$data['fourthqsettings'] = $setting_result[0]['import_fourth'];
 		$this->form_validation->set_rules('student_id', 'Student', 'trim|required|xss_clean');
 		$this->form_validation->set_rules('semester_id', 'Semester', 'trim|required|xss_clean');
-		$this->form_validation->set_rules('quarter', 'Quarter', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('quarter', 'Term', 'trim|required|xss_clean');
 		$this->form_validation->set_rules('subject_id', 'Subject', 'trim|required|xss_clean');
 		$this->form_validation->set_rules('template_id', 'Template', 'trim|required|xss_clean');
 		if ($this->form_validation->run() == FALSE) {
@@ -1877,7 +1877,7 @@ class Grade extends CI_Controller {
 		$data['getquarter'] = $this->customlib->getQuarter();
 		$this->form_validation->set_rules('student_id', 'Student', 'trim|required|xss_clean');
 		$this->form_validation->set_rules('semester_id', 'Semester', 'trim|required|xss_clean');
-		$this->form_validation->set_rules('quarter', 'Quarter', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('quarter', 'Term', 'trim|required|xss_clean');
 		$this->form_validation->set_rules('subject_id', 'Subject', 'trim|required|xss_clean');
 		if ($this->form_validation->run() == FALSE) {
 			$this->load->view('layout/teacher/header', $data);
@@ -2443,7 +2443,7 @@ class Grade extends CI_Controller {
 		$data['getquarter'] = $this->customlib->getQuarter();
 		$this->form_validation->set_rules('student_id', 'Student', 'trim|required|xss_clean');
 		$this->form_validation->set_rules('semester_id', 'Semester', 'trim|required|xss_clean');
-		$this->form_validation->set_rules('quarter', 'Quarter', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('quarter', 'Term', 'trim|required|xss_clean');
 		$this->form_validation->set_rules('subject_id', 'Subject', 'trim|required|xss_clean');
 		if ($this->form_validation->run() == FALSE) {
 			$this->load->view('layout/teacher/header', $data);

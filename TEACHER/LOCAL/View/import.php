@@ -162,7 +162,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
                                     <div class="form-group">
 
-                                    <label for="exampleInputEmail1"><?php echo $this->lang->line('quarter'); ?> <small><span style="color:red;">Required in importing grades only</span></small></label>
+                                    <label for="exampleInputEmail1">Term <small><span style="color:red;">Required in importing grades only</span></small></label>
 
                                         <select  id="quarter" name="quarter" class="form-control" >
 
@@ -176,7 +176,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
                                                         ?>
 
-                                                          <option  value="<?php echo $key; ?>"><?php echo $value; ?></option>
+                                                          <option  value="<?php echo $key; ?>">Term 1</option>
 
                                                         <?php
 
@@ -186,7 +186,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
                                                         ?>
 
-                                                          <option  value="<?php echo $key; ?>"><?php echo $value; ?></option>
+                                                          <option  value="<?php echo $key; ?>">Term 2</option>
 
                                                         <?php
 
@@ -196,17 +196,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
                                                         ?>
 
-                                                          <option  value="<?php echo $key; ?>"><?php echo $value; ?></option>
-
-                                                        <?php
-
-                                                    }
-
-                                                     if( $value == 4 && $fourthqsettings == 'yes'){
-
-                                                        ?>
-
-                                                          <option  value="<?php echo $key; ?>"><?php echo $value; ?></option>
+                                                          <option  value="<?php echo $key; ?>">Term 3</option>
 
                                                         <?php
 

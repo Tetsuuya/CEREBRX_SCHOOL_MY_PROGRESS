@@ -40,7 +40,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 												<th><?php echo $this->lang->line('class'); ?>   </th>
 												<th><?php echo $this->lang->line('section'); ?>   </th>
 												<th><?php echo $this->lang->line('subject'); ?>   </th>
-												<th><?php echo $this->lang->line('quarter'); ?>   </th>
+												<th>Term</th>
 												<th>Published</th>
 												<th>Status</th>
 												<th class="text-right"><?php echo $this->lang->line('action'); ?></th>
@@ -61,7 +61,21 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 													<td class="mailbox-name"> <?php echo $gradesbatch['class'] ?></td>
 													<td class="mailbox-name"> <?php echo $gradesbatch['section'] ?></td>
 													<td class="mailbox-name"> <?php echo $gradesbatch['name'] ?></td>
-													<td class="mailbox-name"> <?php echo $gradesbatch['quarter'] ?></td>
+													<td class="mailbox-name"> 
+														<?php 
+														$term_display = '';
+														if ($gradesbatch['quarter'] == 1) {
+															$term_display = 'Term 1';
+														} elseif ($gradesbatch['quarter'] == 2) {
+															$term_display = 'Term 2';
+														} elseif ($gradesbatch['quarter'] == 3) {
+															$term_display = 'Term 3';
+														} else {
+															$term_display = $gradesbatch['quarter'];
+														}
+														echo $term_display; 
+														?>
+													</td>
 													
 													<td class="mailbox-name"> <?php echo $display_published ?></td>
 													<td class="mailbox-name"> <?php echo $status ?></td>

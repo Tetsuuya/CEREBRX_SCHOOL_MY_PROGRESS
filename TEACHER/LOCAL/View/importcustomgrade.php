@@ -58,13 +58,23 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 								</div>
 								<div class="col-md-3">
                                     <div class="form-group">
-                                    <label for="exampleInputEmail1"><?php echo $this->lang->line('quarter'); ?></label>
+                                    <label for="exampleInputEmail1">Term</label>
                                         <select  id="quarter" name="quarter" class="form-control" >
                                            <option value=""><?php echo $this->lang->line('select'); ?></option>
                                             <?php
                                                 foreach ($getquarter as $key => $value) {
+                                                    $term_label = $value;
+                                                    if ($key == 1) {
+                                                        $term_label = 'Term 1';
+                                                    } elseif ($key == 2) {
+                                                        $term_label = 'Term 2';
+                                                    } elseif ($key == 3) {
+                                                        $term_label = 'Term 3';
+                                                    } elseif ($key == 4) {
+                                                        continue;
+                                                    }
                                                 ?>
-                                                <option  value="<?php echo $key; ?>" <?php //if ($value['quarter'] == $value) echo "selected"; ?>><?php echo $value; ?></option>
+                                                <option  value="<?php echo $key; ?>" <?php //if ($value['quarter'] == $value) echo "selected"; ?>><?php echo $term_label; ?></option>
                                                 <?php
                                                 }
                                             ?>

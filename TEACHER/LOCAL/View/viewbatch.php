@@ -175,11 +175,6 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 													} else {
 
 														echo '<span class="label label-info">Grades Already Published - Cannot Delete</span>';
-														?>
-														<a href="<?php echo base_url(); ?>teacher/grade/unpublish/<?php echo $id; ?>" class="btn btn-warning btn-sm"  data-toggle="tooltip" title="Unpublish to allow editing" onclick="return confirm('Are you sure you want to unpublish these grades? You will be able to edit/delete them again.');">
-															Unpublish Grades
-														</a>
-														<?php
 
 													}
 

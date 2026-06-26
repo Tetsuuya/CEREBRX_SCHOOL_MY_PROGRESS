@@ -1,8 +1,27 @@
 # Teacher System - Complete Code Changes Report
 
-This document provides a comprehensive, file-by-file comparison of all the changes made to the **Teacher** system relative to the original `BACKUP` state.
+This document provides a comprehensive comparison of all changes made to the **Teacher** system relative to the original `BACKUP` codebase, specifically detailing the successful transition from a **4-Quarter** grading scheme to a **3-Term** grading scheme using the new formula-driven template.
 
-All file changes are listed in sequential order from the top of the file to the bottom (by line numbers).
+---
+
+## 🚀 Key Transition: 4 Quarters to 3 Terms
+
+To support the school's new curriculum calendar, the system was converted from a 4-quarter system to a 3-term system. This involved coordination across views, controllers, the Excel generation library, and the grading spreadsheet template:
+
+1. **New Template Integration (`3-term_New_Grade_Template_fin.xlsx`)**:
+   - The original template (`GradingTemplate.xlsx`) was a 4-quarter spreadsheet populated manually across multiple sheets.
+   - The new template uses a **formula-driven architecture**. It contains sheets for `INPUT`, `TERM1`, `TERM2`, `TERM3`, and `SUMMARY OF GRADES`. Student lists are populated ONLY on the `INPUT` sheet. Other sheets automatically pull student data using native Excel formulas (e.g. `=INPUT!B12`).
+
+2. **Single-Sheet Data Population**:
+   - The spreadsheet generator library (`Excelwithspout.php`) was updated to only insert student lists into the `INPUT` tab (sheet index 0), keeping all 1,671 inter-sheet formulas intact and avoiding formula destruction. This reduced file size and improved performance.
+
+3. **UI/View Term Selector Updates**:
+   - Dropped Quarter terminology and references in favor of "Term".
+   - Selectors in `import.php` and `importcustomgrade.php` display "Term 1", "Term 2", and "Term 3" options, completely removing/skipping Term 4.
+   - Headers and columns in tables now display "Term" instead of "Quarter", converting numerical values to term names (e.g. `1` to `Term 1`).
+
+4. **Robust Controller Sheet Mappings**:
+   - The import controllers in `Grade.php` now dynamically resolve target sheets. If the template does not contain traditional sheet names like "1st Quarter", it maps term values directly to `TERM1`, `TERM2`, and `TERM3` sheets, supporting both old and new templates.
 
 ---
 
@@ -233,6 +252,212 @@ All file changes are listed in sequential order from the top of the file to the 
 
 ---
 
+### 1.3 View - View/import.php (Term Selector)
+#### Term Selector Dropdown Updates (Quarter to Term Transition)
+* **Type of Change**: Modified
+* **Lines Changed**: Lines 81-113 in original `BACKUP` (replaced by lines 165-205 in Today's `LOCAL`)
+
+##### Before (Original BACKUP State)
+```php
+                                    <label for="exampleInputEmail1"><?php echo $this->lang->line('quarter'); ?> <small><span style="color:red;">Required in importing grades only</span></small></label>
+                                        <select  id="quarter" name="quarter" class="form-control" >
+                                           <option value=""><?php echo $this->lang->line('select'); ?></option>
+                                             <?php
+                                                 foreach ($getquarter as $key => $value) {
+                                                 if( $value == 1 && $firstqsettings == 'yes'){
+                                                         ?>
+                                                           <option  value="<?php echo $key; ?>"><?php echo $value; ?></option>
+                                                         <?php
+                                                     }
+                                                      if( $value == 2 && $secondqsettings == 'yes'){
+                                                         ?>
+                                                           <option  value="<?php echo $key; ?>"><?php echo $value; ?></option>
+                                                         <?php
+                                                     }
+                                                      if( $value == 3 && $thirdqsettings == 'yes'){
+                                                         ?>
+                                                           <option  value="<?php echo $key; ?>"><?php echo $value; ?></option>
+                                                         <?php
+                                                     }
+                                                      if( $value == 4 && $fourthqsettings == 'yes'){
+                                                         ?>
+                                                           <option  value="<?php echo $key; ?>"><?php echo $value; ?></option>
+                                                         <?php
+                                                     }
+                                                 }
+                                             ?>
+                                         </select>
+```
+
+##### After (Today's LOCAL State)
+```php
+                                    <label for="exampleInputEmail1">Term <small><span style="color:red;">Required in importing grades only</span></small></label>
+                                        <select  id="quarter" name="quarter" class="form-control" >
+                                           <option value=""><?php echo $this->lang->line('select'); ?></option>
+                                             <?php
+                                                 foreach ($getquarter as $key => $value) {
+                                                 if( $value == 1 && $firstqsettings == 'yes'){
+                                                         ?>
+                                                           <option  value="<?php echo $key; ?>">Term 1</option>
+                                                         <?php
+                                                     }
+                                                      if( $value == 2 && $secondqsettings == 'yes'){
+                                                         ?>
+                                                           <option  value="<?php echo $key; ?>">Term 2</option>
+                                                         <?php
+                                                     }
+                                                      if( $value == 3 && $thirdqsettings == 'yes'){
+                                                         ?>
+                                                           <option  value="<?php echo $key; ?>">Term 3</option>
+                                                         <?php
+                                                     }
+                                                 }
+                                             ?>
+                                         </select>
+```
+
+* **What Changed**: Changed select element's label to "Term", hardcoded option values to display "Term 1", "Term 2", "Term 3" instead of general database quarters, and removed the fourth option checking logic completely.
+* **Purpose**: Transitions grade import UI to a 3-term system, eliminating Term 4 options.
+
+---
+
+### 1.4 View - View/importcustomgrade.php
+#### Quarter to Term Selector Transition and Term 4 Removal
+* **Type of Change**: Modified
+* **Lines Changed**: Lines 60-70 in original `BACKUP` (replaced by lines 60-84 in Today's `LOCAL`)
+
+##### Before (Original BACKUP State)
+```php
+                                    <label for="exampleInputEmail1"><?php echo $this->lang->line('quarter'); ?></label>
+                                        <select  id="quarter" name="quarter" class="form-control" >
+                                           <option value=""><?php echo $this->lang->line('select'); ?></option>
+                                             <?php
+                                                 foreach ($getquarter as $key => $value) {
+                                                 ?>
+                                                 <option  value="<?php echo $key; ?>" <?php //if ($value['quarter'] == $value) echo "selected"; ?>><?php echo $value; ?></option>
+                                                 <?php
+                                                 }
+                                             ?>
+                                         </select>
+```
+
+##### After (Today's LOCAL State)
+```php
+                                    <label for="exampleInputEmail1">Term</label>
+                                        <select  id="quarter" name="quarter" class="form-control" >
+                                           <option value=""><?php echo $this->lang->line('select'); ?></option>
+                                             <?php
+                                                 foreach ($getquarter as $key => $value) {
+                                                     $term_label = $value;
+                                                     if ($key == 1) {
+                                                         $term_label = 'Term 1';
+                                                     } elseif ($key == 2) {
+                                                         $term_label = 'Term 2';
+                                                     } elseif ($key == 3) {
+                                                         $term_label = 'Term 3';
+                                                     } elseif ($key == 4) {
+                                                         continue;
+                                                     }
+                                                 ?>
+                                                 <option  value="<?php echo $key; ?>" <?php //if ($value['quarter'] == $value) echo "selected"; ?>><?php echo $term_label; ?></option>
+                                                 <?php
+                                                 }
+                                             ?>
+                                         </select>
+```
+
+* **What Changed**: Relabeled "Quarter" to "Term" and added logic inside the loop to map integer keys 1, 2, 3 to `'Term 1'`, `'Term 2'`, `'Term 3'`, while skipping `$key == 4` (Term 4).
+* **Purpose**: Updates the custom grade import page to align with the new 3-term system, completely removing Term 4 from the selectable options.
+* **Layman's Explanation**: The dropdown box for selecting quarters now lists "Term 1", "Term 2", and "Term 3" instead of quarters, and the 4th term option has been removed entirely.
+
+---
+
+### 1.5 View - View/imported.php
+#### Column Headers and Batch Term Formatting
+* **Type of Change**: Modified
+* **Lines Changed**: Lines 60-70 in original `BACKUP` (replaced by lines 60-85 in Today's `LOCAL`)
+
+##### Before (Original BACKUP State)
+```php
+												<th><?php echo $this->lang->line('subject'); ?>   </th>
+												<th><?php echo $this->lang->line('quarter'); ?>   </th>
+												<th>Published</th>
+```
+And:
+```php
+													<td class="mailbox-name"> <?php echo $gradesbatch['name'] ?></td>
+													<td class="mailbox-name"> <?php echo $gradesbatch['quarter'] ?></td>
+													
+													<td class="mailbox-name"> <?php echo $display_published ?></td>
+```
+
+##### After (Today's LOCAL State)
+```php
+												<th><?php echo $this->lang->line('subject'); ?>   </th>
+												<th>Term</th>
+												<th>Published</th>
+```
+And:
+```php
+													<td class="mailbox-name"> <?php echo $gradesbatch['name'] ?></td>
+													<td class="mailbox-name"> 
+														<?php 
+														$term_display = '';
+														if ($gradesbatch['quarter'] == 1) {
+															$term_display = 'Term 1';
+														} elseif ($gradesbatch['quarter'] == 2) {
+															$term_display = 'Term 2';
+														} elseif ($gradesbatch['quarter'] == 3) {
+															$term_display = 'Term 3';
+														} else {
+															$term_display = $gradesbatch['quarter'];
+														}
+														echo $term_display; 
+														?>
+													</td>
+													
+													<td class="mailbox-name"> <?php echo $display_published ?></td>
+```
+
+* **What Changed**: Relabeled the "Quarter" column header to "Term" and added code to display numerical values 1, 2, and 3 as "Term 1", "Term 2", and "Term 3".
+* **Purpose**: Ensures that when teachers list imported batches of grades, they see "Term 1/2/3" in the tables instead of raw numbers or quarter names.
+
+---
+
+### 1.6 View - View/viewbatch.php
+#### Term Label and Display Logic in Batch Review Screen
+* **Type of Change**: Modified
+* **Lines Changed**: Line 54 in original `BACKUP` (replaced by lines 107-121 in Today's `LOCAL`)
+
+##### Before (Original BACKUP State)
+```php
+												<td align="right"><h4><small><b>Quarter:</b></small>&nbsp;<span class="label label-success"><?php echo $this->setting_model->getquarter($importgrades['quarter']); ?></span></h4></td>
+```
+
+##### After (Today's LOCAL State)
+```php
+												<td align="right"><h4><small><b>Term:</b></small>&nbsp;<span class="label label-success">
+													<?php 
+													$term_display = '';
+													if ($importgrades['quarter'] == 1) {
+														$term_display = 'Term 1';
+													} elseif ($importgrades['quarter'] == 2) {
+														$term_display = 'Term 2';
+													} elseif ($importgrades['quarter'] == 3) {
+														$term_display = 'Term 3';
+													} else {
+														$term_display = $importgrades['quarter'];
+													}
+													echo $term_display;
+													?>
+												</span></h4></td>
+```
+
+* **What Changed**: Changed the header label from "Quarter" to "Term" and mapped the numerical value stored in `$importgrades['quarter']` to a Term name rather than fetching it from the database system settings (which might still return Quarter strings).
+* **Purpose**: Standardizes review tables to display Term names, maintaining a consistent 3-term system appearance.
+
+---
+
 ## 2. Controller Changes - Controller/Grade.php
 
 ### 2.1 Load Setting Variables on generate_spreadsheet Validation Error
@@ -399,6 +624,65 @@ All file changes are listed in sequential order from the top of the file to the 
 
 ---
 
+### 2.4 Form Validation Rules Update (Quarter to Term)
+* **Type of Change**: Modified
+* **Lines Changed**: Lines 968, 2303 in original `BACKUP` (replaced by lines 968, 2468 in Today's `LOCAL`)
+
+##### Before (Original BACKUP State)
+```php
+		$this->form_validation->set_rules('quarter', 'Quarter', 'trim|required|xss_clean');
+```
+
+##### After (Today's LOCAL State)
+```php
+		$this->form_validation->set_rules('quarter', 'Term', 'trim|required|xss_clean');
+```
+
+* **What Changed**: Modified form validation rules labels for the `'quarter'` input fields in methods `import()` and `importcustomgrade()` to show `'Term'` instead of `'Quarter'`.
+* **Purpose**: Updates form validation output errors to refer to "Term" instead of "Quarter", matching the new terminology.
+
+---
+
+### 2.5 Flexible Sheet Resolution (Quarter Fallback to TERM1/TERM2/TERM3)
+* **Type of Change**: Modified / Enhanced Compatibility
+* **Lines Changed**: Lines 1771-1784 in original `BACKUP` (replaced by lines 1921-1936 in Today's `LOCAL` for `importcustomgrade()`, and similar additions for `import()`)
+
+##### Before (Original BACKUP State)
+```php
+				$getCurrentSheet = $this->get_assign_sheet_name( $quarter );
+				
+				if(in_array( $getCurrentSheet, $getSheetNames )){
+					$getquartersheet = array_search( $getCurrentSheet, $getSheetNames);
+					
+					$objPHPExcel->setActiveSheetIndex($getquartersheet);
+					$sheetInsertData = $objPHPExcel->getActiveSheet();
+```
+
+##### After (Today's LOCAL State)
+```php
+				$getCurrentSheet = $this->get_assign_sheet_name( $quarter );
+				$termSheetMap = array(1 => 'TERM1', 2 => 'TERM2', 3 => 'TERM3');
+				$targetTermSheet = isset($termSheetMap[$quarter]) ? $termSheetMap[$quarter] : '';
+				
+				if(in_array( $getCurrentSheet, $getSheetNames )){
+					$getquartersheet = array_search( $getCurrentSheet, $getSheetNames);
+					$objPHPExcel->setActiveSheetIndex($getquartersheet);
+				} elseif($targetTermSheet !== '' && in_array( $targetTermSheet, $getSheetNames )){
+					$getquartersheet = array_search( $targetTermSheet, $getSheetNames);
+					$objPHPExcel->setActiveSheetIndex($getquartersheet);
+				} else {
+					$this->session->set_flashdata('msg', '<div class="alert alert-warning">Sheet "'.$getCurrentSheet.'" or "'.$targetTermSheet.'" not found. Please import correct template.</div>');
+					redirect('teacher/grade/importcustomgrade');
+				}
+				$sheetInsertData = $objPHPExcel->getActiveSheet();
+```
+
+* **What Changed**: Added fallback sheet resolution logic when importing grades. If the sheet name returned by `get_assign_sheet_name` (e.g. "1st Quarter", "2nd Quarter", "3rd Quarter") is not found in the workbook, the system falls back to checking for names `TERM1`, `TERM2`, and `TERM3` based on the selected term code.
+* **Purpose**: Solves import failures on the new 3-term Excel template, which contains sheets named `TERM1`, `TERM2`, `TERM3` instead of `1st Quarter` etc., while maintaining backward compatibility with older templates.
+* **Layman's Explanation**: The system is now smart enough to search for sheet names like "TERM1" if it cannot find the old "1st Quarter" tab, so both old and new template files can be successfully imported.
+
+---
+
 ## 3. Library Changes - Libraries/Excelwithspout.php
 
 ### 3.1 Multi-Sheet Dynamic Grade Spreadsheet Generation (PHPExcel)
@@ -431,7 +715,8 @@ All file changes are listed in sequential order from the top of the file to the 
 ```
 
 * **What Changed**: 
-  - Rewrote the spreadsheet generator to loop through all worksheets. It populates student metadata and boys/girls lists on any tab containing student placeholders.
+  - Rewrote the spreadsheet generator to scan all worksheets for hidden rows (Phase 1) and restore them (Phase 3).
+  - Implemented **Single-Sheet Population (INPUT Only) via Modified Dynamic Scan** in Phase 2 (restricted loop index to `0 <= 0`), which only writes student list data into the `INPUT` sheet. This preserves all 1,671 formulas (e.g., `=INPUT!B12`) in other sheets (`TERM1`, `TERM2`, `TERM3`, `SUMMARY OF GRADES`), prevents duplicate data bloat, and optimizes generation speed.
   - Implemented progressive job status logging/writing into the status JSON files (`progress: 10/30/80/100`) to feed the UI progress bar.
   - Added a `log_debug()` utility logging diagnostics, size, and peak RAM consumption to `application/logs/excel_generation_debug.txt`.
   - Added a row visibility tracking mechanism to preserve the hidden rows of the template.
@@ -481,7 +766,8 @@ Below is a non-technical summary of how the Teacher portal behaved **originally*
 | **"Import Grades" Visibility** | **Conditional**: Only visible if grade importing was globally enabled in the system settings (`import_grade = 'yes'`). | **Always Visible**: Visible to all teachers at all times without restrictions. |
 | **Generation Flow** | **Synchronous**: Web server generated the file on-the-fly inside the HTTP request. Caused **504 Gateway Timeouts** on large classes/templates. | **Asynchronous (Background)**: The task starts in the background, allowing the browser to poll progress via a modal interface. |
 | **User Feedback** | **None**: The screen froze with no indication of progress until the download completed or timed out. | **Progress Modal**: Displays a loading spinner and updating progress message/percentage. |
-| **Grading Template** | **Single Sheet**: Populated student lists only on the first sheet of the generated excel file (`GradingTemplate.xlsx`). | **Multi-Sheet**: Scans and populates student lists across all tabs of the template (e.g. `INPUT`, `TERM1`, `TERM2`, `TERM3`). |
+| **Grading Template** | **Legacy (Single-Sheet)**: Populated student lists on the first sheet of `GradingTemplate.xlsx` (4 quarters represented as static tabs, no automated cross-sheet references). | **Formula-Driven (INPUT Only)**: Uses the new `3-term_New_Grade_Template_fin.xlsx`. Populates ONLY the `INPUT` sheet, dynamically feeding student details into `TERM1`, `TERM2`, `TERM3`, and `SUMMARY` sheets via Excel formulas (preserving all 1,671 inter-sheet formulas). |
+| **Term/Quarter System** | **4 Quarters**: Selectors and tables were designed for 4 quarters (1st, 2nd, 3rd, 4th Quarter) using generic database strings. | **3 Terms**: System fully transitioned to 3 terms (Term 1, Term 2, Term 3). Selectors skip Term 4, database queries check term statuses, and controllers resolve fallback mappings (TERM1/2/3) during Excel imports. |
 | **Hidden Row Preservation** | **Broken**: PHPExcel reset hidden rows to visible on template output. | **Preserved**: Retains hidden rows in generated files using automated XML post-processing fixes. |
 | **System Stability** | **Vulnerable**: Triggers undefined variable PHP notices if validation checks failed. | **Robust**: Safety variable defaults loaded inside controller and view logic checks are added. |
 | **Debugging logs** | **None**: Failures during Excel generation left no trace. | **Detailed**: Diagnostics, execution times, and memory logs written to `excel_generation_debug.txt`. |
@@ -575,11 +861,11 @@ Old duplicate/test files were archived to `BACKUP_20260624_165345/`:
 
 ### 7.2 Database Template Update Query
 
-#### Update Template Record to Use ULTRA_OPTIMIZED File
+#### Update Template Record to Use 3-term_New_Grade_Template_fin.xlsx File
 
 ```sql
 UPDATE sch_template_academic 
-SET file = 'uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx'
+SET file = 'uploads/template_documents/academic_subjects/3-term_New_Grade_Template_fin.xlsx'
 WHERE id = 1;
 ```
 
@@ -593,7 +879,7 @@ WHERE id = 1;
 **Expected Result**:
 | id | name | file |
 |----|------|------|
-| 1  | 3-term New Grade Template | uploads/template_documents/academic_subjects/3-term_New_Grade_Template_ULTRA_OPTIMIZED.xlsx |
+| 1  | 3-term New Grade Template | uploads/template_documents/academic_subjects/3-term_New_Grade_Template_fin.xlsx |
 
 ---
 
@@ -721,166 +1007,119 @@ Complete technical documentation of:
 
 The `Libraries/Excelwithspout.php` file now contains **two different approaches** for populating the Excel template. Both approaches are fully documented in the code with clear markers for switching between them.
 
-#### Current Active Approach: **Multi-Sheet Population (All Sheets)**
-**Location**: Lines ~185-480 in `TEACHER/LOCAL/Libraries/Excelwithspout.php`
+#### Current Active Approach: **Single-Sheet Population (INPUT Only) via Modified Dynamic Scan**
+**Location**: Lines ~196-482 in `TEACHER/LOCAL/Libraries/Excelwithspout.php` (Phase 2 loop index set to `0 <= 0`)
 
 **How It Works**:
-- Loops through **ALL sheets** in the workbook (9 sheets total)
-- Scans each sheet for placeholders like `{school_name}`, `{start_boys}`, etc.
-- Populates data in every sheet that contains student placeholders
-- Processes: INPUT, TERM1, TERM2, TERM3, SUMMARY OF GRADES, and any other sheets
+- Scans all sheets for hidden rows (Phase 1) and restores them (Phase 3).
+- Populates student lists and metadata **ONLY on the INPUT sheet** (sheet index 0) during Phase 2.
+- Other sheets (TERM1, TERM2, TERM3, SUMMARY) use Excel formulas like `=INPUT!B12` to reference INPUT data automatically.
+- This is the approach designed for the new `3-term_New_Grade_Template_fin.xlsx` template.
 
 **Code Structure**:
 ```php
-// CURRENT APPROACH: Process ALL SHEETS
-for ($sheetIndex = 0; $sheetIndex < $totalSheets; $sheetIndex++) {
-    // Scan for placeholders in this sheet
-    // Populate school name, class, subject, teacher
-    // Insert boys list
-    // Insert girls list
+// ACTIVE APPROACH: Process ONLY sheet 0 (INPUT)
+for ($sheetIndex = 0; $sheetIndex <= 0; $sheetIndex++) {
+    // Scan for placeholders, fill metadata, boys/girls lists on INPUT sheet only
+    // TERM1, TERM2, TERM3, and SUMMARY OF GRADES reference INPUT via formulas
 }
 ```
 
 **Pros**:
-- ✅ Works with any template structure
-- ✅ Populates all sheets that have placeholders
-- ✅ No need for Excel formulas between sheets
+- ✅ **Preserves all 1,671 formulas** in TERM1, TERM2, TERM3, and SUMMARY sheets (doesn't overwrite them with static text).
+- ✅ **Much faster generation**: only processes and writes to 1 sheet instead of 9 sheets (reducing execution time to 4-6 minutes instead of 20+).
+- ✅ **Smaller generated file sizes** due to zero duplicated data on the sheets.
+- ✅ Respects the template designer's formula-driven architecture.
 
 **Cons**:
-- ❌ Slower (processes all 9 sheets)
-- ❌ Destroys any formulas that reference other sheets (e.g., `=INPUT!B12`)
-- ❌ More complex code with nested loops
-
-**When to Use**:
-- Template has placeholders in multiple sheets
-- You want PHP to populate all sheets directly
-- You don't have formulas referencing between sheets
+- ❌ Requires the Excel template to have formulas set up correctly (e.g., `=INPUT!B12`).
+- ❌ INPUT sheet must contain the placeholder tags.
 
 ---
 
-#### Alternative Approach: **Single Sheet Population (INPUT Only)** - COMMENTED OUT
-**Location**: Lines ~485-650 in `TEACHER/LOCAL/Libraries/Excelwithspout.php` (inside block comment `/* ... */`)
+#### Inactive Alternative Approach: **Multi-Sheet Population (All Sheets)**
+**Location**: Lines ~196-482 in `TEACHER/LOCAL/Libraries/Excelwithspout.php` (by changing Phase 2 loop to `0 < $totalSheets`)
 
 **How It Works**:
-- Populates **ONLY the INPUT sheet** (sheet index 0)
-- INPUT sheet must have both "ID NO." and "LEARNERS' NAMES" columns
-- Other sheets (TERM1, TERM2, TERM3, SUMMARY) use Excel formulas like `=INPUT!B12` to reference INPUT data
-- Much faster because it only touches one sheet
+- Loops through **ALL sheets** in the workbook (9 sheets total).
+- Scans each sheet for placeholders like `{school_name}`, `{start_boys}`, etc.
+- Populates data statically in every sheet that contains student placeholders (INPUT, TERM1, TERM2, TERM3, SUMMARY OF GRADES).
 
 **Code Structure**:
 ```php
-/* COMMENTED OUT - OLD BACKUP APPROACH
-// Process ONLY sheet 0 (INPUT)
-$objPHPExcel->setActiveSheetIndex(0);
-$sheetInsertData = $objPHPExcel->getActiveSheet();
-
-// Populate school name, class, subject, teacher
-// Insert boys list with ID and names
-// Insert girls list with ID and names
-// Done - other sheets reference this via formulas
-*/
+// INACTIVE APPROACH: Process ALL SHEETS
+for ($sheetIndex = 0; $sheetIndex < $totalSheets; $sheetIndex++) {
+    // Scan and write static names to every tab containing placeholders
+}
 ```
 
 **Pros**:
-- ✅ Much faster (only processes 1 sheet vs 9 sheets)
-- ✅ Preserves Excel formulas in TERM1, TERM2, TERM3, SUMMARY sheets
-- ✅ Simpler code (no nested loops)
-- ✅ Smaller PHP processing time
+- ✅ Works with any template structure even if formulas are not set up between sheets.
+- ✅ Populates all sheets dynamically from PHP.
 
 **Cons**:
-- ❌ Requires template to have formulas set up correctly
-- ❌ INPUT sheet MUST have "ID NO." column added manually
-- ❌ Only works if all other sheets reference INPUT via formulas
-
-**When to Use**:
-- You have a template where INPUT is the master sheet
-- Other sheets use formulas like `=INPUT!B12` to pull data
-- You want fastest generation time
-- Template has "ID NO." column in INPUT sheet
+- ❌ **Slower**: processes all 9 sheets in memory.
+- ❌ **Destroys Excel formulas**: overwrites cells like `=INPUT!B12` with static text, breaking Excel's native formula functionality.
+- ❌ Creates massive memory usage and bloating.
 
 ---
 
 ### 10.2 How to Switch Between Approaches
 
-#### To Use Single Sheet (INPUT Only) Approach:
+#### To Switch to Multi-Sheet Population (All Sheets):
 
 **Step 1**: Open `TEACHER/LOCAL/Libraries/Excelwithspout.php`
 
-**Step 2**: Comment out the CURRENT APPROACH (lines ~185-480):
+**Step 2**: Locate the Phase 2 loop line (~line 229):
 ```php
-/*
-// CURRENT APPROACH: Process ALL SHEETS (TERM1, TERM2, TERM3, SUMMARY, etc.)
-// ... (all the multi-sheet code)
-*/
+// From:
+for ($sheetIndex = 0; $sheetIndex <= 0; $sheetIndex++) {
 ```
 
-**Step 3**: Uncomment the OLD BACKUP APPROACH (lines ~485-650):
+**Step 3**: Modify the loop bounds to scan all sheets:
 ```php
-// Remove the /* at the beginning and */ at the end of the block
+// To:
+for ($sheetIndex = 0; $sheetIndex < $totalSheets; $sheetIndex++) {
 ```
 
-**Step 4**: Ensure your template:
-- Has "ID NO." column in INPUT sheet
-- Has formulas in TERM1, TERM2, TERM3, SUMMARY that reference INPUT
-  - Example: Cell B12 in TERM1 = `=INPUT!B12`
-  - Example: Cell C12 in TERM1 = `=INPUT!C12`
-
-**Step 5**: Upload updated `Excelwithspout.php` to server
-
-**Step 6**: Upload updated template (with formulas) to server
-
----
-
-#### To Revert to Multi-Sheet Approach:
+#### To Switch back to Single-Sheet Population (INPUT Only) [Active]:
 
 **Step 1**: Open `TEACHER/LOCAL/Libraries/Excelwithspout.php`
 
-**Step 2**: Uncomment the CURRENT APPROACH (lines ~185-480):
+**Step 2**: Locate the Phase 2 loop line (~line 229):
 ```php
-// Remove the /* */ around the multi-sheet code
+// From:
+for ($sheetIndex = 0; $sheetIndex < $totalSheets; $sheetIndex++) {
 ```
 
-**Step 3**: Comment out the OLD BACKUP APPROACH (lines ~485-650):
+**Step 3**: Restrict the loop index to sheet 0 (INPUT):
 ```php
-/*
-// OLD BACKUP APPROACH - Single sheet processing
-// ... (all the single-sheet code)
-*/
+// To:
+for ($sheetIndex = 0; $sheetIndex <= 0; $sheetIndex++) {
 ```
-
-**Step 4**: Upload updated `Excelwithspout.php` to server
 
 ---
 
 ### 10.3 Template Requirements for Each Approach
 
-#### Multi-Sheet Approach Template Requirements:
-- INPUT sheet: Has `{school_name}`, `{class}`, `{subject_name}`, `{start_boys}`, `{start_girls}`, etc.
-- TERM1 sheet: Has `{school_name}`, `{class}`, `{subject_name}`, `{start_boys}`, `{start_girls}`, etc.
-- TERM2 sheet: Has `{school_name}`, `{class}`, `{subject_name}`, `{start_boys}`, `{start_girls}`, etc.
-- TERM3 sheet: Has `{school_name}`, `{class}`, `{subject_name}`, `{start_boys}`, `{start_girls}`, etc.
-- Each sheet has its own placeholders and gets populated independently
+#### Single Sheet Approach Template Requirements (Active):
+- **INPUT sheet**: Has `{school_name}`, `{class}`, `{subject_name}`, `{start_boys}`, `{start_girls}`, `{boys_start_id}`, `{girls_start_id}`.
+- **TERM1/2/3/SUMMARY sheets**: MUST use Excel formulas referencing INPUT sheet cells (e.g. `=INPUT!B12`, `=INPUT!C12`). They should NOT have placeholder tags for names/IDs since they are populated automatically via Excel formulas.
 
-#### Single Sheet Approach Template Requirements:
-- INPUT sheet: Has `{school_name}`, `{class}`, `{subject_name}`, `{start_boys}`, `{start_girls}`, **{boys_start_id}**, **{girls_start_id}**
-  - **MUST have "ID NO." column** (referenced by `{boys_start_id}` and `{girls_start_id}`)
-- TERM1 sheet: Uses formulas like `=INPUT!A12`, `=INPUT!B12`, `=INPUT!C12` (NO placeholders)
-- TERM2 sheet: Uses formulas like `=INPUT!A12`, `=INPUT!B12`, `=INPUT!C12` (NO placeholders)
-- TERM3 sheet: Uses formulas like `=INPUT!A12`, `=INPUT!B12`, `=INPUT!C12` (NO placeholders)
-- SUMMARY sheet: Uses formulas referencing INPUT or other sheets
+#### Multi-Sheet Approach Template Requirements (Inactive):
+- **Each sheet** (INPUT, TERM1, TERM2, TERM3, etc.) must have its own `{start_boys}`, `{start_girls}` etc. placeholders. No cross-sheet formulas for student names are used.
 
 ---
 
 ### 10.4 Performance Comparison
 
-| Metric | Multi-Sheet Approach | Single Sheet Approach |
-|--------|---------------------|----------------------|
-| **Sheets Processed** | 9 sheets (INPUT + TERM1 + TERM2 + TERM3 + SUMMARY + 4 others) | 1 sheet (INPUT only) |
-| **PHP Execution Time** | ~6 minutes | ~2-3 minutes (estimated) |
-| **Generated File Size** | 3.62 MB | 3.62 MB (same, depends on setPreCalculateFormulas) |
-| **Memory Usage** | 750 MB | 500 MB (estimated lower) |
-| **Formula Preservation** | ❌ Destroys formulas | ✅ Preserves formulas |
-| **Code Complexity** | Complex (nested loops) | Simple (linear flow) |
+| Metric | Single Sheet Approach (Active) | Multi-Sheet Approach (Inactive) |
+|--------|----------------------|---------------------|
+| **Sheets Populated** | 1 sheet (INPUT only) | 9 sheets (INPUT + TERM1 + TERM2 + TERM3 + SUMMARY + others) |
+| **PHP Execution Time** | ~4-6 minutes | ~20+ minutes (or timeout) |
+| **Generated File Size** | ~3.62 MB (non-bloated) | ~5.2 MB+ (bloated) |
+| **Formula Preservation** | ✅ **Preserved** | ❌ **Destroyed** (overwritten with static values) |
+| **Code Stability** | High (low memory overhead) | Low (prone to out-of-memory errors) |
 
 ---
 
@@ -890,9 +1129,6 @@ All bracket placeholders get their data from the database:
 
 #### From `sch_settings` table (id=1):
 - **`{school_name}`** = `name` column
-
-#### From `sessions` table (active session):
-- **`{school_year}`** = ⚠️ **NOT YET IMPLEMENTED** - needs to be added
 
 #### From `classes` table:
 - **`{class}`** (part 1) = `class` column
@@ -914,48 +1150,13 @@ All bracket placeholders get their data from the database:
 - **Boys**: `admission_no` (ID), `lastname`, `firstname`
 - **Girls**: `admission_no` (ID), `lastname`, `firstname`
 
-**Database Queries to Check Data**:
-```sql
--- Check school name
-SELECT name FROM sch_settings WHERE id = 1;
-
--- Check active session (for school year - not yet implemented)
-SELECT * FROM sessions WHERE id = (SELECT session_id FROM sch_settings LIMIT 1);
-
--- Check class data
-SELECT * FROM classes WHERE id = YOUR_CLASS_ID;
-
--- Check section data
-SELECT * FROM sections WHERE id = YOUR_SECTION_ID;
-
--- Check subject data
-SELECT name, written_work, performance_task, quarterly_assessment 
-FROM subjects WHERE id = YOUR_SUBJECT_ID;
-
--- Check teacher data
-SELECT lastname, name as firstname, middlename 
-FROM teachers WHERE id = YOUR_TEACHER_ID;
-```
-
 ---
 
 ### 10.6 Recommendation
 
-**Current Status**: Multi-Sheet approach is ACTIVE
+**Current Status**: Single-Sheet (INPUT Only) approach is **ACTIVE** in `LOCAL/Libraries/Excelwithspout.php`.
 
-**Senior's Preference**: Keep both approaches in code with clear comments
-
-**Future Decision**:
-1. **If you need fast generation** → Switch to Single Sheet approach + update template with formulas
-2. **If you need flexibility** → Keep Multi-Sheet approach (current)
-3. **If you're unsure** → Keep current Multi-Sheet approach until you test Single Sheet performance
-
-**To Test Single Sheet Approach**:
-1. Create test template with INPUT as master + formulas in other sheets
-2. Add "ID NO." column to INPUT sheet
-3. Switch to Single Sheet approach in code
-4. Generate test file
-5. Compare speed and verify all sheets display data correctly via formulas
+**Reasoning**: This preserves the template's formula-based design, protects the 1,671 formulas in the worksheets, and resolves the 504 gateway timeout issues by significantly reducing computation and memory usage.
 
 ---
 

@@ -1092,6 +1092,14 @@ class Grade extends CI_Controller {
 							if( $end_boys_list != null ){
 								$end_boys_letters = $end_boys_list['columnnumber'];
 								$end_boys_number = $end_boys_list['rownumber'];
+							} else {
+								$start_girls_list = isset($foundInCells['{start_girls}'][$getquartersheet])?$foundInCells['{start_girls}'][$getquartersheet]:null;
+								if ($start_girls_list != null) {
+									$end_boys_number = $start_girls_list['rownumber'] - 2;
+									$end_boys_letters = $start_boys_letters;
+								} else {
+									$end_boys_number = 0;
+								}
 							}
 							
 							$boys_start_id_list = isset($foundInCells['{boys_start_id}'][$getquartersheet])?$foundInCells['{boys_start_id}'][$getquartersheet]:null;
@@ -1194,6 +1202,7 @@ class Grade extends CI_Controller {
 								$startRow = $start_boys_number + 1;
 								//$grades_f[]= null;
 								for($row = $startRow;$row <= $highestRow;$row++){
+									$grades = array();
 									//$grades['id']  = $sheetInsertData->getCellByColumnAndRow(1,$row)->getOldCalculatedValue();
 									$get_id  = $sheetInsertData->getCellByColumnAndRow($boys_start_id_letters,$row)->getValue();
 									if( $get_id == 0 ){
@@ -1310,7 +1319,8 @@ class Grade extends CI_Controller {
 											*/
 											
 											if($grades['id'] == null ){
-												break;
+												// Skip this student and continue to next
+												continue;
 												
 											} else {
 												$grades_f[] = $grades;
@@ -1332,6 +1342,7 @@ class Grade extends CI_Controller {
 								$startRow = $start_girls_number + 1; 
 								for($row = $startRow;$row <= $highestRow;$row++)
 								{
+									$grades = array();
 									$get_id = $sheetInsertData->getCellByColumnAndRow($girls_start_id_letters,$row)->getValue();
 									if( $get_id == 0 ){
 										$get_id = $sheetInsertData->getCellByColumnAndRow($girls_start_id_letters,$row)->getOldCalculatedValue();
@@ -1444,7 +1455,8 @@ class Grade extends CI_Controller {
 											*/
 											
 											if($grades['id'] == null ){
-												break;
+												// Skip this student and continue to next
+												continue;
 											} else {
 												$grades_f[] = $grades;
 											}
@@ -1944,6 +1956,14 @@ class Grade extends CI_Controller {
 					if( $end_boys_list != null ){
 						$end_boys_letters = $end_boys_list['columnnumber'];
 						$end_boys_number = $end_boys_list['rownumber'];
+					} else {
+						$start_girls_list = isset($foundInCells['{start_girls}'][$getquartersheet])?$foundInCells['{start_girls}'][$getquartersheet]:null;
+						if ($start_girls_list != null) {
+							$end_boys_number = $start_girls_list['rownumber'] - 2;
+							$end_boys_letters = $start_boys_letters;
+						} else {
+							$end_boys_number = 0;
+						}
 					}
 					
 					$boys_start_id_list = isset($foundInCells['{boys_start_id}'][$getquartersheet])?$foundInCells['{boys_start_id}'][$getquartersheet]:null;
@@ -2070,6 +2090,7 @@ class Grade extends CI_Controller {
 							//$grades_f[]= null;
 							for($row = $startRow;$row <= $highestRow;$row++)
 							{
+								$grades = array();
 								//$grades['id']  = $sheetInsertData->getCellByColumnAndRow(1,$row)->getOldCalculatedValue();
 								$get_id  = $sheetInsertData->getCellByColumnAndRow($boys_start_id_letters,$row)->getValue();
 								if( $get_id == 0 ){
@@ -2202,6 +2223,7 @@ class Grade extends CI_Controller {
 							$startRow = $start_girls_number + 1; 
 							for($row = $startRow;$row <= $highestRow;$row++)
 							{
+								$grades = array();
 								$get_id = $sheetInsertData->getCellByColumnAndRow($girls_start_id_letters,$row)->getValue();
 								if( $get_id == 0 ){
 									$get_id = $sheetInsertData->getCellByColumnAndRow($girls_start_id_letters,$row)->getOldCalculatedValue();
@@ -2510,6 +2532,14 @@ class Grade extends CI_Controller {
 					if( $end_boys_list != null ){
 						$end_boys_letters = $end_boys_list['columnnumber'];
 						$end_boys_number = $end_boys_list['rownumber'];
+					} else {
+						$start_girls_list = isset($foundInCells['{start_girls}'][$getquartersheet])?$foundInCells['{start_girls}'][$getquartersheet]:null;
+						if ($start_girls_list != null) {
+							$end_boys_number = $start_girls_list['rownumber'] - 2;
+							$end_boys_letters = $start_boys_letters;
+						} else {
+							$end_boys_number = 0;
+						}
 					}
 					
 					$boys_start_id_list = isset($foundInCells['{boys_start_id}'][$getquartersheet])?$foundInCells['{boys_start_id}'][$getquartersheet]:null;
@@ -2636,6 +2666,7 @@ class Grade extends CI_Controller {
 							//$grades_f[]= null;
 							for($row = $startRow;$row <= $highestRow;$row++)
 							{
+								$grades = array();
 								//$grades['id']  = $sheetInsertData->getCellByColumnAndRow(1,$row)->getOldCalculatedValue();
 								$get_id  = $sheetInsertData->getCellByColumnAndRow($boys_start_id_letters,$row)->getValue();
 								if( $get_id == 0 ){
@@ -2768,6 +2799,7 @@ class Grade extends CI_Controller {
 							$startRow = $start_girls_number + 1; 
 							for($row = $startRow;$row <= $highestRow;$row++)
 							{
+								$grades = array();
 								$get_id = $sheetInsertData->getCellByColumnAndRow($girls_start_id_letters,$row)->getValue();
 								if( $get_id == 0 ){
 									$get_id = $sheetInsertData->getCellByColumnAndRow($girls_start_id_letters,$row)->getOldCalculatedValue();

@@ -1674,8 +1674,8 @@ class Grade extends CI_Controller {
 				// Generate unique job ID
 				$job_id = 'job_' . date('Ymdhis') . '_' . uniqid();
 				
-				// Create job status file
-				$status_dir = 'downloads/generated_grades/status';
+				// Create job status file in non-public cache directory
+				$status_dir = APPPATH . 'cache/grade_jobs';
 				if (!is_dir($status_dir)) {
 					mkdir($status_dir, 0755, true);
 				}
@@ -1741,15 +1741,69 @@ class Grade extends CI_Controller {
 			return;
 		}
 		
-		$status_file = 'downloads/generated_grades/status/' . $job_id . '.json';
+		// Status files are stored in non-public app cache directory
+		$status_file = APPPATH . 'cache/grade_jobs/' . $job_id . '.json';
 		
 		header('Content-Type: application/json');
 		if (file_exists($status_file)) {
 			$status_data = json_decode(file_get_contents($status_file), true);
+			// NEVER expose temp_file server path to the browser
+			unset($status_data['temp_file']);
 			echo json_encode($status_data);
 		} else {
 			echo json_encode(['status' => 'error', 'message' => 'Job not found']);
 		}
+	}
+
+	// Stream the generated file directly to browser, then delete it
+	// This endpoint is hit once — it reads temp file, streams it, deletes it
+	public function download_file($job_id = '') {
+		$job_id = trim($job_id);
+		if (empty($job_id)) {
+			show_error('No job ID provided.', 400);
+			return;
+		}
+
+		$status_file = APPPATH . 'cache/grade_jobs/' . $job_id . '.json';
+
+		if (!file_exists($status_file)) {
+			show_error('Download expired or not found. Please generate the file again.', 404);
+			return;
+		}
+
+		$status_data = json_decode(file_get_contents($status_file), true);
+
+		if (!isset($status_data['status']) || $status_data['status'] !== 'complete') {
+			show_error('File is not ready yet. Please wait for generation to complete.', 409);
+			return;
+		}
+
+		$temp_file = isset($status_data['temp_file']) ? $status_data['temp_file'] : '';
+		$filename  = isset($status_data['filename'])  ? $status_data['filename']  : 'grade_spreadsheet.xlsx';
+
+		if (empty($temp_file) || !file_exists($temp_file)) {
+			// Clean up stale status file
+			@unlink($status_file);
+			show_error('Generated file no longer exists. Please generate again.', 410);
+			return;
+		}
+
+		$file_size = filesize($temp_file);
+
+		// Stream the file to browser
+		while (ob_get_level()) {
+			ob_end_clean();
+		}
+		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+		header('Content-Disposition: attachment; filename="' . $filename . '"');
+		header('Content-Length: ' . $file_size);
+		header('Cache-Control: max-age=0');
+		readfile($temp_file);
+
+		// Delete both files immediately after streaming — no storage accumulation
+		@unlink($temp_file);
+		@unlink($status_file);
+		exit;
 	}
 	
 	public function submit($id) {

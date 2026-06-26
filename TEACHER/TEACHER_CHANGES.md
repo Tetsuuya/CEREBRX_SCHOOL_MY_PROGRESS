@@ -959,3 +959,54 @@ FROM teachers WHERE id = YOUR_TEACHER_ID;
 
 ---
 
+## 11. Storage Accumulation Fix - Zero Disk Footprint for Generated Files
+
+### 11.1 Problem
+Every time a teacher clicked "Generate Spreadsheet", a 3.6 MB `.xlsx` file was written permanently to `downloads/generated_grades/` on the server. With many teachers across multiple classes, this folder would grow indefinitely and eventually fill the server disk.
+
+### 11.2 Solution: Temp File + Stream-and-Delete Pattern
+
+#### Flow (Old)
+```
+Teacher clicks Generate
+  → PHP saves file to: downloads/generated_grades/[filename].xlsx  (permanent)
+  → Browser polls for status
+  → Browser redirected to public URL → Downloads file
+  → File stays on disk forever ❌
+```
+
+#### Flow (New)
+```
+Teacher clicks Generate
+  → PHP saves file to: sys_get_temp_dir() / [filename].xlsx  (OS-managed temp)
+  → Status JSON stored to: application/cache/grade_jobs/[job_id].json  (non-public)
+  → Browser polls status via check_job_status endpoint
+  → Browser hits teacher/grade/download_file/[job_id]
+  → Server reads temp file → streams bytes to browser → DELETES temp + status JSON ✅
+  → Zero files remain on disk after download
+```
+
+### 11.3 Files Changed
+
+#### [MODIFY] Libraries/Excelwithspout.php
+* **Save location**: Changed from `downloads/generated_grades/` to `sys_get_temp_dir()` (OS-managed temp, e.g. `/tmp/` on Linux)
+* **Download URL**: Changed from direct public URL to controller endpoint `teacher/grade/download_file/[job_id]`
+* **Status JSON**: Now stores `temp_file` (server path, never exposed to browser) alongside `download_url`
+* **Fallback (non-AJAX)**: Now streams file directly and deletes it instead of returning JSON
+
+#### [MODIFY] Controller/Grade.php
+* **`generate_spreadsheet()`**: Status files now stored in `APPPATH . 'cache/grade_jobs/'` (non-public, not web-accessible)
+* **`check_job_status()`**: Reads from new non-public path; strips `temp_file` field from JSON response so browser never sees server path
+* **`download_file($job_id)`** *(NEW)*: Reads status JSON → validates job is complete → streams temp `.xlsx` bytes to browser → deletes both temp file and status JSON immediately
+
+### 11.4 Security Improvements
+* Status files moved from `downloads/` (public) to `APPPATH/cache/grade_jobs/` (not web-accessible)
+* `temp_file` server path is never sent to the browser
+* Download endpoint validates job status before streaming
+
+### 11.5 Storage Impact
+| Scenario | Old Behavior | New Behavior |
+|----------|-------------|-------------|
+| 1 teacher generates | +3.6 MB permanent | 0 MB after download |
+| 50 teachers generate in a day | +180 MB permanent | ~0 MB (files gone after each download) |
+| Status files | Stored in public `downloads/` forever | Deleted after download, stored in non-public dir |

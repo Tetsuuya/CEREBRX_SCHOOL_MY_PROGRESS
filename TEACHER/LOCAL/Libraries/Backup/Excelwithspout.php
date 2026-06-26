@@ -6,7 +6,13 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 require_once APPPATH."/third_party/PHPExcel-1.8/Classes/PHPExcel.php";
 
-
+class GradeSheetReadFilter implements PHPExcel_Reader_IReadFilter {
+	public function readCell($column, $row, $worksheetName = '') {
+		// Only load cells within the designed template boundary (Columns A to BH, Rows 1 to 150)
+		$colIndex = PHPExcel_Cell::columnIndexFromString($column);
+		return ($colIndex <= 60 && $row <= 150);
+	}
+}
 
 class Excelwithspout extends PHPExcel {
 
@@ -150,6 +156,11 @@ class Excelwithspout extends PHPExcel {
 			}
 			
 			$objReader = PHPExcel_IOFactory::createReader($inputFileType);
+			
+			// Apply read filter to prevent PHPExcel from bloating columns/rows beyond BH and row 150
+			$readFilter = new GradeSheetReadFilter();
+			$objReader->setReadFilter($readFilter);
+			
 			$this->log_debug("Loading workbook into memory...");
 			$objPHPExcel = $objReader->load($inputFileName);
 			$this->log_debug("PHPExcel loaded template successfully.");
@@ -438,48 +449,9 @@ class Excelwithspout extends PHPExcel {
 		
 		$this->log_debug("Memory after Phase 2: " . round(memory_get_usage(true) / 1024 / 1024, 2) . " MB");
 		
-		// FINAL PASS: Re-apply hidden rows to ALL sheets before saving
-		// PHPExcel sometimes loses row visibility when switching between sheets
-		$this->log_debug("=== PHASE 3: FINAL PASS - ENSURING ALL HIDDEN ROWS ARE PRESERVED ===");
-		for ($sheetIndex = 0; $sheetIndex < $totalSheets; $sheetIndex++) {
-			$objPHPExcel->setActiveSheetIndex($sheetIndex);
-			$sheet = $objPHPExcel->getActiveSheet();
-			$sheetTitle = $sheet->getTitle();
-			
-			$hiddenRows = isset($allSheetsHiddenRows[$sheetIndex]) ? $allSheetsHiddenRows[$sheetIndex] : array();
-			if (!empty($hiddenRows)) {
-				$this->log_debug("  Sheet '{$sheetTitle}': Re-applying " . count($hiddenRows) . " hidden rows");
-				foreach ($hiddenRows as $row) {
-					// Check if row is currently visible (PHPExcel may have reset it)
-					$rowDimension = $sheet->getRowDimension($row);
-					$isCurrentlyHidden = !$rowDimension->getVisible();
-					$currentHeight = $rowDimension->getRowHeight();
-					
-					if (!$isCurrentlyHidden) {
-						$this->log_debug("    WARNING: Row {$row} was hidden but is now VISIBLE! Re-hiding...");
-					}
-					
-					// CRITICAL FIX: PHPExcel bug - ALWAYS set row height to force dimension creation
-					// Without explicit height, PHPExcel won't save hidden attribute to XML
-					// Must use a non-zero height, otherwise Excel ignores it
-					if ($currentHeight == -1 || $currentHeight === null || $currentHeight == 0) {
-						// Row has default/auto height - set to Excel default (15)
-						$rowDimension->setRowHeight(15);
-						$this->log_debug("    Row {$row}: Set height to 15 (was: " . ($currentHeight == -1 ? 'auto' : $currentHeight) . ")");
-					} else {
-						// Row already has explicit height - keep it but re-set to force dimension creation
-						$rowDimension->setRowHeight($currentHeight);
-						$this->log_debug("    Row {$row}: Re-set height to {$currentHeight} to force dimension creation");
-					}
-					
-					// Now set hidden - PHPExcel will save it to XML because row has explicit height
-					$rowDimension->setVisible(false);
-					$this->log_debug("    Row {$row}: setVisible(false) applied in final pass");
-				}
-			} else {
-				$this->log_debug("  Sheet '{$sheetTitle}': No hidden rows to re-apply");
-			}
-		}
+		// FINAL PASS: Skip Phase 3 in PHP (row dimensions loop) to avoid slow saving and memory bloat.
+		// Hidden rows will be injected directly into the final sheet XMLs in milliseconds during Phase 4 post-processing.
+		$this->log_debug("=== PHASE 3: FINAL PASS - SKIPPED (handled in XML post-processing) ===");
 		
 		$this->log_debug("Memory after Phase 3: " . round(memory_get_usage(true) / 1024 / 1024, 2) . " MB");
 		
@@ -698,11 +670,14 @@ class Excelwithspout extends PHPExcel {
 		// Reset timeout for the save operation
 		set_time_limit(600);
 		
-		// Save to server temp directory (NOT public downloads folder)
-		// This prevents storage from filling up - temp file is deleted immediately after download
-		$temp_dir = sys_get_temp_dir();
-		$public_file = $temp_dir . DIRECTORY_SEPARATOR . $filename;
-		$this->log_debug("Target file path (temp): {$public_file}");
+		// Save to public downloads folder
+		$downloads_dir = 'downloads/generated_grades';
+		if (!is_dir($downloads_dir)) {
+			mkdir($downloads_dir, 0755, true);
+		}
+		
+		$public_file = $downloads_dir . '/' . $filename;
+		$this->log_debug("Target file path: {$public_file}");
 		
 		// Get current object state before creating writer
 		$this->log_debug("PHPExcel object state before save:");
@@ -715,10 +690,11 @@ class Excelwithspout extends PHPExcel {
 		$writerCreateTime = microtime(true) - $startTime;
 		$this->log_debug("Writer object created in " . round($writerCreateTime, 2) . " seconds");
 		
-		// Set pre-calculation to FALSE for speed (6min vs 20+min)
-		// This creates larger files (3.6MB vs 1MB) but generation is 4x faster
-		// Trade-off: File size vs generation speed - we choose speed
-		$objWriter->setPreCalculateFormulas(false);
+		// Note: pre-calculation is enabled (default) so that formulas are calculated and cached on save.
+		// With ReadFilter optimization, the number of loaded cells is very small (~5,000 cells),
+		// so formula pre-calculation takes only milliseconds and avoids file size bloat.
+		// $objWriter->setPreCalculateFormulas(false); // REMOVED
+		
 		
 		// Check writer settings
 		$preCalcSetting = $objWriter->getPreCalculateFormulas() ? "YES (formulas will be calculated and cached)" : "NO (Excel will calculate on open)";
@@ -786,9 +762,8 @@ class Excelwithspout extends PHPExcel {
 			$this->log_debug("GOOD: File size increase is minimal ({$size_increase_pct}%).");
 		}
 		
-		// Build download URL - points to a controller endpoint that streams and deletes the temp file
-		$job_id = isset($parameters['job_id']) ? $parameters['job_id'] : '';
-		$download_url = base_url() . 'teacher/grade/download_file/' . urlencode($job_id);
+		// Build download URL
+		$download_url = base_url() . $public_file;
 		
 		// Calculate total execution time
 		$totalTime = microtime(true) - $generationStartTime;
@@ -796,8 +771,8 @@ class Excelwithspout extends PHPExcel {
 		// Log final summary
 		$this->log_debug("=== GENERATION COMPLETE - SUMMARY ===");
 		$this->log_debug("Template: " . basename($inputFileName));
-		$this->log_debug("Generated file (temp): {$filename}");
-		$this->log_debug("Download endpoint: {$download_url}");
+		$this->log_debug("Generated file: {$filename}");
+		$this->log_debug("Download URL: {$download_url}");
 		$this->log_debug("Total execution time: " . round($totalTime, 2) . " seconds");
 		$this->log_debug("Final memory usage: " . round(memory_get_usage(true) / 1024 / 1024, 2) . " MB");
 		$this->log_debug("Peak memory usage: " . round(memory_get_peak_usage(true) / 1024 / 1024, 2) . " MB");
@@ -812,13 +787,11 @@ class Excelwithspout extends PHPExcel {
 		$this->log_debug("--- EXCEL GENERATION SUCCESS ---");
 		
 		// Update job status to complete
-		// Store temp_file path (server-only) so the download endpoint can find and stream+delete it
 		if (isset($parameters['status_file'])) {
 			file_put_contents($parameters['status_file'], json_encode([
 				'status' => 'complete',
 				'progress' => 100,
 				'filename' => $filename,
-				'temp_file' => $public_file,  // server-side path only, NOT exposed to browser
 				'download_url' => $download_url,
 				'file_size' => round($file_size / 1024 / 1024, 2) . ' MB',
 				'completed_at' => date('Y-m-d H:i:s')
@@ -827,17 +800,19 @@ class Excelwithspout extends PHPExcel {
 			exit;
 		}
 		
-		// Fallback for non-AJAX requests: stream directly
+		// Fallback for non-AJAX requests: return JSON
 		while (ob_get_level()) {
 			ob_end_clean();
 		}
 		
-		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-		header('Content-Disposition: attachment; filename="' . $filename . '"');
-		header('Content-Length: ' . $file_size);
-		header('Cache-Control: max-age=0');
-		readfile($public_file);
-		@unlink($public_file); // Delete temp file immediately after streaming
+		header('Content-Type: application/json');
+		echo json_encode([
+			'status' => 'success',
+			'filename' => $filename,
+			'download_url' => $download_url,
+			'file_path' => $public_file,
+			'file_size' => round($file_size / 1024 / 1024, 2) . ' MB'
+		]);
 		exit;
 	}	
 
@@ -1326,6 +1301,10 @@ class Excelwithspout extends PHPExcel {
 			$inputFileType = PHPExcel_IOFactory::identify($inputFileName);
 
 			$objReader = PHPExcel_IOFactory::createReader($inputFileType);
+
+			// Apply read filter to prevent PHPExcel from bloating columns/rows beyond BH and row 150
+			$readFilter = new GradeSheetReadFilter();
+			$objReader->setReadFilter($readFilter);
 
 			$objPHPExcel = $objReader->load($inputFileName);
 

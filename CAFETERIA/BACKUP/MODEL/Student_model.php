@@ -2464,7 +2464,8 @@ public function searchFullTextCheckAllow($searchterm , $include_session = "yes",
             'school_name' => $school_name,
             'school_address' => $school_address
         );
-
+        $this->db->where('id', $student_id);
+        return $this->db->update('students', $data);
     }
 
     //NEW Function 03-23-2026

@@ -1205,7 +1205,7 @@ class Grade extends CI_Controller {
 									$grades = array();
 									//$grades['id']  = $sheetInsertData->getCellByColumnAndRow(1,$row)->getOldCalculatedValue();
 									$get_id  = $sheetInsertData->getCellByColumnAndRow($boys_start_id_letters,$row)->getValue();
-									if( $get_id == 0 ){
+									if( $get_id == 0 || (is_string($get_id) && strpos($get_id, '=') === 0) ){
 										$get_id  = $sheetInsertData->getCellByColumnAndRow($boys_start_id_letters,$row)->getOldCalculatedValue();
 									}
 									if( $get_id ){
@@ -1344,7 +1344,7 @@ class Grade extends CI_Controller {
 								{
 									$grades = array();
 									$get_id = $sheetInsertData->getCellByColumnAndRow($girls_start_id_letters,$row)->getValue();
-									if( $get_id == 0 ){
+									if( $get_id == 0 || (is_string($get_id) && strpos($get_id, '=') === 0) ){
 										$get_id = $sheetInsertData->getCellByColumnAndRow($girls_start_id_letters,$row)->getOldCalculatedValue();
 									}
 									if( $get_id ){
@@ -2093,7 +2093,7 @@ class Grade extends CI_Controller {
 								$grades = array();
 								//$grades['id']  = $sheetInsertData->getCellByColumnAndRow(1,$row)->getOldCalculatedValue();
 								$get_id  = $sheetInsertData->getCellByColumnAndRow($boys_start_id_letters,$row)->getValue();
-								if( $get_id == 0 ){
+								if( $get_id == 0 || (is_string($get_id) && strpos($get_id, '=') === 0) ){
 									$get_id  = $sheetInsertData->getCellByColumnAndRow($boys_start_id_letters,$row)->getOldCalculatedValue();
 								}
 								if( $get_id ){
@@ -2225,7 +2225,7 @@ class Grade extends CI_Controller {
 							{
 								$grades = array();
 								$get_id = $sheetInsertData->getCellByColumnAndRow($girls_start_id_letters,$row)->getValue();
-								if( $get_id == 0 ){
+								if( $get_id == 0 || (is_string($get_id) && strpos($get_id, '=') === 0) ){
 									$get_id = $sheetInsertData->getCellByColumnAndRow($girls_start_id_letters,$row)->getOldCalculatedValue();
 								}
 								if( $get_id ){
@@ -2669,7 +2669,7 @@ class Grade extends CI_Controller {
 								$grades = array();
 								//$grades['id']  = $sheetInsertData->getCellByColumnAndRow(1,$row)->getOldCalculatedValue();
 								$get_id  = $sheetInsertData->getCellByColumnAndRow($boys_start_id_letters,$row)->getValue();
-								if( $get_id == 0 ){
+								if( $get_id == 0 || (is_string($get_id) && strpos($get_id, '=') === 0) ){
 									$get_id  = $sheetInsertData->getCellByColumnAndRow($boys_start_id_letters,$row)->getOldCalculatedValue();
 								}
 								if( $get_id ){
@@ -2801,7 +2801,7 @@ class Grade extends CI_Controller {
 							{
 								$grades = array();
 								$get_id = $sheetInsertData->getCellByColumnAndRow($girls_start_id_letters,$row)->getValue();
-								if( $get_id == 0 ){
+								if( $get_id == 0 || (is_string($get_id) && strpos($get_id, '=') === 0) ){
 									$get_id = $sheetInsertData->getCellByColumnAndRow($girls_start_id_letters,$row)->getOldCalculatedValue();
 								}
 								if( $get_id ){

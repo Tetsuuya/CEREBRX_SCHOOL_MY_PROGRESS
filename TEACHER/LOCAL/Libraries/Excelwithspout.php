@@ -91,8 +91,7 @@ class Excelwithspout extends PHPExcel {
 		}
 		
 		include ("application/third_party/PHPExcel-1.8/Classes/PHPExcel/IOFactory.php");
-		
-		if( $template_file!= null ){
+				if( $template_file!= null ){
 			$inputFileName = $template_file;
 		} else {
 			$inputFileName = 'uploads/GradingTemplate.xlsx';
@@ -106,585 +105,192 @@ class Excelwithspout extends PHPExcel {
 			die('Error: File does not exist at path: ' . $inputFileName);
 		}
 		
-		$fsize = filesize($inputFileName);
-		$this->log_debug("File size: {$fsize} bytes (" . round($fsize / 1024 / 1024, 2) . " MB)");
-		
-		// Check magic header (first 4 bytes)
-		$fh = fopen($inputFileName, 'r');
-		if ($fh) {
-			$magic = fread($fh, 4);
-			fclose($fh);
-			$hexMagic = bin2hex($magic);
-			$this->log_debug("File magic bytes (hex): {$hexMagic}");
-		} else {
-			$this->log_debug("Warning: Could not open file to read magic bytes.");
-		}
-		
-		$temp_dir = sys_get_temp_dir();
-		$this->log_debug("System temp dir: {$temp_dir} | Writable: " . (is_writable($temp_dir) ? "YES" : "NO"));
-		
-		// Set cache storage method (disabled to prevent /tmp write locks/hangs on the server)
-		/*
-		try {
-			$cacheMethod = PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp;
-			$cacheSettings = array('memoryCacheSize' => '256MB');
-			PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
-			$this->log_debug("Cell caching (phpTemp) initialized.");
-		} catch (Exception $e) {
-			$this->log_debug("Failed to set cell caching: " . $e->getMessage());
-		}
-		*/
-	
-		try {
-			$this->log_debug("Identifying Excel format...");
-			$inputFileType = PHPExcel_IOFactory::identify($inputFileName);
-			$this->log_debug("Excel format identified: {$inputFileType}. Creating reader...");
-			
-			// Update job status
-			if (isset($parameters['status_file'])) {
-				file_put_contents($parameters['status_file'], json_encode([
-					'status' => 'processing',
-					'progress' => 10,
-					'message' => 'Loading template file...'
-				]));
-			}
-			
-			$objReader = PHPExcel_IOFactory::createReader($inputFileType);
-			$this->log_debug("Loading workbook into memory...");
-			$objPHPExcel = $objReader->load($inputFileName);
-			$this->log_debug("PHPExcel loaded template successfully.");
-			$this->log_debug("Memory usage after load: " . round(memory_get_usage(true) / 1024 / 1024, 2) . " MB");
-			
-			// Update job status
-			if (isset($parameters['status_file'])) {
-				file_put_contents($parameters['status_file'], json_encode([
-					'status' => 'processing',
-					'progress' => 30,
-					'message' => 'Template loaded, processing sheets...'
-				]));
-			}
-		} 
-		catch(Exception $e) {
-			$this->log_debug("Error loading template file: " . $e->getMessage() . "\n" . $e->getTraceAsString());
-			if (isset($parameters['status_file'])) {
-				file_put_contents($parameters['status_file'], json_encode([
-					'status' => 'error',
-					'message' => 'Error loading template: ' . $e->getMessage()
-				]));
-			}
-			die('Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage());
-		}
-
-		// Calculate decimal representations once outside the loop
-		$written_work_pct = $written_work ? $written_work / 100 : null;
-		$performance_task_pct = $performance_task ? $performance_task / 100 : null;
-		$quarterly_assesment_pct = $quarterly_assesment ? $quarterly_assesment / 100 : null;
-
-		$totalSheets = $objPHPExcel->getSheetCount();
-		$this->log_debug("Total worksheets in workbook: {$totalSheets}");
-		$this->log_debug("Initial file size on disk: " . round(filesize($inputFileName) / 1024 / 1024, 2) . " MB (" . filesize($inputFileName) . " bytes)");
-		$this->log_debug("Memory after load: " . round(memory_get_usage(true) / 1024 / 1024, 2) . " MB");
-
-		// ========================================
-		// APPROACH SELECTION: Choose one of the two approaches below
-		// ========================================
-		// CURRENT APPROACH: Process ALL SHEETS (TERM1, TERM2, TERM3, SUMMARY, etc.)
-		// This destroys formulas in sheets that reference INPUT sheet
-		// Use this if your template has placeholders in ALL sheets
-		// ========================================
-		
-		// Store hidden rows for ALL sheets before processing
-		$allSheetsHiddenRows = array();
-		
-		$this->log_debug("=== PHASE 1: DETECTING HIDDEN ROWS IN ALL SHEETS ===");
-		for ($sheetIndex = 0; $sheetIndex < $totalSheets; $sheetIndex++) {
-			$objPHPExcel->setActiveSheetIndex($sheetIndex);
-			$sheetInsertData = $objPHPExcel->getActiveSheet();
-			$sheetTitle = $sheetInsertData->getTitle();
-			
-			// CRITICAL: Preserve ONLY rows that were hidden in the original template
-			// We do NOT want to hide additional rows after generation
-			// We only want to keep hidden the rows that were hidden by the template designer
-			$originallyHiddenRows = array();
-			for ($row = 1; $row <= 150; $row++) {
-				$rowDimension = $sheetInsertData->getRowDimension($row);
-				// Check if row is explicitly hidden in template
-				if (!$rowDimension->getVisible()) {
-					$originallyHiddenRows[] = $row;
-					$this->log_debug("  Sheet '{$sheetTitle}': Row {$row} is hidden in template");
-				}
-			}
-			
-			// Store hidden rows for this sheet
-			$allSheetsHiddenRows[$sheetIndex] = $originallyHiddenRows;
-			$this->log_debug("  Sheet '{$sheetTitle}': Stored " . count($originallyHiddenRows) . " hidden rows for later use");
-		}
-		
-		$this->log_debug("Memory after Phase 1: " . round(memory_get_usage(true) / 1024 / 1024, 2) . " MB");
-		
-		$this->log_debug("=== PHASE 2: DATA INSERTION ===");
-		$total_boys_written = 0;
-		$total_girls_written = 0;
-		// Only populate INPUT sheet (sheet 0). TERM1/TERM2/TERM3/SUMMARY have formulas that reference INPUT
-		for ($sheetIndex = 0; $sheetIndex <= 0; $sheetIndex++) {
-			$objPHPExcel->setActiveSheetIndex($sheetIndex);
-			$sheetInsertData = $objPHPExcel->getActiveSheet();
-			$sheetTitle = $sheetInsertData->getTitle();
-			
-			// Scan the active sheet for placeholders dynamically (up to 150 rows and 60 columns)
-			$sheetFoundCells = array();
-			
-			for ($row = 1; $row <= 150; $row++) {
-				for ($col = 0; $col < 60; $col++) {
-					$cell = $sheetInsertData->getCellByColumnAndRow($col, $row);
-					$cellValue = $cell->getValue();
-					if ($cellValue !== null && $cellValue !== '') {
-						$cellValueClean = trim((string)$cellValue);
-						if (strpos($cellValueClean, '{') === 0 && strpos($cellValueClean, '}') === (strlen($cellValueClean) - 1)) {
-							$sheetFoundCells[$cellValueClean] = array(
-								'rownumber' => $row,
-								'columnnumber' => $col
-							);
-						}
-					}
-				}
-			}
-
-			// Check if this sheet is a student grade sheet (contains `{start_boys}` and `{start_girls}` placeholders)
-			$start_boys = isset($sheetFoundCells['{start_boys}'])?$sheetFoundCells['{start_boys}']:null;
-			$start_girls = isset($sheetFoundCells['{start_girls}'])?$sheetFoundCells['{start_girls}']:null;
-
-			$has_boys = ($start_boys != null);
-			$has_girls = ($start_girls != null);
-
-			if ($has_boys || $has_girls) {
-				$this->log_debug("Processing worksheet Index {$sheetIndex}: '{$sheetTitle}' (Grade Sheet detected)");
-				
-				$school_name_cell = isset($sheetFoundCells['{school_name}'])?$sheetFoundCells['{school_name}']:null;
-				$subject_name_cell = isset($sheetFoundCells['{subject_name}'])?$sheetFoundCells['{subject_name}']:null;
-				$class_cell = isset($sheetFoundCells['{class}'])?$sheetFoundCells['{class}']:null; 
-				$subject_teacher_cell = isset($sheetFoundCells['{subject_teacher}'])?$sheetFoundCells['{subject_teacher}']:null;
-				$written_work_cell = isset($sheetFoundCells['{written_work}'])?$sheetFoundCells['{written_work}']:null;
-				$performance_tasks_cell = isset($sheetFoundCells['{performance_tasks}'])?$sheetFoundCells['{performance_tasks}']:null;
-				$quarterly_assesment_cell = isset($sheetFoundCells['{quarterly_assessment}'])?$sheetFoundCells['{quarterly_assessment}']:null;
-
-				if( $school_name_cell != null ){
-					$school_name_cell_x = $school_name_cell['rownumber'];
-					$school_name_cell_y = $school_name_cell['columnnumber'];
-					$sheetInsertData->setCellValueByColumnAndRow($school_name_cell_y,$school_name_cell_x, $get_school_name );
-				}
-				
-				if( $class_cell != null ){
-					$class_cell_x = $class_cell['rownumber'];
-					$class_cell_y = $class_cell['columnnumber'];
-					$sheetInsertData->setCellValueByColumnAndRow($class_cell_y,$class_cell_x, $class_name.' '.$section_name );
-				}
-				
-				if( $subject_name_cell != null ){
-					$subject_name_cell_x = $subject_name_cell['rownumber'];
-					$subject_name_cell_y = $subject_name_cell['columnnumber'];
-					$sheetInsertData->setCellValueByColumnAndRow($subject_name_cell_y,$subject_name_cell_x, $subject_name );
-				}
-				
-				if( $written_work_cell != null && $written_work_pct !== null  ){
-					$written_work_cell_x = $written_work_cell['rownumber'];
-					$written_work_cell_y = $written_work_cell['columnnumber'];
-					$sheetInsertData->setCellValueByColumnAndRow($written_work_cell_y,$written_work_cell_x, $written_work_pct );
-				}
-				
-				if( $performance_tasks_cell != null && $performance_task_pct !== null ){
-					$performance_tasks_cell_x = $performance_tasks_cell['rownumber'];
-					$performance_tasks_cell_y = $performance_tasks_cell['columnnumber'];
-					$sheetInsertData->setCellValueByColumnAndRow($performance_tasks_cell_y,$performance_tasks_cell_x, $performance_task_pct );
-				}
-				
-				if( $quarterly_assesment_cell != null && $quarterly_assesment_pct !== null ){
-					$quarterly_assesment_cell_x = $quarterly_assesment_cell['rownumber'];
-					$quarterly_assesment_cell_y = $quarterly_assesment_cell['columnnumber'];
-					$sheetInsertData->setCellValueByColumnAndRow($quarterly_assesment_cell_y,$quarterly_assesment_cell_x, $quarterly_assesment_pct );
-				}
-				
-				if( $subject_teacher_cell != null  ){
-					$subject_teacher_cell_x = $subject_teacher_cell['rownumber'];
-					$subject_teacher_cell_y = $subject_teacher_cell['columnnumber'];
-					if( $teacher_result ){
-						$firstname = $teacher_result['name'];
-						$lastname = $teacher_result['lastname'];
-						$middlename = $teacher_result['middlename'];
-						if( $middlename ){
-						  $fullname = $lastname.', '.$firstname.' '.$middlename;	
-						} else {
-							$fullname = $lastname.', '.$firstname;	
-						}
-						$sheetInsertData->setCellValueByColumnAndRow($subject_teacher_cell_y,$subject_teacher_cell_x, $fullname );
-					}
-				}
-
-				$boys_written_count = 0;
-				$start_boys_numbering = isset($sheetFoundCells['{start_boys_numbering}'])?$sheetFoundCells['{start_boys_numbering}']:null;
-				$end_boys_numbering = isset($sheetFoundCells['{end_boys_numbering}'])?$sheetFoundCells['{end_boys_numbering}']:null;
-				$boys_start_id = isset($sheetFoundCells['{boys_start_id}'])?$sheetFoundCells['{boys_start_id}']:null;
-				$end_boys = isset($sheetFoundCells['{end_boys}'])?$sheetFoundCells['{end_boys}']:null;
-
-				if ($start_boys_numbering && $end_boys_numbering && $start_boys && $end_boys) {
-					$start_boys_numbering_x = $start_boys_numbering['rownumber'];
-					$start_boys_numbering_y = $start_boys_numbering['columnnumber'];
-					$end_boys_numbering_x = $end_boys_numbering['rownumber'];
-					$start_boys_x = $start_boys['rownumber'];
-					$start_boys_y = $start_boys['columnnumber'];
-					$end_boys_x = $end_boys['rownumber'];
-					$end_boys_y = $end_boys['columnnumber'];
-					$boys_start_id_x = $boys_start_id ? $boys_start_id['rownumber'] : null;
-					$boys_start_id_y = $boys_start_id ? $boys_start_id['columnnumber'] : null;
-					$n=1;
-					$start_boys_numbering_x++;
-					if ($boys_start_id_x !== null) {
-						$boys_start_id_x++;
-					}
-					$start_boys_x++;
-					for( $b=0; $start_boys_numbering_x < $end_boys_numbering_x ; $b++ )
-					{
-						set_time_limit(0);
-						if( !empty( $boys_students[$b] ) ){
-							$boy_details  = $boys_students[$b];
-							$sheetInsertData->setCellValueByColumnAndRow($start_boys_numbering_y,$start_boys_numbering_x, $n );
-							if ($boys_start_id_y !== null && $boys_start_id_x !== null) {
-								$sheetInsertData->setCellValueByColumnAndRow($boys_start_id_y,$boys_start_id_x, $boy_details['admission_no'] ); 
-							}
-							$sheetInsertData->setCellValueByColumnAndRow($start_boys_y,$start_boys_x, $boy_details['lastname'].", ".$boy_details['firstname'] );
-							$boys_written_count++;
-						}
-						
-						$start_boys_numbering_x++;
-						if ($boys_start_id_x !== null) {
-							$boys_start_id_x++;
-						}
-						$start_boys_x++;
-						$n++;
-					}
-				}
-
-				$girls_written_count = 0;
-				$start_girls_numbering = isset($sheetFoundCells['{start_girls_numbering}'])?$sheetFoundCells['{start_girls_numbering}']:null;
-				$end_girls_numbering = isset($sheetFoundCells['{end_girls_numbering}'])?$sheetFoundCells['{end_girls_numbering}']:null;
-				$girls_start_id = isset($sheetFoundCells['{girls_start_id}'])?$sheetFoundCells['{girls_start_id}']:null;
-				$end_girls = isset($sheetFoundCells['{end_girls}'])?$sheetFoundCells['{end_girls}']:null;
-
-				if ($start_girls_numbering && $end_girls_numbering && $start_girls && $end_girls) {
-					$start_girls_numbering_x = $start_girls_numbering['rownumber'];
-					$start_girls_numbering_y = $start_girls_numbering['columnnumber'];
-					$end_girls_numbering_x = $end_girls_numbering['rownumber'];
-					$start_girls_x = $start_girls['rownumber'];
-					$start_girls_y = $start_girls['columnnumber'];
-					$end_girls_x = $end_girls['rownumber'];
-					$end_girls_y = $end_girls['columnnumber'];
-					$girls_start_id_x = $girls_start_id ? $girls_start_id['rownumber'] : null;
-					$girls_start_id_y = $girls_start_id ? $girls_start_id['columnnumber'] : null;
-					
-					$n=1;
-					$start_girls_numbering_x++;
-					if ($girls_start_id_x !== null) {
-						$girls_start_id_x++;
-					}
-					$start_girls_x++;
-					for( $b=0; $start_girls_numbering_x < $end_girls_numbering_x ; $b++ )
-					{
-						set_time_limit(0);
-						if( !empty( $girl_students[$b] ) ){
-							$girl_details  = $girl_students[$b];
-							$sheetInsertData->setCellValueByColumnAndRow($start_girls_numbering_y,$start_girls_numbering_x, $n );
-							if ($girls_start_id_y !== null && $girls_start_id_x !== null) {
-								$sheetInsertData->setCellValueByColumnAndRow($girls_start_id_y,$girls_start_id_x, $girl_details['admission_no'] ); 
-							}
-							$sheetInsertData->setCellValueByColumnAndRow($start_girls_y,$start_girls_x, $girl_details['lastname'].", ".$girl_details['firstname'] );
-							$girls_written_count++;
-						}
-						
-						$start_girls_numbering_x++;
-						if ($girls_start_id_x !== null) {
-							$girls_start_id_x++;
-						}
-						$start_girls_x++;
-						$n++;
-					}
-				}
-				$this->log_debug("Worksheet '{$sheetTitle}' populated: {$boys_written_count} boys, {$girls_written_count} girls.");
-				$total_boys_written += $boys_written_count;
-				$total_girls_written += $girls_written_count;
-			} else {
-				$this->log_debug("Skipping worksheet Index {$sheetIndex}: '{$sheetTitle}' (No student grade placeholders found)");
-			}
-			
-			// CRITICAL FIX: Re-hide rows that were originally hidden in the template
-			// This must be done AFTER all data insertion to ensure PHPExcel doesn't lose the hidden state
-			$originallyHiddenRows = isset($allSheetsHiddenRows[$sheetIndex]) ? $allSheetsHiddenRows[$sheetIndex] : array();
-			if (!empty($originallyHiddenRows)) {
-				$this->log_debug("  Sheet '{$sheetTitle}': Re-hiding " . count($originallyHiddenRows) . " originally hidden rows");
-				foreach ($originallyHiddenRows as $hideRow) {
-					$sheetInsertData->getRowDimension($hideRow)->setVisible(false);
-					$this->log_debug("    Row {$hideRow}: setVisible(false) called");
-				}
-			} else {
-				$this->log_debug("  Sheet '{$sheetTitle}': No hidden rows to restore");
-			}
-
-			if (function_exists('gc_collect_cycles')) {
-				gc_collect_cycles();
-			}
-			
-			// Log memory after each sheet
-			$this->log_debug("  Memory after sheet {$sheetIndex}: " . round(memory_get_usage(true) / 1024 / 1024, 2) . " MB");
-		}
-		
-		$this->log_debug("Memory after Phase 2: " . round(memory_get_usage(true) / 1024 / 1024, 2) . " MB");
-		
-		// FINAL PASS: Re-apply hidden rows to ALL sheets before saving
-		// PHPExcel sometimes loses row visibility when switching between sheets
-		$this->log_debug("=== PHASE 3: FINAL PASS - ENSURING ALL HIDDEN ROWS ARE PRESERVED ===");
-		for ($sheetIndex = 0; $sheetIndex < $totalSheets; $sheetIndex++) {
-			$objPHPExcel->setActiveSheetIndex($sheetIndex);
-			$sheet = $objPHPExcel->getActiveSheet();
-			$sheetTitle = $sheet->getTitle();
-			
-			$hiddenRows = isset($allSheetsHiddenRows[$sheetIndex]) ? $allSheetsHiddenRows[$sheetIndex] : array();
-			if (!empty($hiddenRows)) {
-				$this->log_debug("  Sheet '{$sheetTitle}': Re-applying " . count($hiddenRows) . " hidden rows");
-				foreach ($hiddenRows as $row) {
-					// Check if row is currently visible (PHPExcel may have reset it)
-					$rowDimension = $sheet->getRowDimension($row);
-					$isCurrentlyHidden = !$rowDimension->getVisible();
-					$currentHeight = $rowDimension->getRowHeight();
-					
-					if (!$isCurrentlyHidden) {
-						$this->log_debug("    WARNING: Row {$row} was hidden but is now VISIBLE! Re-hiding...");
-					}
-					
-					// CRITICAL FIX: PHPExcel bug - ALWAYS set row height to force dimension creation
-					// Without explicit height, PHPExcel won't save hidden attribute to XML
-					// Must use a non-zero height, otherwise Excel ignores it
-					if ($currentHeight == -1 || $currentHeight === null || $currentHeight == 0) {
-						// Row has default/auto height - set to Excel default (15)
-						$rowDimension->setRowHeight(15);
-						$this->log_debug("    Row {$row}: Set height to 15 (was: " . ($currentHeight == -1 ? 'auto' : $currentHeight) . ")");
-					} else {
-						// Row already has explicit height - keep it but re-set to force dimension creation
-						$rowDimension->setRowHeight($currentHeight);
-						$this->log_debug("    Row {$row}: Re-set height to {$currentHeight} to force dimension creation");
-					}
-					
-					// Now set hidden - PHPExcel will save it to XML because row has explicit height
-					$rowDimension->setVisible(false);
-					$this->log_debug("    Row {$row}: setVisible(false) applied in final pass");
-				}
-			} else {
-				$this->log_debug("  Sheet '{$sheetTitle}': No hidden rows to re-apply");
-			}
-		}
-		
-		$this->log_debug("Memory after Phase 3: " . round(memory_get_usage(true) / 1024 / 1024, 2) . " MB");
-		
-		// ========================================
-		// ALTERNATIVE APPROACH (COMMENTED OUT): OLD BACKUP WAY
-		// ========================================
-		// This is the original simple approach from BACKUP folder
-		// It does NOT loop through sheets - processes only the active sheet (sheet 0)
-		// PROS: Faster, simpler code
-		// CONS: Only works if template has placeholders in one sheet only
-		// 
-		// TO USE THIS APPROACH:
-		// 1. Comment out the entire "CURRENT APPROACH" section above (lines ~185-480)
-		// 2. Uncomment the code block below
-		// 3. Make sure your template has all formulas set up correctly
-		// ========================================
-		
-		/*
-		// OLD BACKUP APPROACH - Single sheet processing (no loops)
-		$allSheetsHiddenRows = array();
-		
-		// Set active sheet to first sheet (index 0 = INPUT sheet)
-		$objPHPExcel->setActiveSheetIndex(0);
-		$sheetInsertData = $objPHPExcel->getActiveSheet();
-		
-		// Get placeholder positions from Spout scan
-		$foundInCells = $this->spout->search_cells($inputFileName);
-		
-		$school_name_cell = isset($foundInCells['{school_name}'])?$foundInCells['{school_name}']:null;
-		$subject_name_cell = isset($foundInCells['{subject_name}'])?$foundInCells['{subject_name}']:null;
-		$class_cell = isset($foundInCells['{class}'])?$foundInCells['{class}']:null; 
-		$subject_teacher_cell = isset($foundInCells['{subject_teacher}'])?$foundInCells['{subject_teacher}']:null;
-		$written_work_cell = isset($foundInCells['{written_work}'])?$foundInCells['{written_work}']:null;
-		$performance_tasks_cell = isset($foundInCells['{performance_tasks}'])?$foundInCells['{performance_tasks}']:null;
-		$quarterly_assesment_cell = isset($foundInCells['{quarterly_assessment}'])?$foundInCells['{quarterly_assessment}']:null;
-		
-		if( $school_name_cell != null ){
-			$school_name_cell_x = $school_name_cell['rownumber'];
-			$school_name_cell_y = $school_name_cell['columnnumber'];
-			$sheetInsertData->setCellValueByColumnAndRow($school_name_cell_y,$school_name_cell_x, $get_school_name );
-		}
-		
-		if( $class_cell != null ){
-			$class_cell_x = $class_cell['rownumber'];
-			$class_cell_y = $class_cell['columnnumber'];
-			$sheetInsertData->setCellValueByColumnAndRow($class_cell_y,$class_cell_x, $class_name.' '.$section_name );
-		}
-		
-		if( $subject_name_cell != null ){
-			$subject_name_cell_x = $subject_name_cell['rownumber'];
-			$subject_name_cell_y = $subject_name_cell['columnnumber'];
-			$sheetInsertData->setCellValueByColumnAndRow($subject_name_cell_y,$subject_name_cell_x, $subject_name );
-		}
-		
-		if( $written_work_cell != null && $written_work  ){
-			$written_work = $written_work / 100;
-			$written_work_cell_x = $written_work_cell['rownumber'];
-			$written_work_cell_y = $written_work_cell['columnnumber'];
-			$sheetInsertData->setCellValueByColumnAndRow($written_work_cell_y,$written_work_cell_x, $written_work );
-		}
-		
-		if( $performance_tasks_cell != null && $performance_task ){
-			$performance_task = $performance_task / 100;
-			$performance_tasks_cell_x = $performance_tasks_cell['rownumber'];
-			$performance_tasks_cell_y = $performance_tasks_cell['columnnumber'];
-			$sheetInsertData->setCellValueByColumnAndRow($performance_tasks_cell_y,$performance_tasks_cell_x, $performance_task );
-		}
-		
-		if( $quarterly_assesment_cell != null && $quarterly_assesment ){
-			$quarterly_assesment = $quarterly_assesment / 100;
-			$quarterly_assesment_cell_x = $quarterly_assesment_cell['rownumber'];
-			$quarterly_assesment_cell_y = $quarterly_assesment_cell['columnnumber'];
-			$sheetInsertData->setCellValueByColumnAndRow($quarterly_assesment_cell_y,$quarterly_assesment_cell_x, $quarterly_assesment );
-		}
-		
-		if( $subject_teacher_cell != null  ){
-			$subject_teacher_cell_x = $subject_teacher_cell['rownumber'];
-			$subject_teacher_cell_y = $subject_teacher_cell['columnnumber'];
-			if( $teacher_result ){
-				$firstname = $teacher_result['name'];
-				$lastname = $teacher_result['lastname'];
-				$middlename = $teacher_result['middlename'];
-				if( $middlename ){
-				  $fullname = $lastname.', '.$firstname.' '.$middlename;	
-				} else {
-					$fullname = $lastname.', '.$firstname;	
-				}
-				$sheetInsertData->setCellValueByColumnAndRow($subject_teacher_cell_y,$subject_teacher_cell_x, $fullname );
-			}
-		}
-
-		// BOYS
-		$start_boys_numbering = isset($foundInCells['{start_boys_numbering}'])?$foundInCells['{start_boys_numbering}']:null;
-		$end_boys_numbering = isset($foundInCells['{end_boys_numbering}'])?$foundInCells['{end_boys_numbering}']:null;
-		$start_boys = isset($foundInCells['{start_boys}'])?$foundInCells['{start_boys}']:null;
-		$end_boys = isset($foundInCells['{end_boys}'])?$foundInCells['{end_boys}']:null;
-		$boys_start_id = isset($foundInCells['{boys_start_id}'])?$foundInCells['{boys_start_id}']:null;
-		
-		if ($start_boys_numbering && $end_boys_numbering && $start_boys && $end_boys && $boys_start_id) {
-			$start_boys_numbering_x = $start_boys_numbering['rownumber'];
-			$start_boys_numbering_y = $start_boys_numbering['columnnumber'];
-			$end_boys_numbering_x = $end_boys_numbering['rownumber'];
-			$start_boys_x = $start_boys['rownumber'];
-			$start_boys_y = $start_boys['columnnumber'];
-			$end_boys_x = $end_boys['rownumber'];
-			$end_boys_y = $end_boys['columnnumber'];
-			$boys_start_id_x = $boys_start_id['rownumber'];
-			$boys_start_id_y = $boys_start_id['columnnumber'];
-			$n=1;
-			$start_boys_numbering_x++;
-			$boys_start_id_x++;
-			$start_boys_x++;
-			for( $b=0; $start_boys_numbering_x < $end_boys_numbering_x ; $b++ )
-			{
-				set_time_limit(0);
-				if( !empty( $boys_students[$b] ) ){
-					$boy_details  = $boys_students[$b];
-					$sheetInsertData->setCellValueByColumnAndRow($start_boys_numbering_y,$start_boys_numbering_x, $n );
-					$sheetInsertData->setCellValueByColumnAndRow($boys_start_id_y,$boys_start_id_x, $boy_details['admission_no'] ); 
-					$sheetInsertData->setCellValueByColumnAndRow($start_boys_y,$start_boys_x, $boy_details['lastname'].", ".$boy_details['firstname'] );
-				}
-				$start_boys_numbering_x++;
-				$boys_start_id_x++;
-				$start_boys_x++;
-				$n++;
-			}
-		}
-		
-		// GIRLS
-		$start_girls_numbering = isset($foundInCells['{start_girls_numbering}'])?$foundInCells['{start_girls_numbering}']:null;
-		$end_girls_numbering = isset($foundInCells['{end_girls_numbering}'])?$foundInCells['{end_girls_numbering}']:null;
-		$start_girls = isset($foundInCells['{start_girls}'])?$foundInCells['{start_girls}']:null;
-		$end_girls = isset($foundInCells['{end_girls}'])?$foundInCells['{end_girls}']:null;
-		$girls_start_id = isset($foundInCells['{girls_start_id}'])?$foundInCells['{girls_start_id}']:null;
-
-		if ($start_girls_numbering && $end_girls_numbering && $start_girls && $end_girls && $girls_start_id) {
-			$start_girls_numbering_x = $start_girls_numbering['rownumber'];
-			$start_girls_numbering_y = $start_girls_numbering['columnnumber'];
-			$end_girls_numbering_x = $end_girls_numbering['rownumber'];
-			$start_girls_x = $start_girls['rownumber'];
-			$start_girls_y = $start_girls['columnnumber'];
-			$end_girls_x = $end_girls['rownumber'];
-			$end_girls_y = $end_girls['columnnumber'];
-			$girls_start_id_x = $girls_start_id['rownumber'];
-			$girls_start_id_y = $girls_start_id['columnnumber'];
-			
-			$n=1;
-			$start_girls_numbering_x++;
-			$girls_start_id_x++;
-			$start_girls_x++;
-			for( $b=0; $start_girls_numbering_x < $end_girls_numbering_x ; $b++ )
-			{
-				set_time_limit(0);
-				if( !empty( $girl_students[$b] ) ){
-					$girl_details  = $girl_students[$b];
-					$sheetInsertData->setCellValueByColumnAndRow($start_girls_numbering_y,$start_girls_numbering_x, $n );
-					$sheetInsertData->setCellValueByColumnAndRow($girls_start_id_y,$girls_start_id_x, $girl_details['admission_no'] ); 
-					$sheetInsertData->setCellValueByColumnAndRow($start_girls_y,$start_girls_x, $girl_details['lastname'].", ".$girl_details['firstname'] );
-				}
-				$start_girls_numbering_x++;
-				$girls_start_id_x++;
-				$start_girls_x++;
-				$n++;
-			}
-		}
-		*/
-		// ========================================
-		// END OF OLD BACKUP APPROACH
-		// ========================================
-				
 		$date = date('Ymdhis');
 		$filename = $subject_name.'-'.$class_name.' '.$section_name.'-'.$date;
 		$filename= $filename.'.xlsx';
 		
-		$this->log_debug("=== PHASE 4: SAVING FILE ===");
-		$this->log_debug("Filename: {$filename}");
-		$this->log_debug("Peak memory usage: " . round(memory_get_peak_usage(true) / 1024 / 1024, 2) . " MB");
+		$temp_dir = sys_get_temp_dir();
+		$public_file = $temp_dir . DIRECTORY_SEPARATOR . $filename;
+		$this->log_debug("Target file path (temp): {$public_file}");
 		
-		// VERIFICATION: Check if hidden rows are still hidden right before save
-		$this->log_debug("VERIFICATION: Checking hidden row state immediately before save:");
-		for ($sheetIndex = 0; $sheetIndex < $totalSheets; $sheetIndex++) {
-			$objPHPExcel->setActiveSheetIndex($sheetIndex);
-			$sheet = $objPHPExcel->getActiveSheet();
-			$sheetTitle = $sheet->getTitle();
-			$hiddenRows = isset($allSheetsHiddenRows[$sheetIndex]) ? $allSheetsHiddenRows[$sheetIndex] : array();
-			
-			if (!empty($hiddenRows)) {
-				$stillHidden = array();
-				$becameVisible = array();
-				foreach ($hiddenRows as $row) {
-					if (!$sheet->getRowDimension($row)->getVisible()) {
-						$stillHidden[] = $row;
-					} else {
-						$becameVisible[] = $row;
-					}
-				}
-				
-				if (!empty($stillHidden)) {
-					$this->log_debug("  Sheet '{$sheetTitle}': " . count($stillHidden) . " rows STILL HIDDEN: " . implode(', ', $stillHidden));
-				}
-				if (!empty($becameVisible)) {
-					$this->log_debug("  Sheet '{$sheetTitle}': ERROR! " . count($becameVisible) . " rows BECAME VISIBLE: " . implode(', ', $becameVisible));
+		// Copy original template to target output path
+		if (!copy($inputFileName, $public_file)) {
+			$this->log_debug("  ERROR: Failed to copy template file to target output path.");
+			die('Error: Could not copy template file.');
+		}
+		
+		$zip = new ZipArchive();
+		if ($zip->open($public_file) !== TRUE) {
+			$this->log_debug("  ERROR: Could not open output Excel file.");
+			die('Error: Could not open output Excel file.');
+		}
+		
+		// 1. Read and modify sharedStrings.xml
+		$this->log_debug("Reading sharedStrings.xml...");
+		$sharedStringsXml = $zip->getFromName('xl/sharedStrings.xml');
+		if ($sharedStringsXml === false) {
+			$zip->close();
+			$this->log_debug("  ERROR: Could not read sharedStrings.xml from template.");
+			die('Error: Could not read sharedStrings.xml from template.');
+		}
+		
+		// Prepare metadata replacements
+		$fullname = '';
+		if ($teacher_result) {
+			$firstname = $teacher_result['name'];
+			$lastname = $teacher_result['lastname'];
+			$middlename = $teacher_result['middlename'];
+			if ($middlename) {
+				$fullname = $lastname.', '.$firstname.' '.$middlename;
+			} else {
+				$fullname = $lastname.', '.$firstname;
+			}
+		}
+		
+		$replacements = array(
+			'{school_name}' => $get_school_name,
+			'{class}' => $class_name . ' ' . $section_name,
+			'{subject_name}' => $subject_name,
+			'{subject_teacher}' => $fullname,
+			'{school_year}' => date('Y') . '-' . (date('Y') + 1),
+			'{written_work}' => $written_work ? ($written_work / 100) : '',
+			'{performance_tasks}' => $performance_task ? ($performance_task / 100) : '',
+			'{quarterly_assessment}' => $quarterly_assesment ? ($quarterly_assesment / 100) : ''
+		);
+		
+		foreach ($replacements as $key => $val) {
+			$sharedStringsXml = str_replace($key, htmlspecialchars($val), $sharedStringsXml);
+		}
+		
+		// Parse shared strings to find placeholder indices
+		preg_match_all('/<si[^>]*>.*?<\/si>/s', $sharedStringsXml, $si_matches);
+		$si_items = $si_matches[0];
+		
+		$placeholder_indices = array();
+		foreach ($si_items as $idx => $si) {
+			if (preg_match('/<t[^>]*>(.*?)<\/t>/s', $si, $t_match)) {
+				$txt = trim($t_match[1]);
+				if (strpos($txt, '{') !== false) {
+					$placeholder_indices[$txt] = $idx;
 				}
 			}
 		}
+		
+		// 2. Read and modify sheet1.xml
+		$this->log_debug("Reading xl/worksheets/sheet1.xml...");
+		$sheet1Xml = $zip->getFromName('xl/worksheets/sheet1.xml');
+		if ($sheet1Xml === false) {
+			$zip->close();
+			$this->log_debug("  ERROR: Could not read sheet1.xml from template.");
+			die('Error: Could not read sheet1.xml from template.');
+		}
+		
+		// Helper function to find cell coordinate for placeholder
+		$find_cell = function($xml, $idx) {
+			$pattern = '/<c\s+r="([A-Z]+)(\d+)"[^>]*t="s"[^>]*>\s*<v>' . $idx . '<\/v>\s*<\/c>/s';
+			if (preg_match($pattern, $xml, $match)) {
+				return array('col' => $match[1], 'row' => (int)$match[2]);
+			}
+			return null;
+		};
+		
+		$boys_name_cell = $find_cell($sheet1Xml, isset($placeholder_indices['{start_boys}']) ? $placeholder_indices['{start_boys}'] : -1);
+		$boys_num_cell = $find_cell($sheet1Xml, isset($placeholder_indices['{start_boys_numbering}']) ? $placeholder_indices['{start_boys_numbering}'] : -1);
+		$boys_id_cell = $find_cell($sheet1Xml, isset($placeholder_indices['{boys_start_id}']) ? $placeholder_indices['{boys_start_id}'] : -1);
+		$girls_name_cell = $find_cell($sheet1Xml, isset($placeholder_indices['{start_girls}']) ? $placeholder_indices['{start_girls}'] : -1);
+		
+		$boys_end_cell = $find_cell($sheet1Xml, isset($placeholder_indices['{end_boys}']) ? $placeholder_indices['{end_boys}'] : -1);
+		$girls_end_cell = $find_cell($sheet1Xml, isset($placeholder_indices['{end_girls}']) ? $placeholder_indices['{end_girls}'] : -1);
+		
+		$boys_col = $boys_name_cell ? $boys_name_cell['col'] : 'C';
+		$boys_start_row = $boys_name_cell ? $boys_name_cell['row'] : 11;
+		$num_col = $boys_num_cell ? $boys_num_cell['col'] : 'A';
+		$id_col = $boys_id_cell ? $boys_id_cell['col'] : 'B';
+		$boys_end_row = $boys_end_cell ? $boys_end_cell['row'] : 61;
+		
+		$girls_col = $girls_name_cell ? $girls_name_cell['col'] : 'C';
+		$girls_start_row = $girls_name_cell ? $girls_name_cell['row'] : 63;
+		$girls_end_row = $girls_end_cell ? $girls_end_cell['row'] : 112;
+		
+		$this->log_debug("Columns: NameCol={$boys_col}, NumCol={$num_col}, IdCol={$id_col}");
+		$this->log_debug("Boys Row range: {$boys_start_row} to {$boys_end_row}");
+		$this->log_debug("Girls Row range: {$girls_start_row} to {$girls_end_row}");
+		
+		$inject_students = function($xml, $start_row, $end_row, $students, $col_name, $col_num, $col_id, $is_boy) use (&$total_written) {
+			$count = 0;
+			$total = count($students);
+			
+			// 1. Populate students
+			for ($i = 0; $i < $total; $i++) {
+				$row_num = $start_row + $i + 1;
+				$num_val = $i + 1;
+				$student = $students[$i];
+				$name = htmlspecialchars($student['lastname'] . ', ' . $student['firstname']);
+				$adm_no = htmlspecialchars($student['admission_no']);
+				
+				$old_name_tag = '<c r="' . $col_name . $row_num . '" s="232"/>';
+				$new_name_tag = '<c r="' . $col_name . $row_num . '" s="232" t="inlineStr"><is><t>' . $name . '</t></is></c>';
+				
+				$old_num_tag = '<c r="' . $col_num . $row_num . '" s="33"/>';
+				$new_num_tag = '<c r="' . $col_num . $row_num . '" s="33"><v>' . $num_val . '</v></c>';
+				
+				$old_id_tag = '<c r="' . $col_id . $row_num . '" s="231"/>';
+				$new_id_tag = '<c r="' . $col_id . $row_num . '" s="231" t="inlineStr"><is><t>' . $adm_no . '</t></is></c>';
+				
+				if (strpos($xml, $old_name_tag) !== false) {
+					$xml = str_replace($old_name_tag, $new_name_tag, $xml);
+					$xml = str_replace($old_num_tag, $new_num_tag, $xml);
+					$xml = str_replace($old_id_tag, $new_id_tag, $xml);
+					$count++;
+				} else {
+					// Regex fallback
+					$pattern_name = '/<c\s+r="' . $col_name . $row_num . '"\s+s="(\d+)"\/>/s';
+					if (preg_match($pattern_name, $xml, $m)) {
+						$style_name = $m[1];
+						$xml = preg_replace($pattern_name, '<c r="' . $col_name . $row_num . '" s="' . $style_name . '" t="inlineStr"><is><t>' . $name . '</t></is></c>', $xml);
+						
+						$pattern_num = '/<c\s+r="' . $col_num . $row_num . '"\s+s="(\d+)"\/>/s';
+						if (preg_match($pattern_num, $xml, $m_num)) {
+							$xml = preg_replace($pattern_num, '<c r="' . $col_num . $row_num . '" s="' . $m_num[1] . '"><v>' . $num_val . '</v></c>', $xml);
+						}
+						
+						$pattern_id = '/<c\s+r="' . $col_id . $row_num . '"\s+s="(\d+)"\/>/s';
+						if (preg_match($pattern_id, $xml, $m_id)) {
+							$xml = preg_replace($pattern_id, '<c r="' . $col_id . $row_num . '" s="' . $m_id[1] . '" t="inlineStr"><is><t>' . $adm_no . '</t></is></c>', $xml);
+						}
+						$count++;
+					}
+				}
+			}
+			
+			// 2. Hide unused rows
+			$unused_start = $start_row + $total + 1;
+			$unused_end = $end_row - 1;
+			
+			for ($r = $unused_start; $r <= $unused_end; $r++) {
+				$xml = preg_replace_callback('/<row r="' . $r . '"\b[^>]*?>/s', function($m) {
+					if (strpos($m[0], 'hidden=') === false) {
+						return str_replace('>', ' hidden="1">', $m[0]);
+					}
+					return $m[0];
+				}, $xml);
+			}
+			
+			return array('xml' => $xml, 'count' => $count);
+		};
+		
+		$total_boys_written = 0;
+		$total_girls_written = 0;
+		
+		$res_boys = $inject_students($sheet1Xml, $boys_start_row, $boys_end_row, $boys_students, $boys_col, $num_col, $id_col, true);
+		$sheet1Xml = $res_boys['xml'];
+		$total_boys_written = $res_boys['count'];
+		
+		$res_girls = $inject_students($sheet1Xml, $girls_start_row, $girls_end_row, $girl_students, $girls_col, $num_col, $id_col, false);
+		$sheet1Xml = $res_girls['xml'];
+		$total_girls_written = $res_girls['count'];
+		
+		$this->log_debug("XML Generation: Injected {$total_boys_written} boys, {$total_girls_written} girls.");
 		
 		// Update job status if provided
 		if (isset($parameters['status_file'])) {
@@ -695,58 +301,10 @@ class Excelwithspout extends PHPExcel {
 			]));
 		}
 		
-		// Reset timeout for the save operation
-		set_time_limit(600);
-		
-		// Save to server temp directory (NOT public downloads folder)
-		// This prevents storage from filling up - temp file is deleted immediately after download
-		$temp_dir = sys_get_temp_dir();
-		$public_file = $temp_dir . DIRECTORY_SEPARATOR . $filename;
-		$this->log_debug("Target file path (temp): {$public_file}");
-		
-		// Get current object state before creating writer
-		$this->log_debug("PHPExcel object state before save:");
-		$this->log_debug("  - Sheet count: " . $objPHPExcel->getSheetCount());
-		$this->log_debug("  - Memory usage: " . round(memory_get_usage(true) / 1024 / 1024, 2) . " MB");
-		
-		$this->log_debug("Creating Excel2007 writer...");
-		$startTime = microtime(true);
-		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
-		$writerCreateTime = microtime(true) - $startTime;
-		$this->log_debug("Writer object created in " . round($writerCreateTime, 2) . " seconds");
-		
-		// Set pre-calculation to FALSE for speed (6min vs 20+min)
-		// This creates larger files (3.6MB vs 1MB) but generation is 4x faster
-		// Trade-off: File size vs generation speed - we choose speed
-		$objWriter->setPreCalculateFormulas(false);
-		
-		// Check writer settings
-		$preCalcSetting = $objWriter->getPreCalculateFormulas() ? "YES (formulas will be calculated and cached)" : "NO (Excel will calculate on open)";
-		$this->log_debug("Writer setting - Pre-calculate formulas: {$preCalcSetting}");
-		
-		// Don't disable pre-calculation - it causes file bloat
-		// Modern Excel can handle pre-calculated formulas just fine
-		// $objWriter->setPreCalculateFormulas(false); // REMOVED - causes 4x file size increase
-		
-		$this->log_debug("Starting file save operation...");
-		$saveStartTime = microtime(true);
-		$objWriter->save($public_file);
-		$saveDuration = microtime(true) - $saveStartTime;
-		$this->log_debug("File saved successfully in " . round($saveDuration, 2) . " seconds");
-		
-		// POST-PROCESSING: Fix hidden rows in XML (PHPExcel bug workaround)
-		// PHPExcel doesn't reliably save hidden="1" to XML even after setVisible(false) + setRowHeight()
-		// So we manually inject hidden="1" attributes into the XML
-		$this->log_debug("POST-PROCESSING: Fixing hidden rows in XML...");
-		$this->fix_hidden_rows_in_xml($public_file, $allSheetsHiddenRows);
-		
-		// Clean up PHPExcel objects
-		$this->log_debug("Cleaning up PHPExcel objects...");
-		$objPHPExcel->disconnectWorksheets();
-		unset($objPHPExcel);
-		unset($objWriter);
-		$this->log_debug("PHPExcel objects cleaned up.");
-		$this->log_debug("Memory after cleanup: " . round(memory_get_usage(true) / 1024 / 1024, 2) . " MB");
+		// Save modified files back to output ZIP
+		$zip->addFromString('xl/sharedStrings.xml', $sharedStringsXml);
+		$zip->addFromString('xl/worksheets/sheet1.xml', $sheet1Xml);
+		$zip->close();
 		
 		// Check file was created
 		if (!file_exists($public_file)) {
@@ -761,39 +319,9 @@ class Excelwithspout extends PHPExcel {
 		}
 		
 		$file_size = filesize($public_file);
-		$file_size_mb = round($file_size / 1024 / 1024, 2);
-		$original_size = filesize($inputFileName);
-		$original_size_mb = round($original_size / 1024 / 1024, 2);
-		$size_increase = $file_size - $original_size;
-		$size_increase_mb = round($size_increase / 1024 / 1024, 2);
-		$size_increase_pct = round(($size_increase / $original_size) * 100, 1);
-		
-		$this->log_debug("=== FILE SIZE ANALYSIS ===");
-		$this->log_debug("Original template size: {$original_size_mb} MB ({$original_size} bytes)");
-		$this->log_debug("Generated file size: {$file_size_mb} MB ({$file_size} bytes)");
-		$this->log_debug("Size increase: {$size_increase_mb} MB ({$size_increase} bytes)");
-		$this->log_debug("Percentage increase: {$size_increase_pct}%");
-		
-		if ($size_increase_pct > 200) {
-			$this->log_debug("WARNING: File size increased by more than 200%! This indicates bloat.");
-			$this->log_debug("Possible causes:");
-			$this->log_debug("  - setPreCalculateFormulas(false) was used (adds ~300% bloat)");
-			$this->log_debug("  - Too many cell styles/formats being created");
-			$this->log_debug("  - PHPExcel adding unnecessary XML data");
-		} else if ($size_increase_pct > 50) {
-			$this->log_debug("NOTE: File size increased by {$size_increase_pct}%, which is acceptable for data insertion.");
-		} else {
-			$this->log_debug("GOOD: File size increase is minimal ({$size_increase_pct}%).");
-		}
-		
-		// Build download URL - points to a controller endpoint that streams and deletes the temp file
-		$job_id = isset($parameters['job_id']) ? $parameters['job_id'] : '';
-		$download_url = base_url() . 'teacher/grade/download_file/' . urlencode($job_id);
-		
-		// Calculate total execution time
+		$download_url = base_url() . 'teacher/grade/download_file/' . urlencode(isset($parameters['job_id']) ? $parameters['job_id'] : '');
 		$totalTime = microtime(true) - $generationStartTime;
 		
-		// Log final summary
 		$this->log_debug("=== GENERATION COMPLETE - SUMMARY ===");
 		$this->log_debug("Template: " . basename($inputFileName));
 		$this->log_debug("Generated file (temp): {$filename}");
@@ -802,28 +330,19 @@ class Excelwithspout extends PHPExcel {
 		$this->log_debug("Final memory usage: " . round(memory_get_usage(true) / 1024 / 1024, 2) . " MB");
 		$this->log_debug("Peak memory usage: " . round(memory_get_peak_usage(true) / 1024 / 1024, 2) . " MB");
 		$this->log_debug("Students: {$total_boys_written} boys + {$total_girls_written} girls = " . ($total_boys_written + $total_girls_written) . " total");
-		
-		// Count hidden rows preserved
-		$totalHiddenRows = 0;
-		foreach ($allSheetsHiddenRows as $rows) {
-			$totalHiddenRows += count($rows);
-		}
-		$this->log_debug("Hidden rows preserved: {$totalHiddenRows} total across " . count($allSheetsHiddenRows) . " sheets");
 		$this->log_debug("--- EXCEL GENERATION SUCCESS ---");
 		
 		// Update job status to complete
-		// Store temp_file path (server-only) so the download endpoint can find and stream+delete it
 		if (isset($parameters['status_file'])) {
 			file_put_contents($parameters['status_file'], json_encode([
 				'status' => 'complete',
 				'progress' => 100,
 				'filename' => $filename,
-				'temp_file' => $public_file,  // server-side path only, NOT exposed to browser
+				'temp_file' => $public_file,
 				'download_url' => $download_url,
 				'file_size' => round($file_size / 1024 / 1024, 2) . ' MB',
 				'completed_at' => date('Y-m-d H:i:s')
 			]));
-			// Exit silently - browser already disconnected
 			exit;
 		}
 		
@@ -837,7 +356,7 @@ class Excelwithspout extends PHPExcel {
 		header('Content-Length: ' . $file_size);
 		header('Cache-Control: max-age=0');
 		readfile($public_file);
-		@unlink($public_file); // Delete temp file immediately after streaming
+		@unlink($public_file);
 		exit;
 	}	
 
@@ -1758,6 +1277,111 @@ class Excelwithspout extends PHPExcel {
 		
 		rmdir($dir);
 		$this->log_debug("  Temp directory cleaned up: {$dir}");
+	}
+	
+	private function set_cell_value($sheet, $col, $row, $value, $is_string = false) {
+		if ($is_string) {
+			$sheet->setCellValueExplicitByColumnAndRow($col, $row, $value, PHPExcel_Cell_DataType::TYPE_STRING);
+		} else {
+			$sheet->setCellValueByColumnAndRow($col, $row, $value);
+		}
+	}
+	
+	private function merge_modified_sheet($targetZipFile, $sourceZipFile) {
+		$this->log_debug("  Opening target zip file: {$targetZipFile}");
+		$zipTarget = new ZipArchive();
+		if ($zipTarget->open($targetZipFile) !== TRUE) {
+			$this->log_debug("  ERROR: Could not open target zip file: {$targetZipFile}");
+			return false;
+		}
+		
+		$this->log_debug("  Opening source zip file: {$sourceZipFile}");
+		$zipSource = new ZipArchive();
+		if ($zipSource->open($sourceZipFile) !== TRUE) {
+			$this->log_debug("  ERROR: Could not open source zip file: {$sourceZipFile}");
+			$zipTarget->close();
+			return false;
+		}
+		
+		// Read sheet1.xml from source ZIP
+		$this->log_debug("  Reading xl/worksheets/sheet1.xml from source...");
+		$sheetXml = $zipSource->getFromName('xl/worksheets/sheet1.xml');
+		if ($sheetXml === false) {
+			$this->log_debug("  ERROR: Could not read xl/worksheets/sheet1.xml from source.");
+			$zipSource->close();
+			$zipTarget->close();
+			return false;
+		}
+		
+		// Read shared strings from target (template)
+		$this->log_debug("  Reading shared strings from target...");
+		$targetSharedStringsXml = $zipTarget->getFromName('xl/sharedStrings.xml');
+		$targetStrings = array();
+		if ($targetSharedStringsXml !== false) {
+			preg_match_all('/<si\b[^>]*>.*?<\/si>/s', $targetSharedStringsXml, $matches);
+			$targetStrings = $matches[0];
+		}
+		
+		$targetLookup = array();
+		foreach ($targetStrings as $idx => $si) {
+			$cleanSi = preg_replace('/\s+/', ' ', $si);
+			$targetLookup[$cleanSi] = $idx;
+		}
+		
+		// Read shared strings from source
+		$this->log_debug("  Reading shared strings from source...");
+		$sourceSharedStringsXml = $zipSource->getFromName('xl/sharedStrings.xml');
+		$sourceStrings = array();
+		if ($sourceSharedStringsXml !== false) {
+			preg_match_all('/<si\b[^>]*>.*?<\/si>/s', $sourceSharedStringsXml, $matches);
+			$sourceStrings = $matches[0];
+		}
+		
+		$zipSource->close();
+		
+		// Map shared string indices
+		$this->log_debug("  Mapping shared string indices in sheet1.xml...");
+		$pattern = '/(<c[^>]*\bt="s"[^>]*>.*?<v>)(\d+)(<\/v>)/s';
+		
+		$sheetXml = preg_replace_callback($pattern, function($matches) use ($sourceStrings, &$targetStrings, &$targetLookup) {
+			$sourceIndex = (int)$matches[2];
+			if (!isset($sourceStrings[$sourceIndex])) {
+				return $matches[0];
+			}
+			
+			$siElement = $sourceStrings[$sourceIndex];
+			$cleanSi = preg_replace('/\s+/', ' ', $siElement);
+			
+			if (!isset($targetLookup[$cleanSi])) {
+				$newIndex = count($targetStrings);
+				$targetStrings[] = $siElement;
+				$targetLookup[$cleanSi] = $newIndex;
+			}
+			
+			$targetIndex = $targetLookup[$cleanSi];
+			return $matches[1] . $targetIndex . $matches[3];
+		}, $sheetXml);
+		
+		// Write merged shared strings back to target ZIP
+		$this->log_debug("  Writing merged shared strings back to target ZIP...");
+		$newSharedStringsXml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n"
+			. '<sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" count="' . count($targetStrings) . '" uniqueCount="' . count($targetStrings) . '">'
+			. implode('', $targetStrings)
+			. '</sst>';
+		
+		$zipTarget->addFromString('xl/sharedStrings.xml', $newSharedStringsXml);
+		
+		// Write modified sheet1.xml to target ZIP
+		$this->log_debug("  Replacing xl/worksheets/sheet1.xml in target ZIP...");
+		if ($zipTarget->addFromString('xl/worksheets/sheet1.xml', $sheetXml)) {
+			$zipTarget->close();
+			$this->log_debug("  Merge successful.");
+			return true;
+		} else {
+			$this->log_debug("  ERROR: Failed to add sheet1.xml to target ZIP.");
+			$zipTarget->close();
+			return false;
+		}
 	}
 	
 	private function log_debug($message) {

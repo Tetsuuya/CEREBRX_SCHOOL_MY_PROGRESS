@@ -39,6 +39,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                         <span class="text-danger"><?php echo form_error('student_id'); ?></span>
                                     </div>
 								</div>
+                                <!--
 								<div class="col-md-3">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1"> Semester</label>
@@ -56,6 +57,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                         <span class="text-danger"><?php echo form_error('semester_id'); ?></span>
                                     </div>
 								</div>
+                                -->
+                                <input type="hidden" id="semester_id" name="semester_id" value="1">
 								<div class="col-md-3">
                                     <div class="form-group">
                                     <label for="exampleInputEmail1">Term</label>
@@ -133,28 +136,27 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                 $(document).ready(function () {
                     $(document).on('change', '#student_id', function (e) {
                         $('#subject_id').html("");
-                        });
+                        var student_id = $(this).val();
+                        var semester_id = $("#semester_id").val();
+                        var base_url = '<?php echo base_url() ?>';
+                        var div_data = '<option value=""><?php echo $this->lang->line('select'); ?></option>';
+                        if (student_id && semester_id) {
+                            $.ajax({
+                                type: "GET",
+                                url: base_url + "/teacher/CustomSubject/getSubjectbySemester",
+                                data: {'student_id': student_id, 'semester_id': semester_id},
+                                dataType: "json",
+                                success: function (data) {
+                                    $.each(data, function (i, obj)
+                                    {	
+                                        div_data += "<option value=" + obj.id + ">" + obj.name +"</option>";
+                                    });
+                                    $('#subject_id').append(div_data);
+                                }
+                            });
+                        }
                     });
-				$(document).on('change', '#semester_id', function (e) {
-					$('#subject_id').html("");
-					var student_id = $("#student_id").val();
-					var semester_id = $(this).val();
-					var base_url = '<?php echo base_url() ?>';
-					var div_data = '<option value=""><?php echo $this->lang->line('select'); ?></option>';
-					$.ajax({
-						type: "GET",
-						url: base_url + "/teacher/CustomSubject/getSubjectbySemester",
-						data: {'student_id': student_id,'semester_id':semester_id},
-						dataType: "json",
-						success: function (data) {
-							$.each(data, function (i, obj)
-							{	
-								div_data += "<option value=" + obj.id + ">" + obj.name +"</option>";
-							});
-							$('#subject_id').append(div_data);
-						}
-					});
-				});
+                });
 				$(document).ready(function () {
                     $(document).on('click', '#templateModalButton', function (e) {
                         $('#template_id').html("");

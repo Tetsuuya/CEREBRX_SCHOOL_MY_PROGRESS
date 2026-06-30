@@ -1225,3 +1225,53 @@ Teacher clicks Generate
   - Commented out the Semester dropdown HTML.
   - Inserted a hidden field: `<input type="hidden" id="semester_id" name="semester_id" value="1">` so controller validation passes.
   - Updated JavaScript event listener on `#student_id` dropdown to automatically fire the AJAX call and fetch/render subjects when a student is selected.
+
+---
+
+## 13. Student View & Grade Approval Updates (4-Quarter to 3-Term Transition)
+
+To finalize the 3-term grading transition in the Teacher/Coordinator interface, we updated the student-facing grades views, loops inside the student controller, and the database approval behavior:
+
+### 13.1 Controller: [Student.php](file:///c:/Users/Rhenel%20Jhon%20Sajol/Desktop/CEREB_SCHOOL_BACKUP/TEACHER/LOCAL/Controller/Student.php)
+* **Type of Change**: Loop Boundaries Update
+* **Purpose**: Prevents the query engine from fetching a non-existent 4th term from the database when compiling student averages.
+* **What Changed**: In the `view_allgrades()` method:
+  - Updated JHS loop: `$q <= 4` → `$q <= 3` (line 228)
+  - Updated SHS loop: `$q <= 4` → `$q <= 3` (line 257)
+
+### 13.2 View: [student_grades.php](file:///c:/Users/Rhenel%20Jhon%20Sajol/Desktop/CEREB_SCHOOL_BACKUP/TEACHER/LOCAL/View/student_grades.php)
+* **Type of Change**: UI & Average Calculation Update
+* **Purpose**: Displays Term 1, Term 2, and Term 3 headers and divides averages correctly by 3 instead of 4.
+* **What Changed**:
+  - **Junior High (JHS) Table**:
+    - Renamed columns `1Q`, `2Q`, `3Q`, `4Q` to `Term 1`, `Term 2`, `Term 3` and removed the 4th column.
+    - Updated `$total_per_q` mapping array to only count 3 terms (`[1 => 0, 2 => 0, 3 => 0]`).
+    - Changed the loop limit from 4 to 3: `for ($q = 1; $q <= 3; $q++)`.
+    - Adjusted the general average footer loop to calculate averages divided by 3.
+  - **Senior High (SHS) Table**:
+    - Relabeled First Semester `1Q` and `2Q` columns to `Term 1` and `Term 2`.
+    - Updated Second Semester table to show only `Term 3` and completely removed the `4Q` column header and grade row cells.
+
+### 13.3 Coordinator View: [studentGrade.php](file:///c:/Users/Rhenel%20Jhon%20Sajol/Desktop/CEREB_SCHOOL_BACKUP/TEACHER/LOCAL/View/studentGrade.php)
+* **Type of Change**: UI & Variable Update
+* **Purpose**: Scales coordinator grade lists to 3 terms.
+* **What Changed**:
+  - Relabeled table headers `1st Qtr`, `2nd Qtr`, `3rd Qtr`, `4th Qtr` to `Term 1`, `Term 2`, `Term 3` in both the JHS Grades List and Conduct Grade tables.
+  - Changed initialization variables `$last_quarter = 4;` and `$get_count = 4;` to `3` in JHS table (lines ~1520-1530).
+  - Changed Conduct table initialization `$last_quarter = 4;` to `3` (line ~2001).
+
+### 13.4 Student Details View: [studentShow.php](file:///c:/Users/Rhenel%20Jhon%20Sajol/Desktop/CEREB_SCHOOL_BACKUP/TEACHER/LOCAL/View/studentShow.php)
+* **Type of Change**: New View File & Integration (Downloaded from Server)
+* **Purpose**: Aligns the student detail grades tab with the 3-term layout.
+* **What Changed**:
+  - Relabeled table headers `1st Qtr`, `2nd Qtr`, `3rd Qtr`, `4th Qtr` to `Term 1`, `Term 2`, `Term 3` in both the JHS Grades List and Conduct Grade tables.
+  - Updated JHS variables `$last_quarter = 4;` and `$get_count = 4;` to `3` (lines ~967-969).
+  - Updated Conduct table variable `$last_quarter = 4;` to `3` (line ~1207).
+
+### 13.5 Model: [Importgradesdetails_model.php](file:///c:/Users/Rhenel%20Jhon%20Sajol/Desktop/CEREB_SCHOOL_BACKUP/TEACHER/LOCAL/Model/Importgradesdetails_model.php)
+* **Type of Change**: Logic Enhancement (Update/Overwrite Integration)
+* **Purpose**: Resolves the "grade approved already" warning that blocks grade re-uploads. Allows teachers and coordinators to overwrite old grades seamlessly when uploading revisions.
+* **What Changed**: Refactored the `approved_batch()` method:
+  - **Before**: If a record for a student's subject, term, and session already existed in `exam_results`, the system threw a warning notification and skipped the record.
+  - **After**: If a record exists, the system now runs an `$this->db->update` query directly on `exam_results` to overwrite the existing grade with the new imported grade value, sets the imported detail row to `approved = 1`, and logs the action.
+  - This preserves the "Draft → Pending → Approved" workflow but enables safe, multiple re-uploads for grade corrections.

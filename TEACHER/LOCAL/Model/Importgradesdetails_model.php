@@ -147,22 +147,34 @@ class Importgradesdetails_model extends CI_Model {
 				'created_at' => $this->current_date
 				);
 			} else {
-				$student_details = $this->student_model->get( $student_id );
-				$firstname = $student_details['firstname'];
-				$lastname = $student_details['lastname'];
+				// Overwrite the existing grade in exam_results
+				$this->db->where('student_id', $student_id);
+				$this->db->where('subject_id', $subject_id);
+				$this->db->where('quarter', $quarter);
+				$this->db->where('session_id', $session_id);
+				$this->db->update('exam_results', array('get_marks' => $grades));
 
-				$notification[] =  '<div class="alert alert-warning"> Student <strong>'.$firstname.' '.$lastname.'</strong> grade(<strong>'.$subject_name.'</strong>) for <strong>'.$get_quarter.'</strong> approved already. </div>';	
+				$approved_grades_update_list[] = array(
+					'id' => $approved_grades_id,
+					'approved' => 1
+				);
+				$save_data = true;
 			}
 		}		
 		
 		if( count( $approved_grades_added_list ) > 0 ){
 			$this->db->insert_batch( 'exam_results', $approved_grades_added_list );
-			$this->db->update_batch( 'import_grades_details',$approved_grades_update_list, 'id' );
-			$notification[] = '<div class="alert alert-success"> Approved data successfully. </div>';
+		}
+		
+		if( count( $approved_grades_update_list ) > 0 ){
+			$this->db->update_batch( 'import_grades_details', $approved_grades_update_list, 'id' );
+			$notification[] = '<div class="alert alert-success"> Approved and updated grades successfully. </div>';
 			$save_data = true;
 		} else {
-			$notification[] = '<div class="alert alert-warning"> Approved data unsuccessfully. </div>';
-			$save_data = false;
+			if (empty($save_data)) {
+				$notification[] = '<div class="alert alert-warning"> Approved data unsuccessfully. </div>';
+				$save_data = false;
+			}
 		}
 
 		$session_details = $this->session->userdata('student');

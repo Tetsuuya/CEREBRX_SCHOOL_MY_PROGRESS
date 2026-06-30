@@ -225,7 +225,7 @@ class student extends CI_Controller {
                         $subject_id = $subject['subject_id'];
                         $subject['semester'] = $sem;
 
-                        for ($q = 1; $q <= 4; $q++) {
+                        for ($q = 1; $q <= 3; $q++) {
                             $result = $this->Grade_model->getExamResultsByStudentSessionQuarter(
                                 $student_id,
                                 $session_id,
@@ -254,7 +254,7 @@ class student extends CI_Controller {
                 foreach ($subjects as &$subject) {
                     $subject_id = $subject['id'];
 
-                    for ($q = 1; $q <= 4; $q++) {
+                    for ($q = 1; $q <= 3; $q++) {
                         $result = $this->Grade_model->getExamResultsByStudentSessionQuarter(
                             $student_id,
                             $session_id,

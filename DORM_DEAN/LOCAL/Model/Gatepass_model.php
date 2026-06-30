@@ -87,6 +87,15 @@ class Gatepass_model extends CI_Model {
             $starts_with = $this->db->escape_like_str($search) . '%';
             $contains = '%' . $this->db->escape_like_str($search) . '%';
             
+            // GATE-UI-001: Map frontend display labels to actual DB status values
+            $search_lower = strtolower(trim($search));
+            $status_contains = $contains; // default: use same search term
+            if (strpos('approved', $search_lower) !== false) {
+                $status_contains = '%approve%';
+            } elseif (strpos('declined', $search_lower) !== false) {
+                $status_contains = '%denied%';
+            }
+            
             // Search by lastname, firstname (starts with OR contains), purpose, destination, status, type
             $this->db->group_start();
             $this->db->where("students.lastname LIKE '$starts_with'");
@@ -95,7 +104,7 @@ class Gatepass_model extends CI_Model {
             $this->db->or_where("students.firstname LIKE '$contains'");
             $this->db->or_where("gatepass.purpose LIKE '$contains'");
             $this->db->or_where("gatepass.destination LIKE '$contains'");
-            $this->db->or_where("gatepass.status LIKE '$contains'");
+            $this->db->or_where("gatepass.status LIKE '$status_contains'");
             $this->db->or_where("gatepass.type LIKE '$contains'");
             $this->db->group_end();
         }
@@ -144,6 +153,15 @@ class Gatepass_model extends CI_Model {
             $starts_with = $this->db->escape_like_str($search) . '%';
             $contains = '%' . $this->db->escape_like_str($search) . '%';
             
+            // GATE-UI-001: Map frontend display labels to actual DB status values
+            $search_lower = strtolower(trim($search));
+            $status_contains = $contains;
+            if (strpos('approved', $search_lower) !== false) {
+                $status_contains = '%approve%';
+            } elseif (strpos('declined', $search_lower) !== false) {
+                $status_contains = '%denied%';
+            }
+            
             // Search by lastname, firstname (starts with OR contains), purpose, destination, status, type
             $this->db->group_start();
             $this->db->where("students.lastname LIKE '$starts_with'");
@@ -152,7 +170,7 @@ class Gatepass_model extends CI_Model {
             $this->db->or_where("students.firstname LIKE '$contains'");
             $this->db->or_where("gatepass.purpose LIKE '$contains'");
             $this->db->or_where("gatepass.destination LIKE '$contains'");
-            $this->db->or_where("gatepass.status LIKE '$contains'");
+            $this->db->or_where("gatepass.status LIKE '$status_contains'");
             $this->db->or_where("gatepass.type LIKE '$contains'");
             $this->db->group_end();
         }
@@ -192,6 +210,15 @@ class Gatepass_model extends CI_Model {
             $starts_with = $this->db->escape_like_str($search) . '%';
             $contains = '%' . $this->db->escape_like_str($search) . '%';
             
+            // GATE-UI-001: Map frontend display labels to actual DB status values
+            $search_lower = strtolower(trim($search));
+            $status_contains = $contains;
+            if (strpos('approved', $search_lower) !== false) {
+                $status_contains = '%approve%';
+            } elseif (strpos('declined', $search_lower) !== false) {
+                $status_contains = '%denied%';
+            }
+            
             // Search by lastname, firstname (starts with OR contains), purpose, destination, status, type
             $this->db->group_start();
             $this->db->where("students.lastname LIKE '$starts_with'");
@@ -200,7 +227,7 @@ class Gatepass_model extends CI_Model {
             $this->db->or_where("students.firstname LIKE '$contains'");
             $this->db->or_where("gatepass.purpose LIKE '$contains'");
             $this->db->or_where("gatepass.destination LIKE '$contains'");
-            $this->db->or_where("gatepass.status LIKE '$contains'");
+            $this->db->or_where("gatepass.status LIKE '$status_contains'");
             $this->db->or_where("gatepass.type LIKE '$contains'");
             $this->db->group_end();
         }
@@ -250,6 +277,15 @@ class Gatepass_model extends CI_Model {
             $starts_with = $this->db->escape_like_str($search) . '%';
             $contains = '%' . $this->db->escape_like_str($search) . '%';
             
+            // GATE-UI-001: Map frontend display labels to actual DB status values
+            $search_lower = strtolower(trim($search));
+            $status_contains = $contains;
+            if (strpos('approved', $search_lower) !== false) {
+                $status_contains = '%approve%';
+            } elseif (strpos('declined', $search_lower) !== false) {
+                $status_contains = '%denied%';
+            }
+            
             // Search by lastname, firstname (starts with OR contains), purpose, destination, status, type
             $this->db->group_start();
             $this->db->where("students.lastname LIKE '$starts_with'");
@@ -258,7 +294,7 @@ class Gatepass_model extends CI_Model {
             $this->db->or_where("students.firstname LIKE '$contains'");
             $this->db->or_where("gatepass.purpose LIKE '$contains'");
             $this->db->or_where("gatepass.destination LIKE '$contains'");
-            $this->db->or_where("gatepass.status LIKE '$contains'");
+            $this->db->or_where("gatepass.status LIKE '$status_contains'");
             $this->db->or_where("gatepass.type LIKE '$contains'");
             $this->db->group_end();
         }

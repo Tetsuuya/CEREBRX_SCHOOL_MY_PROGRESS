@@ -802,3 +802,88 @@ Below is a non-technical summary of how the Dorm Dean portal behaved **originall
 | **Denied Status Label** | **Denied**: The red status badge for rejected gatepass requests displayed as "Denied". | **Declined**: The status badge is updated to display as "Declined" to maintain consistency. |
 | **Action Button Labels** | **Approved / Declined**: The buttons to process pending requests were labeled as "Approved" and "Declined". | **Approve / Decline**: The buttons are now labeled as "Approve" and "Decline" (verbs) to match action semantics. |
 | **Record Sorting Priority** | **Exit Date / Created At**: Sorted strictly by exit dates or the date the pass was originally created. | **Pending & Recently Updated First**: "Pending" requests are pinned to the top, and processed requests are ordered by the most recent updates (`updated_at` / `created_at` DESC). |
+
+---
+
+## 5. Bugfix - GATE-SYS-001: Gatepass Sorting by created_at
+
+* **Session**: Sunday (June 29, 2026)
+* **Bug ID**: GATE-SYS-001
+* **Type of Change**: Bugfix
+* **File**: `Controller/Gatepass.php` → `save_data()` method, Line 93
+* **Severity**: Functional defect
+
+### Problem
+Newly created Gate Pass requests were not placed at the top of the list. Instead, they appeared below other gate passes created on the same day, making it difficult to find the most recently added request.
+
+### Root Cause
+The `created_at` field was being set using `date("Y-m-d")`, which produces a **date-only** value (e.g., `2026-06-29`). When stored in the database, the time component defaults to `00:00:00`, resulting in a timestamp of `2026-06-29 00:00:00` for every gate pass created on the same day.
+
+Since the `ORDER BY gatepass.created_at DESC` clause in the model's `getactiverecords()` cannot distinguish between records that all share the same `00:00:00` timestamp, the sort order within the same day was effectively **arbitrary** (determined by database insertion order or primary key).
+
+### Fix Applied
+
+#### Before (Bug)
+```php
+'created_at' => date("Y-m-d")
+```
+
+#### After (Fix)
+```php
+'created_at' => date("Y-m-d H:i:s")
+```
+
+### Impact
+- The `created_at` field now stores the **exact date and time** of creation (e.g., `2026-06-29 15:18:12`)
+- The existing `ORDER BY gatepass.created_at DESC` in the model will now correctly sort newer gate passes above older ones within the same day
+- **No model or view changes required** — the sorting queries already use `created_at DESC`; only the data being stored was incomplete
+
+> **Note**: This fix only affects **newly created** gate passes going forward. Existing records that were saved with `00:00:00` timestamps will retain their old ordering among themselves.
+
+---
+
+## 6. Bugfix - GATE-SYS-003: Regular Gatepass 2-Hour Return Limit
+
+* **Session**: Sunday (June 29, 2026)
+* **Bug ID**: GATE-SYS-003
+* **Type of Change**: Bugfix / Enhancement
+* **Files Modified**: `Controller/Gatepass.php`, `View/records.php`
+* **Severity**: Business rule violation
+
+### Problem
+The Add Gate Pass form allowed the Dorm Dean to select **any** return date and time for a Regular Gatepass, even though school policy limits Regular Gate Passes to a maximum of **2 hours**. There was no enforcement of this rule.
+
+### Fix Applied
+
+#### Front-End (View/records.php)
+- When **Regular Gatepass** is selected (default), the **Return Date** and **Return Time** fields are **automatically filled** to exactly 2 hours after the Exit Date/Time.
+- Both return fields become **read-only** (greyed out) so the user cannot modify them.
+- A helper text appears: *"Auto-set to 2 hours after exit (Regular Gatepass)"*
+- When the user changes the Exit Date or Exit Time, the return fields **auto-recalculate**.
+- When **Campus Leave** or **Emergency Gatepass** is selected, the return fields **unlock** and become fully editable again.
+
+#### Back-End (Controller/Gatepass.php)
+- Server-side enforcement added in `save_data()`: If the type is `regular`, the controller **overrides** whatever return date/time was submitted and forces it to exit + 2 hours.
+- This prevents any bypass of the front-end readonly constraint.
+
+```php
+// GATE-SYS-003: Enforce 2-hour limit for Regular Gatepass (server-side)
+if ($type_of_gatepass == 'regular' && $exit_date && $exit_time) {
+    $exit_datetime = new DateTime($exit_date . ' ' . $exit_time);
+    $return_datetime = clone $exit_datetime;
+    $return_datetime->modify('+2 hours');
+    $return_date = $return_datetime->format('Y-m-d');
+    $return_time = $return_datetime->format('H:i');
+}
+```
+
+### Behavior by Gatepass Type
+
+| Gatepass Type | Return Date/Time | Editable? |
+| :--- | :--- | :--- |
+| **Regular** | Auto-set to Exit + 2 hours | ❌ Read-only |
+| **Campus Leave** | User picks freely | ✅ Editable |
+| **Emergency** | User picks freely | ✅ Editable |
+
+
+

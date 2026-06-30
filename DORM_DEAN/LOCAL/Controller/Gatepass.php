@@ -73,6 +73,15 @@ class Gatepass extends CI_Controller {
         $dorm_id =  $student_result['dorm_id'];
         $complete_name =  $student_result['firstname'].' '.$student_result['middlename'].' '.$student_result['lastname']; 
 
+        // GATE-SYS-003: Enforce 2-hour limit for Regular Gatepass (server-side)
+        if ($type_of_gatepass == 'regular' && $exit_date && $exit_time) {
+            $exit_datetime = new DateTime($exit_date . ' ' . $exit_time);
+            $return_datetime = clone $exit_datetime;
+            $return_datetime->modify('+2 hours');
+            $return_date = $return_datetime->format('Y-m-d');
+            $return_time = $return_datetime->format('H:i');
+        }
+
         if( $student_id ){
             $data = array(
                 'student_id' => $student_id,
@@ -90,7 +99,7 @@ class Gatepass extends CI_Controller {
                 'dorm_id' => $dorm_id, 
                 'requestor_id' => $dormitorydean_id, 
                 'session_id' => $session_id, 
-                'created_at' => date("Y-m-d")
+                'created_at' => date("Y-m-d H:i:s")
             );
 
 

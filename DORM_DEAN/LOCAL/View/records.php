@@ -60,11 +60,13 @@
                                 <label for="exampleInputEmail1">Return Date <span style="color:red;">*</span></label>
                                 <input id="return_date" name="return_date" placeholder="" type="date" class="form-control date" required="required"/>
                                 <span class="text-danger"><?php echo form_error('return_date'); ?></span>
+                                <small id="return_date_help" class="text-muted" style="display:none;">Auto-set to 2 hours after exit (Regular Gatepass)</small>
                             </div> 
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Return Time <span style="color:red;">*</span></label>
                                 <input id="return_time" name="return_time" placeholder="" type="time" class="form-control date" required="required"/>
                                 <span class="text-danger"><?php echo form_error('return_time'); ?></span>
+                                <small id="return_time_help" class="text-muted" style="display:none;">Auto-set to 2 hours after exit (Regular Gatepass)</small>
                             </div> 
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Purpose/Reason <span style="color:red;">*</span></label>
@@ -286,6 +288,82 @@
 
 
 <script>
+// ============================================================
+// GATE-SYS-003: Regular Gatepass 2-hour return limit
+// ============================================================
+$(document).ready(function() {
+    var $exitDate = $('#exit_date');
+    var $exitTime = $('#exit_time');
+    var $returnDate = $('#return_date');
+    var $returnTime = $('#return_time');
+    var $typeRadios = $('input[name="type_of_gatepass"]');
+    var $returnDateHelp = $('#return_date_help');
+    var $returnTimeHelp = $('#return_time_help');
+
+    // Calculate return = exit + 2 hours and fill the fields
+    function autoFillReturn() {
+        var selectedType = $('input[name="type_of_gatepass"]:checked').val();
+        if (selectedType !== 'regular') return;
+
+        var exitDateVal = $exitDate.val();
+        var exitTimeVal = $exitTime.val();
+
+        if (exitDateVal && exitTimeVal) {
+            // Build a Date object from exit date + time
+            var exitDateTime = new Date(exitDateVal + 'T' + exitTimeVal);
+            // Add 2 hours
+            var returnDateTime = new Date(exitDateTime.getTime() + (2 * 60 * 60 * 1000));
+
+            // Format return date as YYYY-MM-DD
+            var rYear = returnDateTime.getFullYear();
+            var rMonth = ('0' + (returnDateTime.getMonth() + 1)).slice(-2);
+            var rDay = ('0' + returnDateTime.getDate()).slice(-2);
+            $returnDate.val(rYear + '-' + rMonth + '-' + rDay);
+
+            // Format return time as HH:MM
+            var rHours = ('0' + returnDateTime.getHours()).slice(-2);
+            var rMinutes = ('0' + returnDateTime.getMinutes()).slice(-2);
+            $returnTime.val(rHours + ':' + rMinutes);
+        }
+    }
+
+    // Lock or unlock return fields based on gatepass type
+    function updateReturnFieldState() {
+        var selectedType = $('input[name="type_of_gatepass"]:checked').val();
+
+        if (selectedType === 'regular') {
+            // Auto-fill and lock
+            autoFillReturn();
+            $returnDate.prop('readonly', true).css('background-color', '#eee');
+            $returnTime.prop('readonly', true).css('background-color', '#eee');
+            $returnDateHelp.show();
+            $returnTimeHelp.show();
+        } else {
+            // Unlock for Campus Leave and Emergency
+            $returnDate.prop('readonly', false).css('background-color', '');
+            $returnTime.prop('readonly', false).css('background-color', '');
+            $returnDateHelp.hide();
+            $returnTimeHelp.hide();
+        }
+    }
+
+    // Trigger on type change
+    $typeRadios.on('change', function() {
+        updateReturnFieldState();
+    });
+
+    // Trigger on exit date/time change (recalculate if Regular)
+    $exitDate.on('change', function() {
+        autoFillReturn();
+    });
+    $exitTime.on('change', function() {
+        autoFillReturn();
+    });
+
+    // Initialize on page load (Regular is checked by default)
+    updateReturnFieldState();
+});
+
 // Destroy DataTables for this specific table to use server-side pagination
 $(document).ready(function() {
     var table = $('.example');

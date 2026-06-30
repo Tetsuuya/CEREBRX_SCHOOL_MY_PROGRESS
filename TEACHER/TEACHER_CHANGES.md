@@ -1277,3 +1277,11 @@ To finalize the 3-term grading transition in the Teacher/Coordinator interface, 
   - **Before**: If a record for a student's subject, term, and session already existed in `exam_results`, the system threw a warning notification and skipped the record.
   - **After**: If a record exists, the system now runs an `$this->db->update` query directly on `exam_results` to overwrite the existing grade with the new imported grade value, sets the imported detail row to `approved = 1`, and logs the action.
   - This preserves the "Draft → Pending → Approved" workflow but enables safe, multiple re-uploads for grade corrections.
+
+### 13.6 Library: [Excelwithspout.php](file:///c:/Users/Rhenel%20Jhon%20Sajol/Desktop/CEREB_SCHOOL_BACKUP/TEACHER/LOCAL/Libraries/Excelwithspout.php)
+* **Type of Change**: Bug Fix (Dynamic School Year Resolution)
+* **Purpose**: Resolves the mismatch where generated Excel templates display a hardcoded year range (like `2026-2027`) instead of the actual active school year session (like `2023-2024`).
+* **What Changed**: Refactored the `{school_year}` replacement block (line 404):
+  - **Before**: The template replacement array hardcoded the current server calendar year using standard date functions: `date('Y') . '-' . (date('Y') + 1)`.
+  - **After**: The library now fetches the current session ID via `Setting_model->getCurrentSession()` and queries the `sessions` table in the database to fetch the exact, human-readable session name (e.g. `2023-2024`). If no session is found, it falls back to the system date range as a safe backup.
+  - This ensures generated spreadsheet metadata always aligns perfectly with the active school year selected in the portal.

@@ -396,12 +396,16 @@ class Excelwithspout extends PHPExcel {
 			}
 		}
 		
+		$session_id = $CI->Setting_model->getCurrentSession();
+		$session_row = $CI->db->select('session')->from('sessions')->where('id', $session_id)->get()->row();
+		$school_year = $session_row ? $session_row->session : date('Y') . '-' . (date('Y') + 1);
+
 		$replacements = array(
 			'{school_name}' => $get_school_name,
 			'{class}' => $class_name . ' ' . $section_name,
 			'{subject_name}' => $subject_name,
 			'{subject_teacher}' => $fullname,
-			'{school_year}' => date('Y') . '-' . (date('Y') + 1),
+			'{school_year}' => $school_year,
 			'{written_work}' => $written_work ? ($written_work / 100) : '',
 			'{performance_tasks}' => $performance_task ? ($performance_task / 100) : '',
 			'{quarterly_assessment}' => $quarterly_assesment ? ($quarterly_assesment / 100) : ''

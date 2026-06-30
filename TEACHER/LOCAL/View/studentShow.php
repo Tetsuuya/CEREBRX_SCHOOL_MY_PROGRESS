@@ -981,6 +981,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                 $complete_third = true;
                                                 $complete_fourth = true;
                                                 foreach( $list_of_subjects as $listsubject => $subjects ){
+                                                    $complete_grades = true;
                                                     $subject_id = $subjects['id'];
                                                     $subject_manager_details = $this->subjectmanager_model->getBySubjectSession( $subject_id, $session_id );
                                                     $display_card = $subject_manager_details['display_card'];

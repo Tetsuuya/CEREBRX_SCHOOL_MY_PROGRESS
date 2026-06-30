@@ -1554,6 +1554,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
 												foreach( $list_of_subjects as $listsubject => $subjects ){
 
+													$complete_grades = true;
+
 													$subject_id = $subjects['id'];
 
 													$subject_manager_details = $this->subjectmanager_model->getBySubjectSession( $subject_id, $session_id );

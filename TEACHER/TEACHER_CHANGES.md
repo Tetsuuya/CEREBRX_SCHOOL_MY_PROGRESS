@@ -1253,20 +1253,22 @@ To finalize the 3-term grading transition in the Teacher/Coordinator interface, 
     - Updated Second Semester table to show only `Term 3` and completely removed the `4Q` column header and grade row cells.
 
 ### 13.3 Coordinator View: [studentGrade.php](file:///c:/Users/Rhenel%20Jhon%20Sajol/Desktop/CEREB_SCHOOL_BACKUP/TEACHER/LOCAL/View/studentGrade.php)
-* **Type of Change**: UI & Variable Update
-* **Purpose**: Scales coordinator grade lists to 3 terms.
+* **Type of Change**: UI & Variable Update & Bug Fix
+* **Purpose**: Scales coordinator grade lists to 3 terms and resolves the "Final Grade column blank" bug.
 * **What Changed**:
-  - Relabeled table headers `1st Qtr`, `2nd Qtr`, `3rd Qtr`, `4th Qtr` to `Term 1`, `Term 2`, `Term 3` in both the JHS Grades List and Conduct Grade tables.
+  - Relabeled table headers `1st Qtr`, `2nd Qtr`, `3rd Qtr`, `4th Qtr` to `Term 1`, `Term 2`, `Term 3` in JHS and Conduct tables.
   - Changed initialization variables `$last_quarter = 4;` and `$get_count = 4;` to `3` in JHS table (lines ~1520-1530).
   - Changed Conduct table initialization `$last_quarter = 4;` to `3` (line ~2001).
+  - **Bug Fix**: Moved the `$complete_grades = true;` variable initialization inside the JHS subject loop (line 1557) so it is correctly reset for each subject, allowing final grades to display for completed subjects.
 
 ### 13.4 Student Details View: [studentShow.php](file:///c:/Users/Rhenel%20Jhon%20Sajol/Desktop/CEREB_SCHOOL_BACKUP/TEACHER/LOCAL/View/studentShow.php)
-* **Type of Change**: New View File & Integration (Downloaded from Server)
-* **Purpose**: Aligns the student detail grades tab with the 3-term layout.
+* **Type of Change**: New View File & Integration & Bug Fix
+* **Purpose**: Aligns the student details grade tab with the 3-term layout and resolves the "Final Grade column blank" bug.
 * **What Changed**:
-  - Relabeled table headers `1st Qtr`, `2nd Qtr`, `3rd Qtr`, `4th Qtr` to `Term 1`, `Term 2`, `Term 3` in both the JHS Grades List and Conduct Grade tables.
+  - Relabeled table headers `1st Qtr`, `2nd Qtr`, `3rd Qtr`, `4th Qtr` to `Term 1`, `Term 2`, `Term 3` in JHS and Conduct tables.
   - Updated JHS variables `$last_quarter = 4;` and `$get_count = 4;` to `3` (lines ~967-969).
   - Updated Conduct table variable `$last_quarter = 4;` to `3` (line ~1207).
+  - **Bug Fix**: Moved the `$complete_grades = true;` variable initialization inside the JHS subject loop (line 984) so it is correctly reset for each subject, allowing final grades to display for completed subjects.
 
 ### 13.5 Model: [Importgradesdetails_model.php](file:///c:/Users/Rhenel%20Jhon%20Sajol/Desktop/CEREB_SCHOOL_BACKUP/TEACHER/LOCAL/Model/Importgradesdetails_model.php)
 * **Type of Change**: Logic Enhancement (Update/Overwrite Integration)

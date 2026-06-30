@@ -89,12 +89,7 @@
                                     <input type="hidden" id="parent_custom" name="parent_custom" value="<?php echo set_value('custom_parent', $notification['custom_parent']); ?>">
                                     <!-- modification: hidden field added to store targeted specific student IDs -->
                                     <input type="hidden" id="custom_student_ids" name="custom_student_ids" value="<?php echo set_value('custom_student_ids', $notification['custom_student_ids']); ?>">
-									<?php
-									  if( $notification['approved'] != 'yes' && ( $notification['created_id'] == $teacher_id && $notification['created_by'] == 'teacher' )){?>
-											<button type="submit" class="btn btn-primary" onclick.submit="Are "><i class="fa fa-envelope-o"></i> <?php echo $this->lang->line('send'); ?> </button>
-									<?php 
-									  }
-									  ?>
+                                    <button type="submit" class="btn btn-primary"><i class="fa fa-envelope-o"></i> <?php echo $this->lang->line('send'); ?> </button>
                                 </div>
 
                             </div>

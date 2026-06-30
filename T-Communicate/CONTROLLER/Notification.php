@@ -258,6 +258,29 @@ class Notification extends CI_Controller {
 
             }
 
+            // modification: direct SMS sending for selected specific parents
+            $custom_student_ids = $this->input->post('custom_student_ids');
+            if (!empty($custom_student_ids)) {
+                $student_ids = explode(',', $custom_student_ids);
+                $this->db->select('students.guardian_phone');
+                $this->db->from('students');
+                $this->db->where_in('students.id', $student_ids);
+                $query = $this->db->get();
+                $students_contact = $query->result_array();
+
+                if (!empty($students_contact)) {
+                    $this->load->library('smsgateway');
+                    foreach ($students_contact as $s_value) {
+                        $phone = $s_value['guardian_phone'];
+                        $phone = str_replace(' ', '', $phone);
+                        $phone = str_replace('-', '', $phone);
+                        if (strlen($phone) > 10) {
+                            $this->smsgateway->sentNotificationSMS($sms_message, $phone);
+                        }
+                    }
+                }
+            }
+
 
 
            
@@ -316,7 +339,7 @@ class Notification extends CI_Controller {
 
         $data['id'] = $id;
 
-        $notification = $this->notification_model->get($id);
+        $notification = $this->db->select('*')->from('send_notification')->where('id', $id)->get()->row_array();
 
         $data['notification'] = $notification;
 
@@ -584,6 +607,29 @@ class Notification extends CI_Controller {
 
                 } 
 
+            }
+
+            // modification: direct SMS sending for selected specific parents
+            $custom_student_ids = $this->input->post('custom_student_ids');
+            if (!empty($custom_student_ids)) {
+                $student_ids = explode(',', $custom_student_ids);
+                $this->db->select('students.guardian_phone');
+                $this->db->from('students');
+                $this->db->where_in('students.id', $student_ids);
+                $query = $this->db->get();
+                $students_contact = $query->result_array();
+
+                if (!empty($students_contact)) {
+                    $this->load->library('smsgateway');
+                    foreach ($students_contact as $s_value) {
+                        $phone = $s_value['guardian_phone'];
+                        $phone = str_replace(' ', '', $phone);
+                        $phone = str_replace('-', '', $phone);
+                        if (strlen($phone) > 10) {
+                            $this->smsgateway->sentNotificationSMS($sms_message, $phone);
+                        }
+                    }
+                }
             }
 
 

@@ -74,17 +74,21 @@
 									</div>
                                     <div class="col-md-3">
                                         <div class="form-group">
-                                            <label for="exampleInputEmail1"><?php echo $this->lang->line('quarter'); ?></label>
-                                            <select  id="quarter" name="quarter" class="form-control" >
-                                               <option value=""><?php echo $this->lang->line('select'); ?></option>
-                                                <?php
-                                                    foreach ($getquarter as $key => $value) {
-                                                    ?>
-                                                    <option  value="<?php echo $key; ?>" <?php if($quarter == $value) echo "selected"; ?>><?php echo $value; ?></option>
-                                                    <?php
-                                                    }
-                                                ?>
-                                            </select>
+                                             <label for="exampleInputEmail1">Term</label>
+                                             <select  id="quarter" name="quarter" class="form-control" >
+                                                <option value=""><?php echo $this->lang->line('select'); ?></option>
+                                                 <?php
+                                                     foreach ($getquarter as $key => $value) {
+                                                         if ($key > 3) {
+                                                             continue;
+                                                         }
+                                                     ?>
+                                                     <option  value="<?php echo $key; ?>" <?php if($quarter == $key || $quarter == $value) echo "selected"; ?>>Term <?php echo $key; ?></option>
+                                                     <?php
+                                                     }
+                                                 ?>
+                                                 <option  value="final" <?php if($quarter == 'final') echo "selected"; ?>>Final Grade</option>
+                                             </select>
                                             <span class="text-danger"><?php echo form_error('quarter'); ?></span>
                                         </div>
                                     </div>
@@ -136,7 +140,10 @@
 														<?php
 													} else {
 														$row_count = 1;
-														foreach ($studentlist as  $student_value) {
+														foreach ($studentlist as $key => $student_value) {
+															if (!is_numeric($key)) {
+																continue;
+															}
 															if( !empty( $student_value["id"])){
 																$student_id = $student_value["id"];
 																$url = base_url().'admin/report/show_report_card/'.$student_id; 

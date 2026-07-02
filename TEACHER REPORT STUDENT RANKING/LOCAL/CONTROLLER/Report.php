@@ -351,6 +351,13 @@ class Report extends CI_Controller {
 			$studentlist = $this->student_model->searchByClassSection($class, $section);
             $studentranking = $this->grade_model->getStudentAverage( $studentlist, $quarter, $semester, $combine_category );
 			$getgraderanking = $this->grade_model->getgraderanking( $studentranking );
+			if (is_array($getgraderanking)) {
+				foreach ($getgraderanking as $key => $val) {
+					if (!is_numeric($key)) {
+						unset($getgraderanking[$key]);
+					}
+				}
+			}
             $data['studentlist'] = $getgraderanking;
  
  

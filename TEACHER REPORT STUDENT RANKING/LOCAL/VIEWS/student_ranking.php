@@ -127,6 +127,7 @@
 														<th>First Name</th>
 														<th>Middle Name</th>
 														<th>Gender</th>  
+														<th>Subject Grade</th>  
 														<th>Grade</th>  
 													</tr>
 												</thead>
@@ -160,6 +161,70 @@
 																	<td class="tdclsname" style="background-color:<?php echo $background_color;?>;color:<?php echo $text_color;?>" ><?php echo $student_value['firstname']; ?></td>
 																	<td class="tdclsname" style="background-color:<?php echo $background_color;?>;color:<?php echo $text_color;?>" ><?php echo $student_value['middlename']; ?></td>
 																	<td class="tdclsname" style="background-color:<?php echo $background_color;?>;color:<?php echo $text_color;?>" ><?php echo $student_value['gender']; ?></td>
+																	<td class="tdclsname" style="background-color:<?php echo $background_color;?>;color:<?php echo $text_color;?>" >
+																		<?php
+																		$gradingsettings    = $this->gradingsetting_model->getbySession();
+																		$decimal_grades     = isset($gradingsettings->decimal_grades)    ? $gradingsettings->decimal_grades    : 0;
+																		$decimal_finalgrade = isset($gradingsettings->decimal_finalgrade) ? $gradingsettings->decimal_finalgrade : 2;
+																		$if_gradeisnull     = isset($gradingsettings->if_gradeisnull)    ? $gradingsettings->if_gradeisnull    : 'blank';
+																		$allow_to_pass      = isset($gradingsettings->allow_to_pass)      ? $gradingsettings->allow_to_pass      : 'no';
+																		$combine_category   = 'ga';
+																		$total_quarter      = 3;
+																		$getStudentSubject  = $this->subject_model->getSubjctByClass($class_id);
+																		if ($getStudentSubject) {
+																			if ($quarter == 'final') {
+																				foreach ($getStudentSubject as $listsubject => $subjects) {
+																					$get_final_grade       = 0;
+																					$subj_id               = $subjects['id'];
+																					$subj_name             = $subjects['name'];
+																					$subj_manager          = $this->subjectmanager_model->getBySubjectSession($subj_id);
+																					$display_card          = $subj_manager['display_card'];
+																					$align_right           = $subj_manager['align_right'];
+																					if ($display_card == 'yes') {
+																						for ($xy = 1; $xy <= $total_quarter; $xy++) {
+																							$g = $this->subjectcombine_model->getComputedCombinedGrade($student_id, $subj_id, $xy, $combine_category);
+																							$get_final_grade += $g;
+																						}
+																						$fg = $get_final_grade / $total_quarter;
+																						$checkifChild = $this->subjectcombine_model->checkifChild($subj_id);
+																						if (empty($checkifChild)) {
+																							if ($allow_to_pass == 'yes') {
+																								if ($fg == '74.5' || ($fg > 74.4 && $fg < 75)) { $fg = 75; }
+																							}
+																						}
+																						$fg = number_format((float)$fg, $decimal_finalgrade, '.', '');
+																						if ($align_right == 'yes') {
+																							echo '&nbsp;&nbsp;<i>'.$subj_name.' - <b>'.$fg.'</b></i><br/>';
+																						} else {
+																							echo $subj_name.' - <b>'.$fg.'</b><br/>';
+																						}
+																					}
+																				}
+																			} else {
+																				foreach ($getStudentSubject as $listsubject => $subjects) {
+																					$subj_id      = $subjects['id'];
+																					$subj_name    = $subjects['name'];
+																					$subj_manager = $this->subjectmanager_model->getBySubjectSession($subj_id);
+																					$display_card = $subj_manager['display_card'];
+																					$align_right  = $subj_manager['align_right'];
+																					if ($display_card == 'yes') {
+																						$g = $this->subjectcombine_model->getComputedCombinedGrade($student_id, $subj_id, $quarter, $combine_category);
+																						if ($g == null || $g == 0) {
+																							$val = ($if_gradeisnull == 'blank') ? '' : number_format((float)0, $decimal_grades, '.', '');
+																						} else {
+																							$val = $g;
+																						}
+																						if ($align_right == 'yes') {
+																							echo '&nbsp;&nbsp;<i>'.$subj_name.' - <b>'.$val.'</b></i><br/>';
+																						} else {
+																							echo $subj_name.' - <b>'.$val.'</b><br/>';
+																						}
+																					}
+																				}
+																			}
+																		}
+																		?>
+																	</td>
 																	<td class="tdclsname" style="background-color:<?php echo $background_color;?>;color:<?php echo $text_color;?>" ><?php echo $final_grade; ?></td>
 																</tr>
 																<?php

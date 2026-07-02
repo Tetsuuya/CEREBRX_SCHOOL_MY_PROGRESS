@@ -2911,34 +2911,6 @@ class Report extends CI_Controller {
         <br/>
         <br/>
         
-        <!-- Original Certification and Principal Approval Layout Section -->
-        <table width="100%" style="font-family: sans-serif; font-size: 13px;">
-            <tr>
-                <td width="60%">I hereby certify that the entries are true and correct</td>
-                <td width="35%" style=" border-bottom: 1px solid black;"></td>
-                <td width="5%"></td>
-            </tr>
-            <tr>
-                <td width="60%"></td>
-                <td width="35%" style="text-align: center; font-size: 11px; padding-top: 2px;">Signature</td>
-                <td width="5%"></td>
-            </tr>
-        </table>
-		<br/>
-		<br/> 
-		<table width="100%" style="font-family: sans-serif; font-size: 13px;">
-            <tr>
-                <td width="60%" align="right">Approved by:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-				<?php 
-				 if( $session_id == '13'){
-					$principal_fullname = 'Jesreel D. Mercader';
-				} ?>
-                <td width="35%" style=" border-bottom: 1px solid black;text-transform:uppercase;text-align: center; font-weight: bold;"><?php echo $principal_fullname;?></td>
-                <td width="5%"></td>
-            </tr>
-            <tr>
-                <td width="60%"></td>
-                <td width="35%" style="text-align: center; font-size: 11px; padding-top: 2px;">Principal</td>
                 <td width="5%"></td>
             </tr>
         </table>
@@ -3072,345 +3044,144 @@ class Report extends CI_Controller {
 	   $total_quarter = 3;
         ob_start();
         ?> 
+        <table class="tobe_bordered" width="100%" style="border: 1px solid #000000; border-collapse: collapse;">
+            <thead>
+                <tr> 
+                    <th style="border: 1px solid #000000; padding: 6px; font-size: 11px; text-align: left; background-color: #e6e6e6; color: #000000;" width="50%">Name of Pupils</th> 
+                    <th style="border: 1px solid #000000; padding: 6px; font-size: 10px; text-align: center; background-color: #e6e6e6; color: #000000;" width="10%" text-rotate="90">TERM 1</th>  
+                    <th style="border: 1px solid #000000; padding: 6px; font-size: 10px; text-align: center; background-color: #e6e6e6; color: #000000;" width="10%" text-rotate="90">TERM 2</th>  
+                    <th style="border: 1px solid #000000; padding: 6px; font-size: 10px; text-align: center; background-color: #e6e6e6; color: #000000;" width="10%" text-rotate="90">TERM 3</th>  
+                    <th style="border: 1px solid #000000; padding: 6px; font-size: 10px; text-align: center; background-color: #e6e6e6; color: #000000;" width="10%">GEN. AVE</th>  
+                    <th style="border: 1px solid #000000; padding: 6px; font-size: 10px; text-align: center; background-color: #e6e6e6; color: #000000;" width="10%">REMARKS</th>  
+                </tr>
+            </thead>
+            <tbody>
+                <?php 
+                // Print Male Students
+                if ($studentlistMale) {
+                    foreach ($studentlistMale as $student_value) {  
+                        $complete_grades = true;
+                        $student_id = $student_value["id"]; 
+                        $lastname = $student_value['lastname'];
+                        $firstname = $student_value['firstname'];
+                        $suffix = $student_value['suffix'];
+                        $middlename = !empty($student_value['middlename']) ? $student_value['middlename'][0].'.' : '';
+                        $student_fullname = $lastname.', '.$firstname.' '.$suffix.' '.$middlename;
+                        ?>
+                        <tr>
+                            <td style="border: 1px solid #000000; font-size: 10px; padding: 4px 6px; color: #0000ff; font-weight: normal; text-transform: uppercase;"><?php echo $student_fullname;?></td>
+                            <?php 
+                            $final_grade = 0;
+                            for ($x = 1; $x <= 3; $x++) {
+                                $grade_per_quarter = $this->subjectcombine_model->getComputedCombinedGrade($student_id, $subject_id, $x, $combine_category, $session_id);
+                                $grade_per_quarter = isset($grade_per_quarter) ? $grade_per_quarter : null;
+                                $grade_per_quarter = number_format($grade_per_quarter, $decimal_grades, '.', '');
+                                if ($grade_per_quarter == null || $grade_per_quarter == 0) {
+                                    $complete_grades = false;
+                                    echo '<td style="border: 1px solid #000000; font-size: 10px; padding: 4px; text-align: center;"></td>';
+                                } else {
+                                    $final_grade = $final_grade + $grade_per_quarter;
+                                    echo '<td style="border: 1px solid #000000; font-size: 10px; padding: 4px; text-align: center; color: #000000; font-weight: bold;">'.$grade_per_quarter.'</td>';
+                                }
+                            }
+                            if ($complete_grades && $final_grade != 0) {
+                                $average = $final_grade / 3;
+                                $average_formatted = number_format($average, $decimal_finalgrade, '.', '');
+                                $remarks = ($average >= 75) ? 'Passed' : 'Failed';
+                                echo '<td style="border: 1px solid #000000; font-size: 10px; padding: 4px; text-align: center; color: #000000; font-weight: bold;">'.$average_formatted.'</td>';
+                                echo '<td style="border: 1px solid #000000; font-size: 10px; padding: 4px; text-align: center; color: #000000; font-weight: normal;">'.$remarks.'</td>';
+                            } else {
+                                echo '<td style="border: 1px solid #000000; font-size: 10px; padding: 4px; text-align: center;"></td>';
+                                echo '<td style="border: 1px solid #000000; font-size: 10px; padding: 4px; text-align: center;"></td>';
+                            }
+                            ?>
+                        </tr>
+                        <?php
+                    }
+                }
+
+                // Print Female Students
+                if ($studentlistFemale) {
+                    foreach ($studentlistFemale as $student_value) {  
+                        $complete_grades = true;
+                        $student_id = $student_value["id"]; 
+                        $lastname = $student_value['lastname'];
+                        $firstname = $student_value['firstname'];
+                        $suffix = $student_value['suffix'];
+                        $middlename = !empty($student_value['middlename']) ? $student_value['middlename'][0].'.' : '';
+                        $student_fullname = $lastname.', '.$firstname.' '.$suffix.' '.$middlename;
+                        ?>
+                        <tr>
+                            <td style="border: 1px solid #000000; font-size: 10px; padding: 4px 6px; color: #ff0000; font-weight: normal; text-transform: uppercase;"><?php echo $student_fullname;?></td>
+                            <?php 
+                            $final_grade = 0;
+                            for ($x = 1; $x <= 3; $x++) {
+                                $grade_per_quarter = $this->subjectcombine_model->getComputedCombinedGrade($student_id, $subject_id, $x, $combine_category, $session_id);
+                                $grade_per_quarter = isset($grade_per_quarter) ? $grade_per_quarter : null;
+                                $grade_per_quarter = number_format($grade_per_quarter, $decimal_grades, '.', '');
+                                if ($grade_per_quarter == null || $grade_per_quarter == 0) {
+                                    $complete_grades = false;
+                                    echo '<td style="border: 1px solid #000000; font-size: 10px; padding: 4px; text-align: center;"></td>';
+                                } else {
+                                    $final_grade = $final_grade + $grade_per_quarter;
+                                    echo '<td style="border: 1px solid #000000; font-size: 10px; padding: 4px; text-align: center; color: #000000; font-weight: bold;">'.$grade_per_quarter.'</td>';
+                                }
+                            }
+                            if ($complete_grades && $final_grade != 0) {
+                                $average = $final_grade / 3;
+                                $average_formatted = number_format($average, $decimal_finalgrade, '.', '');
+                                $remarks = ($average >= 75) ? 'Passed' : 'Failed';
+                                echo '<td style="border: 1px solid #000000; font-size: 10px; padding: 4px; text-align: center; color: #000000; font-weight: bold;">'.$average_formatted.'</td>';
+                                echo '<td style="border: 1px solid #000000; font-size: 10px; padding: 4px; text-align: center; color: #000000; font-weight: normal;">'.$remarks.'</td>';
+                            } else {
+                                echo '<td style="border: 1px solid #000000; font-size: 10px; padding: 4px; text-align: center;"></td>';
+                                echo '<td style="border: 1px solid #000000; font-size: 10px; padding: 4px; text-align: center;"></td>';
+                            }
+                            ?>
+                        </tr>
+                        <?php
+                    }
+                }
+                ?>
+                <!-- Signatures Row inside the Table -->
+                <tr>
+                    <td style="border: 1px solid #000000; font-size: 9px; font-weight: bold; padding: 5px 6px; text-transform: uppercase;">SUBJ. TEACHER'S SIGNATURE/DATE</td>
+                    <td style="border: 1px solid #000000;"></td>
+                    <td style="border: 1px solid #000000;"></td>
+                    <td style="border: 1px solid #000000;"></td>
+                    <td style="border: 1px solid #000000;"></td>
+                    <td style="border: 1px solid #000000;"></td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid #000000; font-size: 9px; font-weight: bold; padding: 5px 6px; text-transform: uppercase;">SCH. PRINCIPAL'S SIGNATURE/DATE</td>
+                    <td style="border: 1px solid #000000;"></td>
+                    <td style="border: 1px solid #000000;"></td>
+                    <td style="border: 1px solid #000000;"></td>
+                    <td style="border: 1px solid #000000;"></td>
+                    <td style="border: 1px solid #000000;"></td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <br/>
         <table width="100%">
             <tr>
-                <td width="48%" style="vertical-align: top"> 
+                <td style="font-size: 11px; font-weight: bold;">
                     <?php 
-                    if( $studentlistMale ) {
-                        ?>
-                        <table class="tobe_bordered" width="100%" style=" border: 1px solid black;  border-collapse: collapse;">
-                            <thead>
-                                <tr> 
-                                    <th style=" border: 1px solid black" colspan="2">Names</th> 
-                                    <?php
-                                    if( $enableStrand ){
-                                        $gradingsettings = $this->gradingsetting_model->getBySession( $session_id );
-                                        $get_quarter = array();
-                                        $total_quarter =0;
-                                        if( $semester_id == 1 ){
-                                            $get_quarter = isset($gradingsettings->qtr_first_sem )?$gradingsettings->qtr_first_sem:array(); 
-                                            $get_quarter = is_serialized( $get_quarter )?unserialize($get_quarter):$get_quarter;
-                                            $total_quarter = count( $get_quarter );
-                                        } else {
-                                            $get_quarter = isset($gradingsettings->qtr_second_sem )?$gradingsettings->qtr_second_sem:array();   
-                                            $get_quarter = is_serialized( $get_quarter )?unserialize($get_quarter):$get_quarter;
-                                            $total_quarter = count( $get_quarter );
-                                        }
-                                        
-                                        if( $get_quarter ){
-                                            foreach( $get_quarter as $key => $value ){
-                                                ?>
-                                                <th style=" border: 1px solid black;padding:2px 5px;" ><?php echo ordinal_suffix_roman($value);?></th>
-                                                <?php
-                                            }
-                                           /*  ?><th>F</th><?php */
-                                        }
-                                    } else {
-                                        for($x=1;$x<=3;$x++){
-                                            ?>
-                                            <th style=" border: 1px solid black;padding:2px 5px;" ><?php echo ordinal_suffix_roman($x);?></th>  
-                                            <?php
-                                        }
-                                    }   
-                                    ?>
-									<th style=" border: 1px solid black;padding:2px 5px;" ><small>Final Grade</small></th>  
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php if (empty($studentlistMale)) {
-                                    ?>
-                                    <tr>
-                                        <td colspan="32" class="text-danger text-center" style= "border: 1px solid black"><?php echo $this->lang->line('no_record_found'); ?></td>
-
-                                    </tr>
-                                    <?php
-                                } else {
-                                    $row_count = 1;
-                                    foreach ($studentlistMale as  $student_value) {  
-											$complete_grades = true;
-											$student_id = $student_value["id"]; 
-											$lastname = $student_value['lastname'];
-											$firstname = $student_value['firstname'];
-											$suffix = $student_value['suffix'];
-											$middlename = !empty($student_value['middlename'])?$student_value['middlename'][0].'.':'';
-											?>
-                                        <tr> 
-                                            <td style= "border: 1px solid black; text-align: right; font-size: 11px;"><?php echo $row_count;?></td>
-                                            <td style= "border: 1px solid black; font-size: 11px;  padding-left: 6px;  padding-right: 6px;text-transform:uppercase;"><?php echo $lastname.', '.$firstname.' '.$suffix.' '.$middlename; ?></td> 
-                                            <?php 
-                                            if( $enableStrand ){
-                                                $final_grade = 0;
-												$not_available = false;
-                                                for( $qtr=0;$qtr<$total_quarter;$qtr++ ) {
-                                                    $y = $get_quarter[$qtr];
-													if( $y == 1 || $y == 2 ){
-														$semester_id = 1;
-													} elseif( $y == 3 || $y == '4'){
-														$semester_id = 2;
-													}
-													$getStudentSubjectSemesterDrop = $this->customsubject_model->getStudentSubjectSemesterDrop( $student_id, $subject_id, $semester_id , $session_id );
-													if( empty( $getStudentSubjectSemesterDrop)){
-														$not_available = false;
-														$grade_per_quarter = $this->subjectcombine_model->getComputedCombinedGrade( $student_id, $subject_id, $y, $combine_category, $session_id  );
-														$grade_per_quarter = isset($grade_per_quarter)?$grade_per_quarter:null;
-														$grade_per_quarter = number_format($grade_per_quarter, $decimal_grades, '.', '');
-														if( $grade_per_quarter == null || $grade_per_quarter == 0 ){
-															$complete_grades = false;
-															if( $if_gradeisnull == 'blank'){
-																 echo '<td  style= "border: 1px solid black; font-size: 11px;  padding-left: 6px;  padding-right: 6px;"></td>';
-															}  else {
-																echo '<td  style= "border: 1px solid black; font-size: 11px;  padding-left: 6px;  padding-right: 6px;">'.number_format((float)0, $decimal_grades, '.', '').'</td>';
-															}
-														} else {
-															$final_grade = $final_grade + $grade_per_quarter;
-															 echo '<td style= "border: 1px solid black; font-size: 11px;  padding-left: 6px;  padding-right: 6px;" >'.$grade_per_quarter.'</td>';
-														}
-													} else {
-														$not_available = true;
-														 echo '<td style= "border: 1px solid black; font-size: 11px;  padding-left: 6px;  padding-right: 6px;" >N/A</td>';
-													}
-                                                }
-											   	if( $not_available ){
-													 echo '<td style= "border: 1px solid black; font-size: 11px;  padding-left: 6px;  padding-right: 6px;" >N/A</td>';
-												} else {
-													if( $complete_grades && $final_grade != 0 ){
-														$average = $final_grade / $total_quarter;
-														$average = number_format( $average, $decimal_finalgrade, '.',' ');
-														echo '<td style= "border: 1px solid black; font-size: 11px;  padding-left: 6px;  padding-right: 6px;" >'.$average.'</td>';
-													} else {
-														echo '<td  style= "border: 1px solid black; font-size: 11px;  padding-left: 6px;  padding-right: 6px;"></td>';
-													}
-												}
-														
-                                               
-                                            } else {
-												$final_grade= 0;
-                                                for( $x=1;$x<=3;$x++){
-													$grade_per_quarter = $this->subjectcombine_model->getComputedCombinedGrade( $student_id, $subject_id, $x, $combine_category, $session_id );
-													$grade_per_quarter = isset($grade_per_quarter)?$grade_per_quarter:null;
-													$grade_per_quarter = number_format($grade_per_quarter, $decimal_grades, '.', '');
-													if( $grade_per_quarter == null || $grade_per_quarter == 0 ){
-														$complete_grades = false;
-														if( $if_gradeisnull == 'blank'){
-															echo '<td  style= "border: 1px solid black; font-size: 11px;  padding-left: 6px;  padding-right: 6px;"></td>';
-														}  else {
-															echo '<td  style= "border: 1px solid black; font-size: 11px;  padding-left: 6px;  padding-right: 6px;">'.number_format((float)0, $decimal_grades, '.', '').'</td>';
-														}
-													} else {
-														$final_grade = $final_grade + $grade_per_quarter;
-														echo '<td  style= "border: 1px solid black; font-size: 11px;  padding-left: 6px;  padding-right: 6px;">'.$grade_per_quarter.'</td>';
-													}
-                                                }
-												if( $complete_grades && $final_grade != 0 ){
-													$average = $final_grade / $total_quarter;
-													$average = number_format( $average, $decimal_finalgrade, '.',' ');
-													 echo '<td style= "border: 1px solid black; font-size: 11px;  padding-left: 6px;  padding-right: 6px;" >'.$average.'</td>';
-												} else {
-													 echo '<td  style= "border: 1px solid black; font-size: 11px;  padding-left: 6px;  padding-right: 6px;"></td>';
-												}
-                                            }
-                                            ?>  
-                                        </tr>
-                                        <?php
-                                        $row_count++; 
-                                    }
-                                }
-                                ?>
-                            </tbody> 
-                        </table>  
-                        <?php
+                    $adviser_name_display = '';
+                    if (!empty($teachers_advisory_name)) {
+                        $adviser_name_display = $prefix . ' ' . $teachers_advisory_name . ' ' . $teacher_advisory_midname . ' ' . $teacher_advisory_lastname;
+                    } elseif (!empty($teacher_details)) {
+                        $adviser_name_display = $prefix . ' ' . $teacher_firstname . ' ' . $teacher_middlename . ' ' . $teacher_lastname;
+                    }
+                    if ($adviser_name_display) {
+                        echo $adviser_name_display . ', Class Adviser';
                     }
                     ?>
                 </td>
-                <td width="4%"> &nbsp;</td>
-                <td align="right" width="48%" style="vertical-align: top">
-                    <?php 
-                    if( $studentlistFemale ) {
-                        ?>
-                        <table class="tobe_bordered" width="100%" style=" border: 1px solid black;  border-collapse: collapse;" align="left">
-                            <thead>
-                                <tr> 
-                                    <th style=" border: 1px solid black" colspan="2">Names</th> 
-                                     <?php
-                                    if( $enableStrand ){
-                                        $gradingsettings = $this->gradingsetting_model->getBySession( $session_id );
-                                        $get_quarter = array();
-                                        $total_quarter =0;
-                                        if( $semester_id == 1 ){
-                                            $get_quarter = isset($gradingsettings->qtr_first_sem )?$gradingsettings->qtr_first_sem:array(); 
-                                            $get_quarter = is_serialized( $get_quarter )?unserialize($get_quarter):$get_quarter;
-                                            $total_quarter = count( $get_quarter );
-                                        } else {
-                                            $get_quarter = isset($gradingsettings->qtr_second_sem )?$gradingsettings->qtr_second_sem:array();   
-                                            $get_quarter = is_serialized( $get_quarter )?unserialize($get_quarter):$get_quarter;
-                                            $total_quarter = count( $get_quarter );
-                                        }
-                                        
-                                        if( $get_quarter ){
-                                            foreach( $get_quarter as $key => $value ){
-                                                ?>
-                                                <th style=" border: 1px solid black;padding:2px 5px;" ><?php echo ordinal_suffix_roman($value);?></th>
-                                                <?php
-                                            }
-                                          /*   ?><th>F</th><?php */
-                                        }
-                                    } else {
-                                        for($x=1;$x<=3;$x++){
-                                            ?>
-                                            <th style=" border: 1px solid black;padding:2px 5px;" ><?php echo ordinal_suffix_roman($x);?></th>  
-                                            <?php
-                                        }
-                                    }   
-                                    ?>
-									<th style=" border: 1px solid black;padding:2px 5px;" ><small>Final Grade</small></th>  
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php if (empty($studentlistFemale)) {
-                                    ?>
-                                    <tr>
-                                        <td colspan="32" class="text-danger text-center" style= "border: 1px solid black"><?php echo $this->lang->line('no_record_found'); ?></td>
-
-                                    </tr>
-                                    <?php
-                                } else {
-                                    $row_count = 1;
-                                    foreach ($studentlistFemale as  $student_value) {  
-										
-										$complete_grades = true;
-										$student_id = $student_value["id"]; 
-										$lastname = $student_value['lastname'];
-										$firstname = $student_value['firstname'];
-										$suffix = $student_value['suffix'];
-										$middlename = !empty($student_value['middlename'])?$student_value['middlename'][0].'.':'';
-                                        ?>
-                                         <tr> 
-                                            <td style= "border: 1px solid black; text-align: right; font-size: 11px;"><?php echo $row_count;?></td>
-                                            <td style= "border: 1px solid black; font-size: 11px; text-align: left; padding-left: 6px;  padding-right: 6px;text-transform:uppercase;"><?php echo $lastname.', '.$firstname.' '.$suffix.' '.$middlename; ?></td> 
-                                            <?php 
-                                            if( $enableStrand ){
-                                                $final_grade = 0;
-												$not_available = false;
-                                                for( $qtr=0;$qtr<$total_quarter;$qtr++ ) {
-                                                    $y = $get_quarter[$qtr];
-													if( $y == 1 || $y == 2 ){
-														$semester_id = 1;
-													} elseif( $y == 3 || $y == '4'){
-														$semester_id = 2;
-													}
-													$getStudentSubjectSemesterDrop = $this->customsubject_model->getStudentSubjectSemesterDrop( $student_id, $subject_id, $semester_id , $session_id );
-													if( empty( $getStudentSubjectSemesterDrop)){
-														 $not_available = false;
-														$grade_per_quarter = $this->subjectcombine_model->getComputedCombinedGrade( $student_id, $subject_id, $y, $combine_category, $session_id  );
-														$grade_per_quarter = isset($grade_per_quarter)?$grade_per_quarter:null;
-														$grade_per_quarter = number_format($grade_per_quarter, $decimal_grades, '.', '');
-														if( $grade_per_quarter == null || $grade_per_quarter == 0 ){
-															$complete_grades = false;
-															if( $if_gradeisnull == 'blank'){
-																 echo '<td  style= "border: 1px solid black; font-size: 11px;  padding-left: 6px;  padding-right: 6px;"></td>';
-															}  else {
-																echo '<td  style= "border: 1px solid black; font-size: 11px;  padding-left: 6px;  padding-right: 6px;">'.number_format((float)0, $decimal_grades, '.', '').'</td>';
-															}
-														} else {
-															$final_grade = $final_grade + $grade_per_quarter;
-															 echo '<td style= "border: 1px solid black; font-size: 11px;  padding-left: 6px;  padding-right: 6px;" >'.$grade_per_quarter.'</td>';
-														}
-													} else {
-														 $not_available = true;
-														 echo '<td style= "border: 1px solid black; font-size: 11px;  padding-left: 6px;  padding-right: 6px;" >N/A</td>';
-													}
-                                                }
-												if( $not_available ){
-													 echo '<td style= "border: 1px solid black; font-size: 11px;  padding-left: 6px;  padding-right: 6px;" >N/A</td>';
-												} else {
-													if( $complete_grades && $final_grade != 0 ){
-														$average = $final_grade / $total_quarter;
-														$average = number_format( $average, $decimal_finalgrade, '.',' ');
-														echo '<td style= "border: 1px solid black; font-size: 11px;  padding-left: 6px;  padding-right: 6px;" >'.$average.'</td>';
-													} else {
-														echo '<td  style= "border: 1px solid black; font-size: 11px;  padding-left: 6px;  padding-right: 6px;"></td>';
-													}
-												}
-                                            } else {
-												
-												$final_grade= 0;
-                                                for( $x=1;$x<=3;$x++){
-													$grade_per_quarter = $this->subjectcombine_model->getComputedCombinedGrade( $student_id, $subject_id, $x, $combine_category, $session_id  );
-													$grade_per_quarter = isset($grade_per_quarter)?$grade_per_quarter:null;
-													$grade_per_quarter = number_format($grade_per_quarter, $decimal_grades, '.', '');
-													if( $grade_per_quarter == null || $grade_per_quarter == 0 ){
-														$complete_grades = false;
-														if( $if_gradeisnull == 'blank'){
-															echo '<td  style= "border: 1px solid black; font-size: 11px;  padding-left: 6px;  padding-right: 6px;"></td>';
-														}  else {
-															echo '<td  style= "border: 1px solid black; font-size: 11px;  padding-left: 6px;  padding-right: 6px;">'.number_format((float)0, $decimal_grades, '.', '').'</td>';
-														}
-													} else {
-														$final_grade = $final_grade + $grade_per_quarter;
-														echo '<td  style= "border: 1px solid black; font-size: 11px;  padding-left: 6px;  padding-right: 6px;">'.$grade_per_quarter.'</td>';
-													}
-                                                }
-												if( $complete_grades && $final_grade != 0 ){
-													$average = $final_grade / $total_quarter;
-													$average = number_format( $average, $decimal_finalgrade, '.',' ');
-													 echo '<td style= "border: 1px solid black; font-size: 11px;  padding-left: 6px;  padding-right: 6px;text-align:left;" >'.$average.'</td>';
-												} else {
-													 echo '<td  style= "border: 1px solid black; font-size: 11px;  padding-left: 6px;  padding-right: 6px;"></td>';
-												}
-                                            }
-                                            ?>  
-                                        </tr>
-                                        <?php
-                                        $row_count++; 
-                                    }
-                                }
-                                ?>
-                            </tbody> 
-                        </table>  
-                        <?php
-                    }
-                    ?>
-                </td>
-
             </tr>
         </table>
-        <br /><br /><br />
-		
-		<br/>
-		<br/>
-		<br/>
-        <table width="100%">
-            <tr>
-                <td width="60%">I hereby certify that the entries are true and correct</td>
-                <td width="35%" style=" border-bottom: 1px solid black;"></td>
-                <td width="5%"></td>
-            </tr>
-            <tr>
-                <td width="60%"></td>
-                <td width="35%" style="text-align: center;">Signature</td>
-                <td width="5%"></td>
-            </tr>
-        </table>
-		<br/>
-		<br/>
-		<br/>
-		<table width="100%">
-            <tr>
-                <td width="60%" align="right">Approved by:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-				<?php 
-				 if( $session_id == '13'){
-					$principal_fullname = 'Jesreel D. Mercader';
-				} ?>
-                <td width="35%" style=" border-bottom: 1px solid black;text-transform:uppercase;text-align: center;"><?php echo $principal_fullname;?></td>
-                <td width="5%"></td>
-            </tr>
-            <tr>
-                <td width="60%"></td>
-                <td width="35%" style="text-align: center;">Principal</td>
-                <td width="5%"></td>
-            </tr>
-        </table>
-         <?php
+        <?php
         $content = ob_get_contents();
         ob_end_clean(); 
         $data['content'] = $content;  
@@ -3419,11 +3190,10 @@ class Report extends CI_Controller {
 		$this->load->library('m_pdf');
 		$this->mpdf = new mPDF('utf-8',array(210,160)); 
 		$this->mpdf->SetDisplayMode('fullwidth');
-		$this->m_pdf->pdf->AddPage('P','LEGAL','5','5','5','5','5','5','5','5');
+		$this->m_pdf->pdf->AddPage('P','LEGAL','15','15','15','15','15','15','15','15');
 		$this->m_pdf->pdf->WriteHTML($html);
 		$this->m_pdf->pdf->Output($pdfFilePath, "D");
     }
 }
-
-    
+ 
 ?>

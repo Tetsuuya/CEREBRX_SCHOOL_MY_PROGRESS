@@ -162,11 +162,26 @@ class Notification extends CI_Controller {
 
 			}
 
-            if(  isset($parent) && $parent == 'Yes' || $parent == 'parent'  ){
+            $custom_student_ids = $this->input->post('custom_student_ids');
+            if( (isset($parent) && ($parent == 'Yes' || $parent == 'parent')) && empty($custom_student_ids) ){
 
                 $data_stat = array(  
 
                     'approved' => 'no'
+
+                );
+
+            } else if (!empty($custom_student_ids)) {
+
+                $data_stat = array(  
+
+                    'approved' => 'bypass',
+
+                    'approved_by' => 'teacher',
+
+                    'approved_date' => date('Y-m-d H:i:s'),
+
+                    'approved_id' => $teacher_id,
 
                 );
 
@@ -258,7 +273,7 @@ class Notification extends CI_Controller {
 
             }
 
-            // modification: direct SMS sending for selected specific parents
+            // modification: queue SMS sending in sms_que for selected specific parents
             $custom_student_ids = $this->input->post('custom_student_ids');
             if (!empty($custom_student_ids)) {
                 $student_ids = explode(',', $custom_student_ids);
@@ -269,14 +284,24 @@ class Notification extends CI_Controller {
                 $students_contact = $query->result_array();
 
                 if (!empty($students_contact)) {
-                    $this->load->library('smsgateway');
+                    $parent_sms_data = array();
                     foreach ($students_contact as $s_value) {
                         $phone = $s_value['guardian_phone'];
                         $phone = str_replace(' ', '', $phone);
                         $phone = str_replace('-', '', $phone);
                         if (strlen($phone) > 10) {
-                            $this->smsgateway->sentNotificationSMS($sms_message, $phone);
+                            $parent_sms_data[] = array(
+                                'notification_id' => $insert_id,
+                                'sms_msg' => $sms_message,
+                                'sms_number' => $phone,
+                                'sms_status' => 'idle',
+                                'sms_teacher' => 'no',
+                                'sms_parent' => 'yes'
+                            );
                         }
+                    }
+                    if (!empty($parent_sms_data)) {
+                        $this->db->insert_batch('sms_que', $parent_sms_data);
                     }
                 }
             }
@@ -340,6 +365,11 @@ class Notification extends CI_Controller {
         $data['id'] = $id;
 
         $notification = $this->db->select('*')->from('send_notification')->where('id', $id)->get()->row_array();
+
+        if (!empty($notification['custom_student_ids'])) {
+             $this->session->set_flashdata('msg', '<div class="alert alert-danger">Direct SMS notifications cannot be edited!</div>');
+             redirect('teacher/notification/index');
+        }
 
         $data['notification'] = $notification;
 
@@ -463,11 +493,38 @@ class Notification extends CI_Controller {
 
 			
 
-            if(  isset($parent) && $parent == 'Yes' || $parent == 'parent'  ){
+            $custom_student_ids = $this->input->post('custom_student_ids');
+            if( (isset($parent) && ($parent == 'Yes' || $parent == 'parent')) && empty($custom_student_ids) ){
 
                 $data_stat = array(  
 
                     'approved' => 'no'
+
+                );  
+
+                $current_status = $this->SMSM->check_notification($id);
+
+
+
+                if( $current_status == 'idle' || $current_status == FALSE){
+
+                    $this->SMSM->remove_notification($id );
+
+                } else {
+
+                    $this->session->set_flashdata('msg', '<div class="alert alert-danger">Notification can not be be updated anymore!</div>');
+
+                     redirect('teacher/notification/index');
+
+
+
+                } 
+
+            } else if (!empty($custom_student_ids)) {
+
+                 $data_stat = array(  
+
+                    'approved' => 'bypass'
 
                 );  
 
@@ -609,7 +666,7 @@ class Notification extends CI_Controller {
 
             }
 
-            // modification: direct SMS sending for selected specific parents
+            // modification: queue SMS sending in sms_que for selected specific parents
             $custom_student_ids = $this->input->post('custom_student_ids');
             if (!empty($custom_student_ids)) {
                 $student_ids = explode(',', $custom_student_ids);
@@ -620,14 +677,24 @@ class Notification extends CI_Controller {
                 $students_contact = $query->result_array();
 
                 if (!empty($students_contact)) {
-                    $this->load->library('smsgateway');
+                    $parent_sms_data = array();
                     foreach ($students_contact as $s_value) {
                         $phone = $s_value['guardian_phone'];
                         $phone = str_replace(' ', '', $phone);
                         $phone = str_replace('-', '', $phone);
                         if (strlen($phone) > 10) {
-                            $this->smsgateway->sentNotificationSMS($sms_message, $phone);
+                            $parent_sms_data[] = array(
+                                'notification_id' => $id,
+                                'sms_msg' => $sms_message,
+                                'sms_number' => $phone,
+                                'sms_status' => 'idle',
+                                'sms_teacher' => 'no',
+                                'sms_parent' => 'yes'
+                            );
                         }
+                    }
+                    if (!empty($parent_sms_data)) {
+                        $this->db->insert_batch('sms_que', $parent_sms_data);
                     }
                 }
             }
@@ -683,6 +750,12 @@ class Notification extends CI_Controller {
 
 
     function delete($id) {
+
+         $notification = $this->db->select('*')->from('send_notification')->where('id', $id)->get()->row_array();
+         if (!empty($notification['custom_student_ids'])) {
+             $this->session->set_flashdata('msg', '<div class="alert alert-danger">Direct SMS notifications cannot be deleted!</div>');
+             redirect('teacher/notification/index');
+         }
 
         $current_status = $this->SMSM->check_notification($id);
 

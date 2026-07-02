@@ -2886,49 +2886,60 @@ class Report extends CI_Controller {
 		}
 		?>
 		<br/> 
+        <!-- Prepared by Section -->
         <table width="100%" style="font-family: sans-serif; font-size: 13px; margin-top: 20px;">
             <tr>
-                <td width="50%" style="vertical-align: top;">
-                    Prepared by:<br/><br/><br/>
-                    <span style="color: #008000; font-weight: bold;"><?php echo $teacher_name; ?></span><br/>
+                <td align="left">
+                    Prepared by:<br/><br/>
+                    <span style="color: #008000; font-weight: bold;">
+                        <?php 
+                        $teacher_title = "";
+                        if (isset($teacher_details->sex)) {
+                            if (strtolower($teacher_details->sex) == 'female') {
+                                $teacher_title = "Mrs. ";
+                            } else if (strtolower($teacher_details->sex) == 'male') {
+                                $teacher_title = "Mr. ";
+                            }
+                        }
+                        echo $teacher_title . $teacher_lastname . ', ' . $teacher_name . ($teacher_middlename ? ' ' . $teacher_middlename : ''); 
+                        ?>
+                    </span><br/>
                     <span style="color: #008000;">Class Adviser</span>
                 </td>
-                <td width="50%" style="vertical-align: top; text-align: right;">
-                    <table align="right" width="90%">
-                        <tr>
-                            <td colspan="2" align="left">I hereby certify that the entries are true and correct</td>
-                        </tr>
-                        <tr>
-                            <td colspan="2" style="border-bottom: 1px solid black; height: 35px;"></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2" align="center" style="font-size: 11px; padding-top: 2px;">Signature</td>
-                        </tr>
-                    </table>
-                </td>
+            </tr>
+        </table>
+        <br/>
+        <br/>
+        
+        <!-- Original Certification and Principal Approval Layout Section -->
+        <table width="100%" style="font-family: sans-serif; font-size: 13px;">
+            <tr>
+                <td width="60%">I hereby certify that the entries are true and correct</td>
+                <td width="35%" style=" border-bottom: 1px solid black;"></td>
+                <td width="5%"></td>
+            </tr>
+            <tr>
+                <td width="60%"></td>
+                <td width="35%" style="text-align: center; font-size: 11px; padding-top: 2px;">Signature</td>
+                <td width="5%"></td>
             </tr>
         </table>
 		<br/>
 		<br/> 
 		<table width="100%" style="font-family: sans-serif; font-size: 13px;">
             <tr>
-                <td width="50%"></td>
-                <td width="50%" style="text-align: right;">
-                    <table align="right" width="90%">
-                        <tr>
-                            <td width="40%" align="left" style="vertical-align: bottom;">Approved by:</td>
-                            <?php 
-                            if( $session_id == '13'){
-                                $principal_fullname = 'Jesreel D. Mercader';
-                            } ?>
-                            <td width="60%" align="center" style="border-bottom: 1px solid black; text-transform: uppercase; font-weight: bold;"><?php echo $principal_fullname;?></td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td align="center" style="font-size: 11px; padding-top: 2px;">Principal</td>
-                        </tr>
-                    </table>
-                </td>
+                <td width="60%" align="right">Approved by:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+				<?php 
+				 if( $session_id == '13'){
+					$principal_fullname = 'Jesreel D. Mercader';
+				} ?>
+                <td width="35%" style=" border-bottom: 1px solid black;text-transform:uppercase;text-align: center; font-weight: bold;"><?php echo $principal_fullname;?></td>
+                <td width="5%"></td>
+            </tr>
+            <tr>
+                <td width="60%"></td>
+                <td width="35%" style="text-align: center; font-size: 11px; padding-top: 2px;">Principal</td>
+                <td width="5%"></td>
             </tr>
         </table>
         <?php

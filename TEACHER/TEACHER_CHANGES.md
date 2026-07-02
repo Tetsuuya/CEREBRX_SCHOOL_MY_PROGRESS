@@ -1289,3 +1289,55 @@ To finalize the 3-term grading transition in the Teacher/Coordinator interface, 
   - **Before**: The template replacement array hardcoded the current server calendar year using standard date functions: `date('Y') . '-' . (date('Y') + 1)`.
   - **After**: The library now fetches the current session ID via `Setting_model->getCurrentSession()` and queries the `sessions` table in the database to fetch the exact, human-readable session name (e.g. `2023-2024`). If no session is found, it falls back to the system date range as a safe backup.
   - This ensures generated spreadsheet metadata always aligns perfectly with the active school year selected in the portal.
+
+---
+
+## 14. Master Sheet & Report Card PDF/Web View Updates
+
+To meet school design specifications and branding guidelines for Cagayan de Oro Christian School, we overhauled the Master Sheet search form view, the generated PDF printed layout, its signature blocks, and the Report Card search form:
+
+### 14.1 Master Sheet Web Search View: [master_sheet.php (Search View)](file:///c:/Users/Rhenel%20Jhon%20Sajol/Desktop/CEREB_SCHOOL_BACKUP/TEACHER/LOCAL/View/teacher/reports/master_sheet.php)
+* **Type of Change**: UI & Translation Fix
+* **Purpose**: Restricts selectors to 3 terms, relabels options, and fixes missing language key translations.
+* **What Changed**:
+  - Relabeled the input field label from `"Quarter"` to `"Term"` directly in HTML (bypassing missing language file translations).
+  - Loop bounds modified to skip Term 4: `if ($key > 3) { continue; }`.
+  - Formatted select options dynamically to display as `"Term 1"`, `"Term 2"`, and `"Term 3"`.
+  - Relabeled the `"Final"` option to `"Final Grade"`.
+
+### 14.2 Master Sheet PDF Print Layout: [master_sheet.php (PDF Template)](file:///c:/Users/Rhenel%20Jhon%20Sajol/Desktop/CEREB_SCHOOL_BACKUP/TEACHER/LOCAL/View/template/master_sheet.php)
+* **Type of Change**: Visual & Branding Redesign
+* **Purpose**: Implements Cagayan de Oro Christian School header branding, adds dual logos, and removes redundant metadata.
+* **What Changed**:
+  - Added left logo (`uploads/school_content/logo/cocs.png`) and right logo (`uploads/school_content/logo/UCCP.png`) side-by-side.
+  - Centered header text styled with red, green, and blue typography.
+  - Updated the term subheader to dynamically format the school year: `TERM X for School Year YYYY-YYYY` (e.g. `TERM 1 for School Year 2023-2024`).
+  - Removed the horizontal divider line and the secondary `School Year` metadata row to eliminate redundant year markings.
+
+### 14.3 Student Rows Color Coding: [Report.php](file:///c:/Users/Rhenel%20Jhon%20Sajol/Desktop/CEREB_SCHOOL_BACKUP/TEACHER/LOCAL/Controller/Report.php) (Lines 1959, 2214, 2500, 2706)
+* **Type of Change**: Conditional Styling
+* **Purpose**: Color-codes boy and girl student names in the printed table rows to improve scannability.
+* **What Changed**:
+  - Injected inline styling inside name column loops:
+    - **Boys' names** colored in Blue: `color: #0000FF;`
+    - **Girls' names** colored in Pink/Magenta: `color: #FF00FF;`
+
+### 14.4 Signature Blocks Layout: [Report.php](file:///c:/Users/Rhenel%20Jhon%20Sajol/Desktop/CEREB_SCHOOL_BACKUP/TEACHER/LOCAL/Controller/Report.php) (Bottom section)
+* **Type of Change**: Layout Restructuring & Dynamic Data
+* **Purpose**: Arranges Adviser, Certification, and Principal signature fields in a structured order and prefixes the adviser's name with their gender title.
+* **What Changed**:
+  - **Dynamic Title Prefixing**: Checked the adviser's gender from the `sex` column of the database teacher records to dynamically print `Mrs.` for female teachers and `Mr.` for male teachers (e.g., `Mrs. Abueva, Apple Joy Middle Name`).
+  - **Layout Arrangement**:
+    - **Top Row (Left-aligned)**: Renders `Prepared by: Mrs. Abueva, Apple Joy Middle Name, Class Adviser`.
+    - **Middle Row (Left-aligned)**: Renders `I hereby certify that the entries are true and correct` above a standard `Signature` line block.
+    - **Middle Row (Right-aligned)**: Renders the `Approved by:` Principal block (`Jesreel D. Mercader / Principal`) on the right side of the page, inline with the certification block.
+
+### 14.5 Report Card Web Search View: [report_card.php](file:///c:/Users/Rhenel%20Jhon%20Sajol/Desktop/CEREB_SCHOOL_BACKUP/TEACHER/LOCAL/View/report_card.php)
+* **Type of Change**: UI & 3-Term Restriction
+* **Purpose**: Relabels search inputs and dropdown choices to reflect the 3-term transition and eliminates the non-existent 4th Term.
+* **What Changed**:
+  - Relabeled the selector title from `"Quarter"` to `"Term"`.
+  - Added key/value filters inside the loop to skip the 4th Term dropdown option: `if (strpos($key, '4') !== false || strpos($value, '4') !== false) { continue; }`.
+  - Formatted option text to show `"Term X"` instead of `"X Quarter"`.
+  - Updated the `"final"` value choice text to display as `"Final Grade"`.
+

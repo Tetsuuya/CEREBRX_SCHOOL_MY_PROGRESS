@@ -1956,7 +1956,7 @@ class Report extends CI_Controller {
 							$middlename = !empty($student_value['middlename'])?$student_value['middlename'][0].'.':'';$subjectlist = array_merge( $subjectlist, $custom_subject );
 							?>	
 							<tr>
-							<td style= "border: 1px solid black; font-size: 12px;  padding-left: 6px;  padding-right: 6px;text-transform:uppercase;width:300px;"><?php echo $lastname.', '.$firstname.' '.$suffix.' '.$middlename; ?></td> 
+							<td style= "border: 1px solid black; font-size: 12px;  padding-left: 6px;  padding-right: 6px;text-transform:uppercase;width:300px;color:#0000FF;"><?php echo $lastname.', '.$firstname.' '.$suffix.' '.$middlename; ?></td> 
 							<?php
 						
 							foreach( $getsubjectlist as $subject_value ) {
@@ -2211,7 +2211,7 @@ class Report extends CI_Controller {
 							$middlename = !empty($student_value['middlename'])?$student_value['middlename'][0].'.':'';$subjectlist = array_merge( $subjectlist, $custom_subject );
 							?>	
 							<tr>
-							<td style= "border: 1px solid black; font-size: 12px;  padding-left: 6px;  padding-right: 6px;text-transform:uppercase;width:300px;"><?php echo $lastname.', '.$firstname.' '.$suffix.' '.$middlename; ?></td> 
+							<td style= "border: 1px solid black; font-size: 12px;  padding-left: 6px;  padding-right: 6px;text-transform:uppercase;width:300px;color:#FF00FF;"><?php echo $lastname.', '.$firstname.' '.$suffix.' '.$middlename; ?></td> 
 							<?php
 						
 							foreach( $getsubjectlist as $subject_value ) {
@@ -2497,7 +2497,7 @@ class Report extends CI_Controller {
 								$url = base_url().'teacher/report/show_report_card/'.$student_id; 
 								?>
 								<tr> 
-									<td style= "border: 1px solid black; font-size: 12px;  padding-left: 6px;  padding-right: 6px;text-transform:uppercase;width:300px;"><?php echo $lastname.', '.$firstname.' '.$suffix.' '.$middlename; ?></td> 
+									<td style= "border: 1px solid black; font-size: 12px;  padding-left: 6px;  padding-right: 6px;text-transform:uppercase;width:300px;color:#0000FF;"><?php echo $lastname.', '.$firstname.' '.$suffix.' '.$middlename; ?></td> 
 									<?php
 										if( $subjectlist ){
 											$total_grade = 0;
@@ -2703,7 +2703,7 @@ class Report extends CI_Controller {
 								$url = base_url().'teacher/report/show_report_card/'.$student_id; 
 								?>
 								<tr> 
-									<td style= "border: 1px solid black; font-size: 12px;  padding-left: 6px;  padding-right: 6px;text-transform:uppercase;width:300px;"><?php echo $lastname.', '.$firstname.' '.$suffix.' '.$middlename; ?></td> 
+									<td style= "border: 1px solid black; font-size: 12px;  padding-left: 6px;  padding-right: 6px;text-transform:uppercase;width:300px;color:#FF00FF;"><?php echo $lastname.', '.$firstname.' '.$suffix.' '.$middlename; ?></td> 
 									<?php
 										if( $subjectlist ){
 											$total_grade = 0;
@@ -2886,34 +2886,49 @@ class Report extends CI_Controller {
 		}
 		?>
 		<br/> 
-        <table width="100%">
+        <table width="100%" style="font-family: sans-serif; font-size: 13px; margin-top: 20px;">
             <tr>
-                <td width="60%">I hereby certify that the entries are true and correct</td>
-                <td width="35%" style=" border-bottom: 1px solid black;"></td>
-                <td width="5%"></td>
-            </tr>
-            <tr>
-                <td width="60%"></td>
-                <td width="35%" style="text-align: center;">Signature</td>
-                <td width="5%"></td>
+                <td width="50%" style="vertical-align: top;">
+                    Prepared by:<br/><br/><br/>
+                    <span style="color: #008000; font-weight: bold;"><?php echo $teacher_name; ?></span><br/>
+                    <span style="color: #008000;">Class Adviser</span>
+                </td>
+                <td width="50%" style="vertical-align: top; text-align: right;">
+                    <table align="right" width="90%">
+                        <tr>
+                            <td colspan="2" align="left">I hereby certify that the entries are true and correct</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="border-bottom: 1px solid black; height: 35px;"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" align="center" style="font-size: 11px; padding-top: 2px;">Signature</td>
+                        </tr>
+                    </table>
+                </td>
             </tr>
         </table>
 		<br/>
 		<br/> 
-		<table width="100%">
+		<table width="100%" style="font-family: sans-serif; font-size: 13px;">
             <tr>
-                <td width="60%" align="right">Approved by:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-				<?php 
-				 if( $session_id == '13'){
-					$principal_fullname = 'Jesreel D. Mercader';
-				} ?>
-                <td width="35%" style=" border-bottom: 1px solid black;text-transform:uppercase;text-align: center;"><?php echo $principal_fullname;?></td>
-                <td width="5%"></td>
-            </tr>
-            <tr>
-                <td width="60%"></td>
-                <td width="35%" style="text-align: center;">Principal</td>
-                <td width="5%"></td>
+                <td width="50%"></td>
+                <td width="50%" style="text-align: right;">
+                    <table align="right" width="90%">
+                        <tr>
+                            <td width="40%" align="left" style="vertical-align: bottom;">Approved by:</td>
+                            <?php 
+                            if( $session_id == '13'){
+                                $principal_fullname = 'Jesreel D. Mercader';
+                            } ?>
+                            <td width="60%" align="center" style="border-bottom: 1px solid black; text-transform: uppercase; font-weight: bold;"><?php echo $principal_fullname;?></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td align="center" style="font-size: 11px; padding-top: 2px;">Principal</td>
+                        </tr>
+                    </table>
+                </td>
             </tr>
         </table>
         <?php

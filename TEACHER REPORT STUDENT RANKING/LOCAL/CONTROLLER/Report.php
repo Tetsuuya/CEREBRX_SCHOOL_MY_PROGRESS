@@ -322,6 +322,7 @@ class Report extends CI_Controller {
         $data['strand_id'] = "";
         $data['semester'] = "";
 		$data['getSemester'] = $this->customlib->getSemester();
+		$data['session_id'] = $student_session_data['session_id'];
         $this->form_validation->set_rules('class_id', 'Class', 'trim|required|xss_clean');
         //$this->form_validation->set_rules('section_id', 'Section', 'trim|required|xss_clean');
         $this->form_validation->set_rules('quarter', 'Term', 'trim|required|xss_clean');
@@ -347,6 +348,7 @@ class Report extends CI_Controller {
             $data['quarter'] = $quarter;
             $data['strand_id'] = $strand_id;
 			$data['semester'] = $semester;
+			$data['session_id'] = $student_session_data['session_id'];
 			$combine_category = 'ga';
 			$studentlist = $this->student_model->searchByClassSection($class, $section);
             $studentranking = $this->grade_model->getStudentAverage( $studentlist, $quarter, $semester, $combine_category );

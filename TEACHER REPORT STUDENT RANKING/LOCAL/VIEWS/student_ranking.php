@@ -21,7 +21,8 @@
                         <h3 class="box-title">Select Student by Grade and Section</h3>
                     </div> 
                     <div class="box-body">`
-                        <form id='form1' action="<?php echo site_url('admin/report/student_ranking') ?>"  method="post" accept-charset="utf-8">
+                        <form id='form1' action="<?php echo site_url('teacher/report/student_ranking') ?>"  method="post" accept-charset="utf-8">
+                            <input type="hidden" name="session_id" id="session_id" value="<?php echo $session_id; ?>">
                             <div class="box-body">
                                 <?php echo $this->customlib->getCSRF(); ?>
                                 <div class="row">
@@ -197,15 +198,16 @@
                 $(document).ready(function () {
                     var section_id_post = '<?php echo $section_id; ?>';
                     var class_id_post = '<?php echo $class_id; ?>';
-                    populateSection(section_id_post, class_id_post);
-                    function populateSection(section_id_post, class_id_post) {
+                    var session_id_post = '<?php echo $session_id; ?>';
+                    populateSection(section_id_post, class_id_post, session_id_post);
+                    function populateSection(section_id_post, class_id_post, session_id_post) {
                         $('#section_id').html("");
                         var base_url = '<?php echo base_url() ?>';
                         var div_data = '<option value=""><?php echo $this->lang->line('select'); ?></option>';
                         $.ajax({
                             type: "GET",
-                            url: base_url + "sections/getByClass",
-                            data: {'class_id': class_id_post},
+                            url: base_url + "teacher/sections/getByClassBySession",
+                            data: {'class_id': class_id_post, 'session_id': session_id_post},
                             dataType: "json",
                             success: function (data) {
                                 $.each(data, function (i, obj)
@@ -222,7 +224,7 @@
 						
 						$.ajax({
 							type: "GET",
-							url: base_url + "admin/strand/allowStrand",
+							url: base_url + "teacher/strand/allowStrand",
 							data: {'class_id': class_id_post},
 							dataType: "json",
 							success: function (data) {
@@ -239,12 +241,13 @@
                     $(document).on('change', '#class_id', function (e) {
                         $('#section_id').html("");
                         var class_id = $(this).val();
+                        var session_id = $('#session_id').val();
                         var base_url = '<?php echo base_url() ?>';
                         var div_data = '<option value=""><?php echo $this->lang->line('select'); ?></option>';
                         $.ajax({
                             type: "GET",
-                            url: base_url + "sections/getByClass",
-                            data: {'class_id': class_id},
+                            url: base_url + "teacher/sections/getByClassBySession",
+                            data: {'class_id': class_id, 'session_id': session_id},
                             dataType: "json",
                             success: function (data) {
                                 $.each(data, function (i, obj)
@@ -257,7 +260,7 @@
 						
 						$.ajax({
 							type: "GET",
-							url: base_url + "admin/strand/allowStrand",
+							url: base_url + "teacher/strand/allowStrand",
 							data: {'class_id': class_id},
 							dataType: "json",
 							success: function (data) {

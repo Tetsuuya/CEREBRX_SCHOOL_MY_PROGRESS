@@ -73,18 +73,21 @@
 									</div>
                                     <div class="col-md-2">
                                         <div class="form-group">
-                                            <label for="exampleInputEmail1"><?php echo $this->lang->line('quarter'); ?></label>
-                                            <select  id="quarter" name="quarter" class="form-control" >
-                                               <option value=""><?php echo $this->lang->line('select'); ?></option>
-                                                <?php
-                                                    foreach ($getquarter as $key => $value) {
-                                                    ?>
-                                                    <option  value="<?php echo $key; ?>" <?php if($quarter == $value) echo "selected"; ?>><?php echo $value; ?></option>
-                                                    <?php
-                                                    }
-                                                ?>
-												<option  value="final" <?php if($quarter == 'final') echo "selected"; ?>> Final Grade</option>
-                                            </select>
+                                             <label for="exampleInputEmail1">Term</label>
+                                             <select  id="quarter" name="quarter" class="form-control" >
+                                                <option value=""><?php echo $this->lang->line('select'); ?></option>
+                                                 <?php
+                                                     foreach ($getquarter as $key => $value) {
+                                                         if ($key > 3) {
+                                                             continue;
+                                                         }
+                                                     ?>
+                                                     <option  value="<?php echo $key; ?>" <?php if($quarter == $key || $quarter == $value) echo "selected"; ?>>Term <?php echo $key; ?></option>
+                                                     <?php
+                                                     }
+                                                 ?>
+ 												<option  value="final" <?php if($quarter == 'final') echo "selected"; ?>> Final Grade</option>
+                                             </select>
                                             <span class="text-danger"><?php echo form_error('quarter'); ?></span>
                                         </div>
                                     </div>

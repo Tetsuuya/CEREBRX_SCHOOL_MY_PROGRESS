@@ -214,3 +214,129 @@ WHERE class_id   = 11
 - `exam_results` is what the web app reads to display grades on the student profile
 - Always delete from `exam_results` FIRST before deleting from `import_grades_details` or `import_grades_batch`
 - Grades were randomly generated: 75% passing (75-98), 25% failing (60-74)
+
+---
+
+## Additional Changes
+
+---
+
+### FIX 1 — Homeroom 8 and Work Education 8 Show Letter Grades
+
+**Why it happens:**
+Homeroom 8 (id=114) and Work Education 8 (id=132) are special subjects.
+The system converts their numeric grades into letter descriptors automatically:
+
+| Grade Range | Letter |
+|-------------|--------|
+| 90 - 100    | O (Outstanding) |
+| 85 - 89     | VS (Very Satisfactory) |
+| 80 - 84     | S (Satisfactory) |
+| 75 - 79     | FS (Fairly Satisfactory) |
+| Below 75    | DNME (Did Not Meet Expectations) |
+
+This is normal behavior — not a bug. Defined in `Grade_model.php` → `get_letter_grade_special()`.
+
+**If you want all students to show "O" for these 2 subjects in Term 3:**
+
+```sql
+UPDATE exam_results
+SET get_marks = FLOOR(RAND() * 10 + 90)
+WHERE session_id = 19
+  AND quarter    = 3
+  AND subject_id IN (114, 132)
+  AND student_id IN (
+      SELECT student_id FROM student_session
+      WHERE class_id = 11 AND section_id = 3 AND session_id = 19
+  );
+```
+
+> Sets grades 90-99 so all students show "O" (Outstanding) for Homeroom 8 and Work Education 8.
+
+**UNDO FIX 1 — Restore random passing grades for Homeroom 8 and Work Education 8:**
+
+```sql
+-- Undo in exam_results
+UPDATE exam_results
+SET get_marks = FLOOR(RAND() * 24 + 75)
+WHERE session_id = 19
+  AND quarter    = 3
+  AND subject_id IN (114, 132)
+  AND student_id IN (
+      SELECT student_id FROM student_session
+      WHERE class_id = 11 AND section_id = 3 AND session_id = 19
+  );
+
+-- Undo in import_grades_details
+UPDATE import_grades_details
+SET grades        = FLOOR(RAND() * 24 + 75),
+    initial_grade = FLOOR(RAND() * 24 + 75)
+WHERE quarter    = 3
+  AND class_id   = 11
+  AND section_id = 3
+  AND subject_id IN (114, 132);
+```
+
+> Restores grades 75-98 (passing range) for those 2 subjects.
+
+---
+
+### FIX 2 — Update Ryanjel Ando to Fail All Subjects in Term 3
+
+**Student Info:**
+
+| Field          | Value       |
+|----------------|-------------|
+| `student_id`   | 1           |
+| Name           | Ryanjel Ando |
+| Admission No   | 2022-00001  |
+
+**Purpose:** Force all of Ando's Term 3 grades to below 75 (failing).
+
+**Update exam_results (what the web app displays):**
+
+```sql
+UPDATE exam_results
+SET get_marks = FLOOR(RAND() * 15 + 60)
+WHERE student_id = 1
+  AND session_id = 19
+  AND quarter    = 3;
+```
+
+**Update import_grades_details (keep in sync):**
+
+```sql
+UPDATE import_grades_details
+SET grades        = FLOOR(RAND() * 15 + 60),
+    initial_grade = FLOOR(RAND() * 15 + 60)
+WHERE student_id = 1
+  AND quarter    = 3
+  AND class_id   = 11
+  AND section_id = 3;
+```
+
+> Both queries assign a random grade between 60-74 (all FAIL) for Ando's Term 3 across all subjects.
+> Run both queries then refresh the student page in the web app to verify.
+
+**UNDO FIX 2 — Restore Ando's Term 3 grades back to passing:**
+
+```sql
+-- Undo in exam_results
+UPDATE exam_results
+SET get_marks = FLOOR(RAND() * 24 + 75)
+WHERE student_id = 1
+  AND session_id = 19
+  AND quarter    = 3;
+
+-- Undo in import_grades_details
+UPDATE import_grades_details
+SET grades        = FLOOR(RAND() * 24 + 75),
+    initial_grade = FLOOR(RAND() * 24 + 75)
+WHERE student_id = 1
+  AND quarter    = 3
+  AND class_id   = 11
+  AND section_id = 3;
+```
+
+> Restores Ando's Term 3 grades to random passing grades (75-98).
+> Run both then refresh the student page to verify.

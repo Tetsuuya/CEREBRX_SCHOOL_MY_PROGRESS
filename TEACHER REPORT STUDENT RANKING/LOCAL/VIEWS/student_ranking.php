@@ -148,7 +148,7 @@
 															if( !empty( $student_value["id"])){
 																$student_id = $student_value["id"];
 																$url = base_url().'teacher/report/show_report_card/'.$student_id; 
-																$final_grade = round( $student_value['final_grade'], 2);
+																$final_grade = number_format((float)$student_value['final_grade'], 2, '.', '');
 																$background_color =  isset($student_value["background_color"])?$student_value["background_color"]:'';
 																$text_color = isset($student_value["text_color"])?$student_value["text_color"]:'';
 																$name = isset($student_value["name"])?$student_value["name"]:'';

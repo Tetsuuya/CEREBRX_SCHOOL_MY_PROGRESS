@@ -459,14 +459,11 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                             }
                                                         }
                                                         $get_final_grade = 0;
-                                                        $available_quarters = 0;
                                                         for( $qtr=0;$qtr<$total_quarter;$qtr++ ) {
                                                             $quarter = $get_quarter[$qtr];
                                                             $grade_per_quarter = $this->subjectcombine_model->getComputedCombinedGrade( $student_id, $subject_id, $quarter, '', $session_id  );
                                                             if( empty( $grade_per_quarter )){
                                                                 $complete_grades = false;
-                                                            } else {
-                                                                $available_quarters++;
                                                             }
                                                             if( $include_computation == 'yes'){
                                                                 $checkifChild = $this->subjectcombine_model->checkifChild( $subject_id, 'ga',$session_id );
@@ -520,7 +517,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                             $get_final_grade = $get_final_grade + $grade_per_quarter;
                                                         }
                                                         
-                                                        if( $available_quarters == 0 ){
+                                                        if( empty( $get_final_grade ) ){
                                                             $final_grade = '';
                                                         } else {
                                                             $final_grade =  $get_final_grade / $total_quarter;
@@ -539,7 +536,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                         
                                                         $final_grade =  number_format((float)$final_grade, $decimal_finalgrade, '.', '');
                                                         if( $display_card == 'yes'){
-                                                            if( $available_quarters > 0 ){
+                                                            if( $complete_grades ){
                                                                 ?>
                                                                 <td><?php echo $final_grade;?></td>
                                                                 <?php 
@@ -584,7 +581,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                                     if( $first_ave != 0 && $first_ave != 0.00 && $first_ave != null ){
                                                                         $complete_average++;
                                                                     }
-                                                                    if( $count_subjects_first > 0 ) {
+                                                                    if( $complete_first ) {
                                                                         ?><td><b><?php echo $first != 0 ? $first_ave:'';?></b></td><?php
                                                                     } else {
                                                                         ?><td><b></b></td><?php
@@ -595,7 +592,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                                     if( $second_ave != 0 && $second_ave != 0.00 && $second_ave != null ){
                                                                         $complete_average++;
                                                                     }   
-                                                                    if( $count_subjects_second > 0 ) {
+                                                                    if( $complete_second ) {
                                                                         ?><td><b><?php echo $second != 0 ? $second_ave:'';?></b></td><?php
                                                                     } else {
                                                                         ?><td><b></b></td><?php
@@ -605,7 +602,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                                     if( $third_ave != 0 && $third_ave != 0.00 && $third_ave != null ){
                                                                         $complete_average++;
                                                                     }
-                                                                    if( $count_subjects_third > 0 ) {
+                                                                    if( $complete_third ) {
                                                                         ?><td><b><?php echo $third != 0 ? $third_ave:'';?></b></td><?php
                                                                     } else {
                                                                         ?><td><b></b></td><?php
@@ -622,7 +619,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                         }
                                                         $count_quarter = $complete_average;
                                                         $total_ave =   $subject_count != 0 ? $total_ave / $subject_count:0;
-                                                        if( $subject_count > 0 ){ 
+                                                        //if( $count_quarter == $total_quarter && $complete_grades ){ 
+                                                        if( $complete_first && $complete_second && $complete_third && $complete_fourth ){ 
                                                             $final_grade =  number_format((float)$total_ave, $decimal_average, '.', '');
                                                             ?>
                                                             <td><b><?php echo $final_grade;?></b></td>
@@ -737,7 +735,6 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                         }
                                                     }
                                                     $get_final_grade = 0;
-                                                    $available_quarters = 0;
                                                     for( $qtr=0;$qtr<$total_quarter;$qtr++ ) {
                                                         $quarter = $get_quarter[$qtr];
                                                         //$getgradeperquarter = $this->grade_model->getgradeperquarter( $student_id, $subject_id, $quarter, $set_semester );
@@ -745,8 +742,6 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                         $grade_per_quarter = $this->subjectcombine_model->getComputedCombinedGrade( $student_id, $subject_id, $quarter, 'ga', $session_id );
                                                         if( $grade_per_quarter == null ){
                                                             $complete_grades = false;
-                                                        } else {
-                                                            $available_quarters++;
                                                         } 
                                                         if( $include_computation == 'yes'){
                                                             $checkifChild = $this->subjectcombine_model->checkifChild( $subject_id,'ga', $session_id );
@@ -799,7 +794,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                         $get_final_grade = $get_final_grade + $grade_per_quarter;
                                                     }
                                                     
-                                                    if( $available_quarters == 0 ){
+                                                    if( $get_final_grade == null ){
                                                         $final_grade = '';
                                                     } else {
                                                         $final_grade =  $get_final_grade / $total_quarter;
@@ -818,7 +813,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                     
                                                     $final_grade =  number_format((float)$final_grade, $decimal_finalgrade, '.', '');
                                                     if( $display_card == 'yes'){
-                                                        if( $available_quarters > 0 ){
+                                                        if( $complete_grades ){
                                                             ?>
                                                             <td><?php echo $final_grade;?></td>
                                                             <?php 
@@ -863,7 +858,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                                 if( $first_ave != 0 && $first_ave != 0.00 && $first_ave != null ){
                                                                     $complete_average++;
                                                                 }
-                                                                if( $count_subjects_first > 0 ) {
+                                                                if( $complete_first ) {
                                                                     ?><td><b><?php echo $first != 0 ? $first_ave:'';?></b></td><?php
                                                                 } else {
                                                                     ?><td><b></b></td><?php
@@ -874,7 +869,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                                 if( $second_ave != 0 && $second_ave != 0.00 && $second_ave != null ){
                                                                     $complete_average++;
                                                                 }   
-                                                                if( $count_subjects_second > 0 ) {
+                                                                if( $complete_second ) {
                                                                     ?><td><b><?php echo $second != 0 ? $second_ave:'';?></b></td><?php
                                                                 } else {
                                                                     ?><td><b></b></td><?php
@@ -884,7 +879,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                                 if( $third_ave != 0 && $third_ave != 0.00 && $third_ave != null ){
                                                                     $complete_average++;
                                                                 }
-                                                                if( $count_subjects_third > 0 ) {
+                                                                if( $complete_third ) {
                                                                     ?><td><b><?php echo $third != 0 ? $third_ave:'';?></b></td><?php
                                                                 } else {
                                                                     ?><td><b></b></td><?php
@@ -902,7 +897,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                     
                                                     $count_quarter = $complete_average;
                                                     $total_ave =   $subject_count != 0 ? $total_ave / $subject_count:0;
-                                                    if( $subject_count > 0 ){ 
+                                                    if( $complete_first && $complete_second && $complete_third && $complete_fourth ){ 
                                                         $final_grade =  number_format((float)$total_ave, $decimal_average, '.', '');
                                                         ?>
                                                         <td><b><?php echo $final_grade;?></b></td>
@@ -1007,14 +1002,10 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                             }
                                                         }
                                                         $get_final_grade = 0;
-                                                        $available_quarters = 0;
                                                         for($x=1;$x<=$last_quarter;$x++){
                                                             //$getgradeperquarter = $this->grade_model->getgradeperquarter( $student_id, $subject_id, $x );
                                                             //$grade_per_quarter = isset($getgradeperquarter['final_grade'])?$getgradeperquarter['final_grade']:null;
                                                             $grade_per_quarter = $this->subjectcombine_model->getComputedCombinedGrade( $student_id, $subject_id, $x, 'ga',$session_id );
-                                                            if ( $grade_per_quarter !== null && $grade_per_quarter !== '' ) {
-                                                                $available_quarters++;
-                                                            }
                                                             if( $include_computation == 'yes' ){
                                                                 if( $grade_per_quarter == null ){
                                                                     $complete_grades = false;
@@ -1067,9 +1058,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                             }   
                                                             $get_final_grade = $get_final_grade + $grade_per_quarter;
                                                         }
-                                                        if( $available_quarters == 0 ){
-                                                            $final_grade = '';
-                                                        } else {
+                                                        if( $get_final_grade ){
                                                             $final_grade = $get_final_grade / $last_quarter;
                                                             if( $include_computation == 'yes' ){ 
                                                                 if( empty( $checkifChild ) ){
@@ -1084,6 +1073,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                             }
                                                             
                                                             $final_grade = number_format((float)$final_grade, $decimal_finalgrade, '.', '');
+                                                        } else {
+                                                            $final_grade = '';
                                                         }  
                                                         
                                                         if( $get_final_grade != null ){
@@ -1092,7 +1083,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                         }
                                                         
                                                         if( $display_card == 'yes'){
-                                                            if( $available_quarters > 0 ){
+                                                            if( $complete_grades ){
                                                                 ?>
                                                                 <td><?php echo $final_grade;?></td>
                                                                 <?php
@@ -1130,34 +1121,34 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                             <tr>
                                                 <td><b>Average</b></td>
                                                 <?php 
-                                                 if( $count_subjects_first > 0 ){
-                                                     ?><td><b><?php echo $first != 0 ? $first_ave:'';?></b></td><?php 
-                                                 } else {
-                                                     ?><td><b></b></td><?php 
-                                                 }
-                                                 if( $count_subjects_second > 0 ){
-                                                     ?><td><b><?php echo $second != 0 ? $second_ave:'';?></b></td><?php 
-                                                 } else {
-                                                     ?><td><b></b></td><?php 
-                                                 }
-                                                 if( $count_subjects_third > 0 ){
-                                                     ?><td><b><?php echo $third != 0 ? $third_ave:'';?></b></td><?php 
-                                                 } else {
-                                                     ?><td><b></b></td><?php 
-                                                 }
-                                                 
-                                                 if( $subject_count > 0  ){  
-                                                 //if( $first  ){  
-                                                     $total_ave =   $subject_count != 0 ? $total_ave / $subject_count:0;
-                                                     $final_grade = number_format((float)$total_ave, $decimal_average, '.', '');
-                                                     ?>
-                                                     <td><b><?php echo $final_grade;?></b></td>
-                                                     <?php
-                                                 } else {
-                                                     ?>
-                                                     <td></td> 
-                                                     <?php
-                                                 }  
+                                                if( $complete_first ){
+                                                    ?><td><b><?php echo $first != 0 ? $first_ave:'';?></b></td><?php 
+                                                } else {
+                                                    ?><td><b></b></td><?php 
+                                                }
+                                                if( $complete_second ){
+                                                    ?><td><b><?php echo $second != 0 ? $second_ave:'';?></b></td><?php 
+                                                } else {
+                                                    ?><td><b></b></td><?php 
+                                                }
+                                                if( $complete_third ){
+                                                    ?><td><b><?php echo $third != 0 ? $third_ave:'';?></b></td><?php 
+                                                } else {
+                                                    ?><td><b></b></td><?php 
+                                                }
+                                                
+                                                if( $complete_grades  ){  
+                                                //if( $first  ){  
+                                                    $total_ave =   $subject_count != 0 ? $total_ave / $subject_count:0;
+                                                    $final_grade = number_format((float)$total_ave, $decimal_average, '.', '');
+                                                    ?>
+                                                    <td><b><?php echo $final_grade;?></b></td>
+                                                    <?php
+                                                } else {
+                                                    ?>
+                                                    <td></td> 
+                                                    <?php
+                                                }  
                                                 ?>
                                             </tr>   
                                             <tr></tr>  

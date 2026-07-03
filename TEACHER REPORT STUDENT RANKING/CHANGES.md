@@ -147,3 +147,24 @@ url: base_url + "teacher/strand/allowStrand",
 
 * **Layman's Explanation**: The webpage was trying to fetch sections and academic strands from the admin portal backend.
 * **Purpose**: Resolves the broken section load issue when teachers are viewing the page by routing the request through the teacher portal controllers, which they have access permissions for.
+
+---
+
+### 2.5 Decimal Formatting of Average Grades
+* **Type of Change**: Visual Formatting / Consistency Fix
+* **Lines Changed**: Line 151
+
+#### Code Comparison
+##### Before (Original `BACKUP` State)
+```php
+$final_grade = round( $student_value['final_grade'], 2);
+```
+
+##### After (Today's `LOCAL` State)
+```php
+$final_grade = number_format((float)$student_value['final_grade'], 2, '.', '');
+```
+
+* **Layman's Explanation**: The display value for the general average grade column was changed to always show exactly 2 decimal places.
+* **Purpose**: Ensures trailing zeros are kept (e.g. displaying `94.90` instead of `94.9`, and `93.00` instead of `93`), matching the format used in other areas of the system.
+

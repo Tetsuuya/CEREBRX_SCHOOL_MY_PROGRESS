@@ -329,16 +329,19 @@
                                             $total_per_q[$q] += $grade;
                                             $has_grades = true;
                                         }
+                                        $display_grade = $this->grade_model->get_letter_grade_special($grade, $subject['name']);
+                                        $style = (!empty($grade) && (is_numeric($display_grade) && $display_grade < 75 || $display_grade === 'DNME')) ? ' style="color: #dc3545; font-weight: bold;"' : '';
                                     ?>
-                                        <td<?= (!empty($grade) && is_numeric($grade) && $grade < 75) ? ' style="color: #dc3545; font-weight: bold;"' : '' ?>><?= !empty($grade) ? htmlspecialchars($grade) : '-' ?></td>
+                                        <td<?= $style ?>><?= !empty($grade) ? htmlspecialchars($display_grade) : '-' ?></td>
                                     <?php endfor; ?>
                                     <td>
                                         <?php
                                         if (!empty($subject['final_grade'])) {
                                             $final_total += $subject['final_grade'];
                                         }
-                                        $final_g = !empty($subject['final_grade']) ? htmlspecialchars($subject['final_grade']) : '-';
-                                        $final_style = (!empty($subject['final_grade']) && is_numeric($subject['final_grade']) && $subject['final_grade'] < 75) ? ' style="color: #dc3545; font-weight: bold;"' : '';
+                                        $display_final = $this->grade_model->get_letter_grade_special($subject['final_grade'], $subject['name']);
+                                        $final_g = !empty($subject['final_grade']) ? htmlspecialchars($display_final) : '-';
+                                        $final_style = (!empty($subject['final_grade']) && (is_numeric($display_final) && $display_final < 75 || $display_final === 'DNME')) ? ' style="color: #dc3545; font-weight: bold;"' : '';
                                         ?>
                                         <span<?= $final_style ?>><?= $final_g ?></span>
                                     </td>
@@ -390,10 +393,18 @@
                                         if (!empty($final)) $total_final += $final;
 
                                         if (!empty($q1) || !empty($q2) || !empty($final)) $count++;
+                                        
+                                        $disp_q1 = $this->grade_model->get_letter_grade_special($q1, $subject['name']);
+                                        $disp_q2 = $this->grade_model->get_letter_grade_special($q2, $subject['name']);
+                                        $disp_final = $this->grade_model->get_letter_grade_special($final, $subject['name']);
+                                        
+                                        $style_q1 = (!empty($q1) && (is_numeric($disp_q1) && $disp_q1 < 75 || $disp_q1 === 'DNME')) ? ' style="color: #dc3545; font-weight: bold;"' : '';
+                                        $style_q2 = (!empty($q2) && (is_numeric($disp_q2) && $disp_q2 < 75 || $disp_q2 === 'DNME')) ? ' style="color: #dc3545; font-weight: bold;"' : '';
+                                        $style_final = (!empty($final) && (is_numeric($disp_final) && $disp_final < 75 || $disp_final === 'DNME')) ? ' style="color: #dc3545; font-weight: bold;"' : '';
                                         ?>
-                                        <td<?= (!empty($q1) && is_numeric($q1) && $q1 < 75) ? ' style="color: #dc3545; font-weight: bold;"' : '' ?>><?= !empty($q1) ? $q1 : '-' ?></td>
-                                        <td<?= (!empty($q2) && is_numeric($q2) && $q2 < 75) ? ' style="color: #dc3545; font-weight: bold;"' : '' ?>><?= !empty($q2) ? $q2 : '-' ?></td>
-                                        <td<?= (!empty($final) && is_numeric($final) && $final < 75) ? ' style="color: #dc3545; font-weight: bold;"' : '' ?>><?= !empty($final) ? $final : '-' ?></td>
+                                        <td<?= $style_q1 ?>><?= !empty($q1) ? $disp_q1 : '-' ?></td>
+                                        <td<?= $style_q2 ?>><?= !empty($q2) ? $disp_q2 : '-' ?></td>
+                                        <td<?= $style_final ?>><?= !empty($final) ? $disp_final : '-' ?></td>
                                     </tr>
                                 <?php endif; ?>
                             <?php endforeach; ?>
@@ -439,9 +450,15 @@
                                         if (!empty($final)) $total_final += $final;
 
                                         if (!empty($q3) || !empty($final)) $count++;
+                                        
+                                        $disp_q3 = $this->grade_model->get_letter_grade_special($q3, $subject['name']);
+                                        $disp_final = $this->grade_model->get_letter_grade_special($final, $subject['name']);
+                                        
+                                        $style_q3 = (!empty($q3) && (is_numeric($disp_q3) && $disp_q3 < 75 || $disp_q3 === 'DNME')) ? ' style="color: #dc3545; font-weight: bold;"' : '';
+                                        $style_final = (!empty($final) && (is_numeric($disp_final) && $disp_final < 75 || $disp_final === 'DNME')) ? ' style="color: #dc3545; font-weight: bold;"' : '';
                                         ?>
-                                        <td<?= (!empty($q3) && is_numeric($q3) && $q3 < 75) ? ' style="color: #dc3545; font-weight: bold;"' : '' ?>><?= !empty($q3) ? $q3 : '-' ?></td>
-                                        <td<?= (!empty($final) && is_numeric($final) && $final < 75) ? ' style="color: #dc3545; font-weight: bold;"' : '' ?>><?= !empty($final) ? $final : '-' ?></td>
+                                        <td<?= $style_q3 ?>><?= !empty($q3) ? $disp_q3 : '-' ?></td>
+                                        <td<?= $style_final ?>><?= !empty($final) ? $disp_final : '-' ?></td>
                                     </tr>
                                 <?php endif; ?>
                             <?php endforeach; ?>

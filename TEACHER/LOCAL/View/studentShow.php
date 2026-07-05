@@ -508,15 +508,17 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                                         <?php
                                                                     }  else {
                                                                         $val = number_format((float)0, $decimal_grades, '.', '');
-                                                                        $style = (is_numeric($val) && $val < 75) ? ' style="color: red; font-weight: bold;"' : '';
+                                                                        $display_grade = $this->grade_model->get_letter_grade_special($val, $firstsemester['name']);
+                                                                        $style = (is_numeric($display_grade) && $display_grade < 75 || $display_grade === 'DNME') ? ' style="color: red; font-weight: bold;"' : '';
                                                                         ?>
-                                                                        <td<?php echo $style; ?>><?php echo $val;?></td>
+                                                                        <td<?php echo $style; ?>><?php echo $display_grade;?></td>
                                                                         <?php
                                                                     }
                                                                 } else {
-                                                                    $style = (is_numeric($grade_per_quarter) && $grade_per_quarter < 75) ? ' style="color: red; font-weight: bold;"' : '';
+                                                                    $display_grade = $this->grade_model->get_letter_grade_special($grade_per_quarter, $firstsemester['name']);
+                                                                    $style = (is_numeric($display_grade) && $display_grade < 75 || $display_grade === 'DNME') ? ' style="color: red; font-weight: bold;"' : '';
                                                                     ?>
-                                                                    <td<?php echo $style; ?>><?php echo $grade_per_quarter;?></td>
+                                                                    <td<?php echo $style; ?>><?php echo $display_grade;?></td>
                                                                     <?php
                                                                 }
                                                             }
@@ -543,9 +545,10 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                         $final_grade =  number_format((float)$final_grade, $decimal_finalgrade, '.', '');
                                                         if( $display_card == 'yes'){
                                                             if( $available_quarters > 0 ){
-                                                                $style = (is_numeric($final_grade) && $final_grade < 75) ? ' style="color: red; font-weight: bold;"' : '';
+                                                                $display_f_grade = $this->grade_model->get_letter_grade_special($final_grade, $firstsemester['name']);
+                                                                $style = (is_numeric($display_f_grade) && $display_f_grade < 75 || $display_f_grade === 'DNME') ? ' style="color: red; font-weight: bold;"' : '';
                                                                 ?>
-                                                                <td<?php echo $style; ?>><?php echo $final_grade;?></td>
+                                                                <td<?php echo $style; ?>><?php echo $display_f_grade;?></td>
                                                                 <?php 
                                                             } else {
                                                                 ?>
@@ -788,25 +791,27 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                             }
                                                         }
                                                         if( $display_card == 'yes'){
-                                                            if( $grade_per_quarter == null || $grade_per_quarter == 0  ){
-                                                                if( $if_gradeisnull == 'blank'){
-                                                                    ?>
-                                                                    <td></td>
-                                                                    <?php
-                                                                }  else {
-                                                                    $val = number_format((float)0, $decimal_grades, '.', '');
-                                                                    $style = (is_numeric($val) && $val < 75) ? ' style="color: red; font-weight: bold;"' : '';
-                                                                    ?>
-                                                                    <td<?php echo $style; ?>><?php echo $val;?></td>
-                                                                    <?php
-                                                                }
-                                                            } else {
-                                                                $style = (is_numeric($grade_per_quarter) && $grade_per_quarter < 75) ? ' style="color: red; font-weight: bold;"' : '';
-                                                                ?>
-                                                                <td<?php echo $style; ?>><?php echo $grade_per_quarter;?></td>
-                                                                <?php
-                                                            }
-                                                        }
+                                                             if( $grade_per_quarter == null || $grade_per_quarter == 0  ){
+                                                                 if( $if_gradeisnull == 'blank'){
+                                                                     ?>
+                                                                     <td></td>
+                                                                     <?php
+                                                                 }  else {
+                                                                     $val = number_format((float)0, $decimal_grades, '.', '');
+                                                                     $display_grade = $this->grade_model->get_letter_grade_special($val, $secondsemester['name']);
+                                                                     $style = (is_numeric($display_grade) && $display_grade < 75 || $display_grade === 'DNME') ? ' style="color: red; font-weight: bold;"' : '';
+                                                                     ?>
+                                                                     <td<?php echo $style; ?>><?php echo $display_grade;?></td>
+                                                                     <?php
+                                                                 }
+                                                             } else {
+                                                                 $display_grade = $this->grade_model->get_letter_grade_special($grade_per_quarter, $secondsemester['name']);
+                                                                 $style = (is_numeric($display_grade) && $display_grade < 75 || $display_grade === 'DNME') ? ' style="color: red; font-weight: bold;"' : '';
+                                                                 ?>
+                                                                 <td<?php echo $style; ?>><?php echo $display_grade;?></td>
+                                                                 <?php
+                                                             }
+                                                         }
                                                         $get_final_grade = $get_final_grade + $grade_per_quarter;
                                                     }
                                                     
@@ -828,18 +833,19 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                     }
                                                     
                                                     $final_grade =  number_format((float)$final_grade, $decimal_finalgrade, '.', '');
-                                                    if( $display_card == 'yes'){
-                                                        if( $available_quarters > 0 ){
-                                                            $style = (is_numeric($final_grade) && $final_grade < 75) ? ' style="color: red; font-weight: bold;"' : '';
-                                                            ?>
-                                                            <td<?php echo $style; ?>><?php echo $final_grade;?></td>
-                                                            <?php 
-                                                        } else {
-                                                            ?>
-                                                            <td></td>
-                                                            <?php
-                                                        }
-                                                    }
+                                                     if( $display_card == 'yes'){
+                                                         if( $available_quarters > 0 ){
+                                                             $display_f_grade = $this->grade_model->get_letter_grade_special($final_grade, $secondsemester['name']);
+                                                             $style = (is_numeric($display_f_grade) && $display_f_grade < 75 || $display_f_grade === 'DNME') ? ' style="color: red; font-weight: bold;"' : '';
+                                                             ?>
+                                                             <td<?php echo $style; ?>><?php echo $display_f_grade;?></td>
+                                                             <?php 
+                                                         } else {
+                                                             ?>
+                                                             <td></td>
+                                                             <?php
+                                                         }
+                                                     }
                                                     if( $display_card == 'yes'){
                                                         ?>
                                                         </tr>
@@ -1072,15 +1078,17 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                                     <?php
                                                                     }  else {
                                                                         $val = number_format((float)0, $decimal_grades, '.', '');
-                                                                        $style = (is_numeric($val) && $val < 75) ? ' style="color: red; font-weight: bold;"' : '';
+                                                                        $display_grade = $this->grade_model->get_letter_grade_special($val, $subjects['name']);
+                                                                        $style = (is_numeric($display_grade) && $display_grade < 75 || $display_grade === 'DNME') ? ' style="color: red; font-weight: bold;"' : '';
                                                                     ?>
-                                                                    <td<?php echo $style; ?>><?php echo $val;?></td>
+                                                                    <td<?php echo $style; ?>><?php echo $display_grade;?></td>
                                                                     <?php
                                                                     } 
                                                                 } else {
-                                                                    $style = (is_numeric($grade_per_quarter) && $grade_per_quarter < 75) ? ' style="color: red; font-weight: bold;"' : '';
+                                                                    $display_grade = $this->grade_model->get_letter_grade_special($grade_per_quarter, $subjects['name']);
+                                                                    $style = (is_numeric($display_grade) && $display_grade < 75 || $display_grade === 'DNME') ? ' style="color: red; font-weight: bold;"' : '';
                                                                     ?>
-                                                                    <td<?php echo $style; ?>><?php echo $grade_per_quarter;?></td>
+                                                                    <td<?php echo $style; ?>><?php echo $display_grade;?></td>
                                                                     <?php
                                                                 }
                                                             }   
@@ -1112,9 +1120,10 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                         
                                                         if( $display_card == 'yes'){
                                                             if( $available_quarters > 0 ){
-                                                                $style = (is_numeric($final_grade) && $final_grade < 75) ? ' style="color: red; font-weight: bold;"' : '';
+                                                                $display_f_grade = $this->grade_model->get_letter_grade_special($final_grade, $subjects['name']);
+                                                                $style = (is_numeric($display_f_grade) && $display_f_grade < 75 || $display_f_grade === 'DNME') ? ' style="color: red; font-weight: bold;"' : '';
                                                                 ?>
-                                                                <td<?php echo $style; ?>><?php echo $final_grade;?></td>
+                                                                <td<?php echo $style; ?>><?php echo $display_f_grade;?></td>
                                                                 <?php
                                                             } else {
                                                                 ?>

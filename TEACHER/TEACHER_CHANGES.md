@@ -1361,3 +1361,33 @@ To improve readability and help teachers easily identify students who are failin
   - Added conditional styling (`style="color: #dc3545; font-weight: bold;"`) to JHS/SHS grade cells and final grades.
   - Styled the corresponding General Average cells when the average is below 75.
 
+### 15.3 Special Letter Grades Mapping for Homeroom & Work Education: [studentShow.php](file:///c:/Users/Rhenel%20Jhon%20Sajol/Desktop/CEREB_SCHOOL_BACKUP/TEACHER/LOCAL/View/studentShow.php) & [student_grades.php](file:///c:/Users/Rhenel%20Jhon%20Sajol/Desktop/CEREB_SCHOOL_BACKUP/TEACHER/LOCAL/View/student_grades.php)
+* **Type of Change**: Functional & UI Alignment Update
+* **Purpose**: Converts raw numeric grades into Philippine special grading letter descriptors (O, VS, S, FS, DNME) for Homeroom and Work Education to match the principal's module, and highlights failing letters (DNME) in bold red.
+* **What Changed**:
+  - Called `$this->grade_model->get_letter_grade_special()` dynamically on term and final grade cells.
+  - Aligned styling logic to format values:
+    - **O**: Outstanding (90-100)
+    - **VS**: Very Satisfactory (85-89)
+    - **S**: Satisfactory (80-84)
+    - **FS**: Fairly Satisfactory (75-79)
+    - **DNME**: Did Not Meet Expectations (Below 75)
+  - Colors **DNME** in red, while keeping normal passing letters in default styles.
+
+---
+
+## 16. Search Criteria Layout Alignment with Principal
+
+### 16.1 Student Search Form: [studentSearch.php](file:///c:/Users/Rhenel%20Jhon%20Sajol/Desktop/CEREB_SCHOOL_BACKUP/TEACHER/LOCAL/View/studentSearch.php)
+* **Type of Change**: UI & CSS Layout Fix (Copied Principal Structure)
+* **Purpose**: Aligns the Teacher student search criteria form layout side-by-side to match the Principal module reference page exactly.
+* **What Changed**:
+  - Restored the `form-horizontal` class and copied the exact form layout structure from the principal's module (`PRINCIPAL - grade/studentSearch.php`).
+  - Grouped all three input fields on the left (`session`, `class`, and `section`) into a single `form-group` div, keeping `session` as a full-width `col-sm-12` and `class`/`section` as side-by-side `col-sm-6` elements.
+  - This allows the left form's first form-group to act as a single tall block, aligning the top "School Year" select box and the right column's "Search By Keyword" input box horizontally, while the right search button aligns with the Grade/Section selectors below it.
+
+
+
+
+
+

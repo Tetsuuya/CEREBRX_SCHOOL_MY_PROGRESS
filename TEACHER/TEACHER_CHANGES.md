@@ -1341,3 +1341,23 @@ To meet school design specifications and branding guidelines for Cagayan de Oro 
   - Formatted option text to show `"Term X"` instead of `"X Quarter"`.
   - Updated the `"final"` value choice text to display as `"Final Grade"`.
 
+---
+
+## 15. Failing Grades Color Coding (Red highlight for < 75)
+
+To improve readability and help teachers easily identify students who are failing or struggling, we color-coded all numeric grades below 75 in red bold font:
+
+### 15.1 Student Profile Grades Tab: [studentShow.php](file:///c:/Users/Rhenel%20Jhon%20Sajol/Desktop/CEREB_SCHOOL_BACKUP/TEACHER/LOCAL/View/studentShow.php)
+* **Type of Change**: UI & Styling Update
+* **Purpose**: Colors all JHS/SHS quarter grades, final grades, and general averages below 75 in red in the student profile grades list.
+* **What Changed**:
+  - Injected inline conditional styling (`style="color: red; font-weight: bold;"`) into SHS first and second semester quarter grades, final grades, and quarterly/final average columns.
+  - Applied the same style to JHS term grades, subject final grades, and general average columns.
+
+### 15.2 Student Academic Report: [student_grades.php](file:///c:/Users/Rhenel%20Jhon%20Sajol/Desktop/CEREB_SCHOOL_BACKUP/TEACHER/LOCAL/View/student_grades.php)
+* **Type of Change**: UI & Styling Update
+* **Purpose**: Colors failing grades and averages in the main student grades report view.
+* **What Changed**:
+  - Added conditional styling (`style="color: #dc3545; font-weight: bold;"`) to JHS/SHS grade cells and final grades.
+  - Styled the corresponding General Average cells when the average is below 75.
+

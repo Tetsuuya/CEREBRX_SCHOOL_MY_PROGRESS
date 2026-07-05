@@ -507,13 +507,16 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                                         <td></td>
                                                                         <?php
                                                                     }  else {
+                                                                        $val = number_format((float)0, $decimal_grades, '.', '');
+                                                                        $style = (is_numeric($val) && $val < 75) ? ' style="color: red; font-weight: bold;"' : '';
                                                                         ?>
-                                                                        <td><?php echo number_format((float)0, $decimal_grades, '.', '');?></td>
+                                                                        <td<?php echo $style; ?>><?php echo $val;?></td>
                                                                         <?php
                                                                     }
                                                                 } else {
+                                                                    $style = (is_numeric($grade_per_quarter) && $grade_per_quarter < 75) ? ' style="color: red; font-weight: bold;"' : '';
                                                                     ?>
-                                                                    <td><?php echo $grade_per_quarter;?></td>
+                                                                    <td<?php echo $style; ?>><?php echo $grade_per_quarter;?></td>
                                                                     <?php
                                                                 }
                                                             }
@@ -540,8 +543,9 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                         $final_grade =  number_format((float)$final_grade, $decimal_finalgrade, '.', '');
                                                         if( $display_card == 'yes'){
                                                             if( $available_quarters > 0 ){
+                                                                $style = (is_numeric($final_grade) && $final_grade < 75) ? ' style="color: red; font-weight: bold;"' : '';
                                                                 ?>
-                                                                <td><?php echo $final_grade;?></td>
+                                                                <td<?php echo $style; ?>><?php echo $final_grade;?></td>
                                                                 <?php 
                                                             } else {
                                                                 ?>
@@ -585,7 +589,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                                         $complete_average++;
                                                                     }
                                                                     if( $count_subjects_first > 0 ) {
-                                                                        ?><td><b><?php echo $first != 0 ? $first_ave:'';?></b></td><?php
+                                                                        $style = ($first != 0 && is_numeric($first_ave) && $first_ave < 75) ? ' style="color: red; font-weight: bold;"' : '';
+                                                                        ?><td><b<?php echo $style; ?>><?php echo $first != 0 ? $first_ave:'';?></b></td><?php
                                                                     } else {
                                                                         ?><td><b></b></td><?php
                                                                     }
@@ -596,7 +601,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                                         $complete_average++;
                                                                     }   
                                                                     if( $count_subjects_second > 0 ) {
-                                                                        ?><td><b><?php echo $second != 0 ? $second_ave:'';?></b></td><?php
+                                                                        $style = ($second != 0 && is_numeric($second_ave) && $second_ave < 75) ? ' style="color: red; font-weight: bold;"' : '';
+                                                                        ?><td><b<?php echo $style; ?>><?php echo $second != 0 ? $second_ave:'';?></b></td><?php
                                                                     } else {
                                                                         ?><td><b></b></td><?php
                                                                     }
@@ -606,7 +612,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                                         $complete_average++;
                                                                     }
                                                                     if( $count_subjects_third > 0 ) {
-                                                                        ?><td><b><?php echo $third != 0 ? $third_ave:'';?></b></td><?php
+                                                                        $style = ($third != 0 && is_numeric($third_ave) && $third_ave < 75) ? ' style="color: red; font-weight: bold;"' : '';
+                                                                        ?><td><b<?php echo $style; ?>><?php echo $third != 0 ? $third_ave:'';?></b></td><?php
                                                                     } else {
                                                                         ?><td><b></b></td><?php
                                                                     }
@@ -624,8 +631,9 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                         $total_ave =   $subject_count != 0 ? $total_ave / $subject_count:0;
                                                         if( $subject_count > 0 ){ 
                                                             $final_grade =  number_format((float)$total_ave, $decimal_average, '.', '');
+                                                            $style = (is_numeric($final_grade) && $final_grade < 75) ? ' style="color: red; font-weight: bold;"' : '';
                                                             ?>
-                                                            <td><b><?php echo $final_grade;?></b></td>
+                                                            <td><b<?php echo $style; ?>><?php echo $final_grade;?></b></td>
                                                             <?php
                                                         } else {
                                                             ?>
@@ -786,13 +794,16 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                                     <td></td>
                                                                     <?php
                                                                 }  else {
+                                                                    $val = number_format((float)0, $decimal_grades, '.', '');
+                                                                    $style = (is_numeric($val) && $val < 75) ? ' style="color: red; font-weight: bold;"' : '';
                                                                     ?>
-                                                                    <td><?php echo number_format((float)0, $decimal_grades, '.', '');?></td>
+                                                                    <td<?php echo $style; ?>><?php echo $val;?></td>
                                                                     <?php
                                                                 }
                                                             } else {
+                                                                $style = (is_numeric($grade_per_quarter) && $grade_per_quarter < 75) ? ' style="color: red; font-weight: bold;"' : '';
                                                                 ?>
-                                                                <td><?php echo $grade_per_quarter;?></td>
+                                                                <td<?php echo $style; ?>><?php echo $grade_per_quarter;?></td>
                                                                 <?php
                                                             }
                                                         }
@@ -819,8 +830,9 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                     $final_grade =  number_format((float)$final_grade, $decimal_finalgrade, '.', '');
                                                     if( $display_card == 'yes'){
                                                         if( $available_quarters > 0 ){
+                                                            $style = (is_numeric($final_grade) && $final_grade < 75) ? ' style="color: red; font-weight: bold;"' : '';
                                                             ?>
-                                                            <td><?php echo $final_grade;?></td>
+                                                            <td<?php echo $style; ?>><?php echo $final_grade;?></td>
                                                             <?php 
                                                         } else {
                                                             ?>
@@ -864,7 +876,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                                     $complete_average++;
                                                                 }
                                                                 if( $count_subjects_first > 0 ) {
-                                                                    ?><td><b><?php echo $first != 0 ? $first_ave:'';?></b></td><?php
+                                                                    $style = ($first != 0 && is_numeric($first_ave) && $first_ave < 75) ? ' style="color: red; font-weight: bold;"' : '';
+                                                                    ?><td><b<?php echo $style; ?>><?php echo $first != 0 ? $first_ave:'';?></b></td><?php
                                                                 } else {
                                                                     ?><td><b></b></td><?php
                                                                 }
@@ -875,7 +888,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                                     $complete_average++;
                                                                 }   
                                                                 if( $count_subjects_second > 0 ) {
-                                                                    ?><td><b><?php echo $second != 0 ? $second_ave:'';?></b></td><?php
+                                                                    $style = ($second != 0 && is_numeric($second_ave) && $second_ave < 75) ? ' style="color: red; font-weight: bold;"' : '';
+                                                                    ?><td><b<?php echo $style; ?>><?php echo $second != 0 ? $second_ave:'';?></b></td><?php
                                                                 } else {
                                                                     ?><td><b></b></td><?php
                                                                 }
@@ -885,7 +899,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                                     $complete_average++;
                                                                 }
                                                                 if( $count_subjects_third > 0 ) {
-                                                                    ?><td><b><?php echo $third != 0 ? $third_ave:'';?></b></td><?php
+                                                                    $style = ($third != 0 && is_numeric($third_ave) && $third_ave < 75) ? ' style="color: red; font-weight: bold;"' : '';
+                                                                    ?><td><b<?php echo $style; ?>><?php echo $third != 0 ? $third_ave:'';?></b></td><?php
                                                                 } else {
                                                                     ?><td><b></b></td><?php
                                                                 }
@@ -904,8 +919,9 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                     $total_ave =   $subject_count != 0 ? $total_ave / $subject_count:0;
                                                     if( $subject_count > 0 ){ 
                                                         $final_grade =  number_format((float)$total_ave, $decimal_average, '.', '');
+                                                        $style = (is_numeric($final_grade) && $final_grade < 75) ? ' style="color: red; font-weight: bold;"' : '';
                                                         ?>
-                                                        <td><b><?php echo $final_grade;?></b></td>
+                                                        <td><b<?php echo $style; ?>><?php echo $final_grade;?></b></td>
                                                         <?php
                                                     } else {
                                                         ?>
@@ -1055,13 +1071,16 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                                     <td></td>
                                                                     <?php
                                                                     }  else {
+                                                                        $val = number_format((float)0, $decimal_grades, '.', '');
+                                                                        $style = (is_numeric($val) && $val < 75) ? ' style="color: red; font-weight: bold;"' : '';
                                                                     ?>
-                                                                    <td><?php echo number_format((float)0, $decimal_grades, '.', '');?></td>
+                                                                    <td<?php echo $style; ?>><?php echo $val;?></td>
                                                                     <?php
                                                                     } 
                                                                 } else {
+                                                                    $style = (is_numeric($grade_per_quarter) && $grade_per_quarter < 75) ? ' style="color: red; font-weight: bold;"' : '';
                                                                     ?>
-                                                                    <td><?php echo $grade_per_quarter;?></td>
+                                                                    <td<?php echo $style; ?>><?php echo $grade_per_quarter;?></td>
                                                                     <?php
                                                                 }
                                                             }   
@@ -1093,8 +1112,9 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                         
                                                         if( $display_card == 'yes'){
                                                             if( $available_quarters > 0 ){
+                                                                $style = (is_numeric($final_grade) && $final_grade < 75) ? ' style="color: red; font-weight: bold;"' : '';
                                                                 ?>
-                                                                <td><?php echo $final_grade;?></td>
+                                                                <td<?php echo $style; ?>><?php echo $final_grade;?></td>
                                                                 <?php
                                                             } else {
                                                                 ?>
@@ -1131,17 +1151,20 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                 <td><b>Average</b></td>
                                                 <?php 
                                                  if( $count_subjects_first > 0 ){
-                                                     ?><td><b><?php echo $first != 0 ? $first_ave:'';?></b></td><?php 
+                                                     $style = ($first != 0 && is_numeric($first_ave) && $first_ave < 75) ? ' style="color: red; font-weight: bold;"' : '';
+                                                     ?><td><b<?php echo $style; ?>><?php echo $first != 0 ? $first_ave:'';?></b></td><?php 
                                                  } else {
                                                      ?><td><b></b></td><?php 
                                                  }
                                                  if( $count_subjects_second > 0 ){
-                                                     ?><td><b><?php echo $second != 0 ? $second_ave:'';?></b></td><?php 
+                                                     $style = ($second != 0 && is_numeric($second_ave) && $second_ave < 75) ? ' style="color: red; font-weight: bold;"' : '';
+                                                     ?><td><b<?php echo $style; ?>><?php echo $second != 0 ? $second_ave:'';?></b></td><?php 
                                                  } else {
                                                      ?><td><b></b></td><?php 
                                                  }
                                                  if( $count_subjects_third > 0 ){
-                                                     ?><td><b><?php echo $third != 0 ? $third_ave:'';?></b></td><?php 
+                                                     $style = ($third != 0 && is_numeric($third_ave) && $third_ave < 75) ? ' style="color: red; font-weight: bold;"' : '';
+                                                     ?><td><b<?php echo $style; ?>><?php echo $third != 0 ? $third_ave:'';?></b></td><?php 
                                                  } else {
                                                      ?><td><b></b></td><?php 
                                                  }
@@ -1150,8 +1173,9 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                  //if( $first  ){  
                                                      $total_ave =   $subject_count != 0 ? $total_ave / $subject_count:0;
                                                      $final_grade = number_format((float)$total_ave, $decimal_average, '.', '');
+                                                     $style = (is_numeric($final_grade) && $final_grade < 75) ? ' style="color: red; font-weight: bold;"' : '';
                                                      ?>
-                                                     <td><b><?php echo $final_grade;?></b></td>
+                                                     <td><b<?php echo $style; ?>><?php echo $final_grade;?></b></td>
                                                      <?php
                                                  } else {
                                                      ?>

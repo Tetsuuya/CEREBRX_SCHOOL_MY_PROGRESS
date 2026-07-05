@@ -330,25 +330,34 @@
                                             $has_grades = true;
                                         }
                                     ?>
-                                        <td><?= !empty($grade) ? htmlspecialchars($grade) : '-' ?></td>
+                                        <td<?= (!empty($grade) && is_numeric($grade) && $grade < 75) ? ' style="color: #dc3545; font-weight: bold;"' : '' ?>><?= !empty($grade) ? htmlspecialchars($grade) : '-' ?></td>
                                     <?php endfor; ?>
                                     <td>
                                         <?php
                                         if (!empty($subject['final_grade'])) {
                                             $final_total += $subject['final_grade'];
                                         }
-                                        echo !empty($subject['final_grade']) ? htmlspecialchars($subject['final_grade']) : '-';
+                                        $final_g = !empty($subject['final_grade']) ? htmlspecialchars($subject['final_grade']) : '-';
+                                        $final_style = (!empty($subject['final_grade']) && is_numeric($subject['final_grade']) && $subject['final_grade'] < 75) ? ' style="color: #dc3545; font-weight: bold;"' : '';
                                         ?>
+                                        <span<?= $final_style ?>><?= $final_g ?></span>
                                     </td>
                                 </tr>
                                 <?php if ($has_grades) $subject_count++; ?>
                             <?php endforeach; ?>
                             <tr style="font-weight: bold; background-color: #f9f9f9;">
                                 <td>General Average</td>
-                                <?php for ($q = 1; $q <= 3; $q++): ?>
-                                    <td><?= $subject_count ? round($total_per_q[$q] / $subject_count, 2) : '-' ?></td>
+                                <?php for ($q = 1; $q <= 3; $q++): 
+                                    $avg_val = $subject_count ? round($total_per_q[$q] / $subject_count, 2) : '-';
+                                    $avg_style = ($subject_count && is_numeric($avg_val) && $avg_val < 75) ? ' style="color: #dc3545; font-weight: bold;"' : '';
+                                ?>
+                                    <td<?= $avg_style ?>><?= $avg_val ?></td>
                                 <?php endfor; ?>
-                                <td><?= $subject_count ? round($final_total / $subject_count, 2) : '-' ?></td>
+                                <?php
+                                $final_avg_val = $subject_count ? round($final_total / $subject_count, 2) : '-';
+                                $final_avg_style = ($subject_count && is_numeric($final_avg_val) && $final_avg_val < 75) ? ' style="color: #dc3545; font-weight: bold;"' : '';
+                                ?>
+                                <td<?= $final_avg_style ?>><?= $final_avg_val ?></td>
                             </tr>
                             </tbody>
                         </table>
@@ -382,17 +391,25 @@
 
                                         if (!empty($q1) || !empty($q2) || !empty($final)) $count++;
                                         ?>
-                                        <td><?= !empty($q1) ? $q1 : '-' ?></td>
-                                        <td><?= !empty($q2) ? $q2 : '-' ?></td>
-                                        <td><?= !empty($final) ? $final : '-' ?></td>
+                                        <td<?= (!empty($q1) && is_numeric($q1) && $q1 < 75) ? ' style="color: #dc3545; font-weight: bold;"' : '' ?>><?= !empty($q1) ? $q1 : '-' ?></td>
+                                        <td<?= (!empty($q2) && is_numeric($q2) && $q2 < 75) ? ' style="color: #dc3545; font-weight: bold;"' : '' ?>><?= !empty($q2) ? $q2 : '-' ?></td>
+                                        <td<?= (!empty($final) && is_numeric($final) && $final < 75) ? ' style="color: #dc3545; font-weight: bold;"' : '' ?>><?= !empty($final) ? $final : '-' ?></td>
                                     </tr>
                                 <?php endif; ?>
                             <?php endforeach; ?>
                             <tr style="font-weight: bold; background-color: #f9f9f9;">
                                 <td>General Average</td>
-                                <td><?= $count ? round($total_q1 / $count, 2) : '-' ?></td>
-                                <td><?= $count ? round($total_q2 / $count, 2) : '-' ?></td>
-                                <td><?= $count ? round($total_final / $count, 2) : '-' ?></td>
+                                <?php
+                                $avg_q1 = $count ? round($total_q1 / $count, 2) : '-';
+                                $avg_q1_style = ($count && is_numeric($avg_q1) && $avg_q1 < 75) ? ' style="color: #dc3545; font-weight: bold;"' : '';
+                                $avg_q2 = $count ? round($total_q2 / $count, 2) : '-';
+                                $avg_q2_style = ($count && is_numeric($avg_q2) && $avg_q2 < 75) ? ' style="color: #dc3545; font-weight: bold;"' : '';
+                                $avg_final = $count ? round($total_final / $count, 2) : '-';
+                                $avg_final_style = ($count && is_numeric($avg_final) && $avg_final < 75) ? ' style="color: #dc3545; font-weight: bold;"' : '';
+                                ?>
+                                <td<?= $avg_q1_style ?>><?= $avg_q1 ?></td>
+                                <td<?= $avg_q2_style ?>><?= $avg_q2 ?></td>
+                                <td<?= $avg_final_style ?>><?= $avg_final ?></td>
                             </tr>
                             </tbody>
                         </table>
@@ -423,15 +440,21 @@
 
                                         if (!empty($q3) || !empty($final)) $count++;
                                         ?>
-                                        <td><?= !empty($q3) ? $q3 : '-' ?></td>
-                                        <td><?= !empty($final) ? $final : '-' ?></td>
+                                        <td<?= (!empty($q3) && is_numeric($q3) && $q3 < 75) ? ' style="color: #dc3545; font-weight: bold;"' : '' ?>><?= !empty($q3) ? $q3 : '-' ?></td>
+                                        <td<?= (!empty($final) && is_numeric($final) && $final < 75) ? ' style="color: #dc3545; font-weight: bold;"' : '' ?>><?= !empty($final) ? $final : '-' ?></td>
                                     </tr>
                                 <?php endif; ?>
                             <?php endforeach; ?>
                             <tr style="font-weight: bold; background-color: #f9f9f9;">
                                 <td>General Average</td>
-                                <td><?= $count ? round($total_q3 / $count, 2) : '-' ?></td>
-                                <td><?= $count ? round($total_final / $count, 2) : '-' ?></td>
+                                <?php
+                                $avg_q3 = $count ? round($total_q3 / $count, 2) : '-';
+                                $avg_q3_style = ($count && is_numeric($avg_q3) && $avg_q3 < 75) ? ' style="color: #dc3545; font-weight: bold;"' : '';
+                                $avg_final = $count ? round($total_final / $count, 2) : '-';
+                                $avg_final_style = ($count && is_numeric($avg_final) && $avg_final < 75) ? ' style="color: #dc3545; font-weight: bold;"' : '';
+                                ?>
+                                <td<?= $avg_q3_style ?>><?= $avg_q3 ?></td>
+                                <td<?= $avg_final_style ?>><?= $avg_final ?></td>
                             </tr>
                             </tbody>
                         </table>

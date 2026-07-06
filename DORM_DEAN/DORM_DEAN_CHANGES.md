@@ -1,7 +1,5 @@
 # Dorm Dean System - GATEPASS
 
-All file changes are listed in sequential order from the top of the file to the bottom (by line numbers).
-
 ---
 
 ## 1. Controller - Controller/Gatepass.php

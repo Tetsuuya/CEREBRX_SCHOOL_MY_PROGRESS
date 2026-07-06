@@ -16,13 +16,16 @@
 
 ## Overview
 
-We fixed 5 major issues in the cafeteria student registration system:
+We fixed 5 major issues and implemented 3 design and workflow enhancements in the cafeteria student registration system:
 
 1. ✅ **Missing students** - Some students weren't showing up in the list
 2. ✅ **Wrong search behavior** - Search was finding names anywhere instead of "starts with"
 3. ✅ **Clickable error messages** - "No students found" message was selectable
 4. ✅ **Accumulating searches** - Each search added to previous results instead of replacing
 5. ✅ **Meal plan not saving** - Changes to meal plan in unregister panel weren't saved
+6. ✨ **Styled suggestions dropdown overlay** - Replaced browser-native `<datalist>` dropdowns with custom description popup boxes displaying Full Name, Grade, Section, Gender, and Meal Plan details
+7. ✨ **Search button direct table addition** - Clicking "Search" now automatically executes the search, clears the table selection, and adds all returned matching students directly to the table lists
+8. ✨ **Strict starts-with matches** - Restricted the database query to return matches only if Last Name or First Name starts with the query term, removing contains search entirely
 
 ---
 
@@ -54,7 +57,7 @@ We fixed 5 major issues in the cafeteria student registration system:
 
 | File | Method | Lines Changed | What Changed |
 |------|--------|---------------|--------------|
-| **Student_model.php** | `searchFullTextCheckAllow()` | ~2103, ~2115 | Changed INNER→LEFT JOIN<br>Changed search from "contains" to "starts with" |
+| **Student_model.php** | `searchFullTextCheckAllow()` | ~2110 | Changed INNER→LEFT JOIN<br>Changed search to strict starts-with last name / first name only (contains logic removed) |
 | **Student_model.php** | `update_meal_plan()` | ~2448-2452 | New method to update meal plan |
 | **Order_model.php** | `getallowstudents_pagination()` | ~585, 608, 623, 655 | Changed INNER→LEFT JOIN (4 places) |
 
@@ -72,8 +75,10 @@ We fixed 5 major issues in the cafeteria student registration system:
 |------|---------|---------------|--------------|
 | **register.php** | Flash message function | ~1597 | Moved to global scope |
 | **register.php** | Meal plan handler (unregister) | ~2604-2645 | Added AJAX save functionality |
+| **register.php** | Search inputs | ~385, ~480 | Replaced native `<datalist>` with absolute-positioned custom suggestions popups |
 | **register.php** | Search validation | Multiple | Added student.id validation |
-| **register.php** | Search buttons | Both panels | Clear selection before adding new results |
+| **register.php** | Search buttons | Both panels | Linked click handlers to auto-add all results directly to the tables and show alerts |
+| **register.php** | Autocomplete handlers | Multiple | Dynamic dropdown construction rendering styled name, class, section, gender, and meal plan |
 
 ---
 
@@ -1065,6 +1070,35 @@ $('#btn_search_unreg').click(function() {
 **LEFT JOIN** = Show EVERYTHING, mark missing as N/A
 
 This one change fixed the missing students problem!
+
+---
+
+## Phase 2 Enhancements: Styled Dropdown Suggestions & Direct Table Addition
+
+We added three key enhancements to improve the layout design and user workflow to match the **Dorm Dean** system style:
+
+### 1. Styled Suggestions Dropdown Overlay Popups
+- **Problem:** Native browser `<datalist>` dropdown inputs looked very plain and couldn't display detailed description lines (like Grade, Section, Gender, etc.).
+- **Fix:** Replaced the `<datalist>` elements with custom HTML `div` suggestion dropdown overlays positioned absolute below the search inputs.
+- **Result:** Autocomplete suggestions now display as dynamic structured boxes showing:
+  - Student Name (bold)
+  - Grade level & Section
+  - Gender (e.g. Male / Female)
+  - Current Meal Plan with custom pricing (e.g. `Cafeteria (₱3200)`)
+  - A nice hover highlight effect when moving the mouse over suggestions.
+
+### 2. Search Button Click - Direct Table Addition
+- **Problem:** Clicking the Search button next to the input was a dead button (did not do anything).
+- **Fix:** Linked the click events on both Search buttons (`#btn_search_reg` and `#btn_search_unreg`) to:
+  1. Clear any previous selection table items.
+  2. Automatically add all returned search results directly to the Selected Students table.
+  3. Show a browser alert indicating the count of matches found.
+- **Result:** Typing a query (like **"a"**) and clicking the "Search" button now immediately adds all matched students to the list in one click.
+
+### 3. Strict Starts-With Matching parameter constraint
+- **Problem:** Autocomplete suggestions and search returned names that contained the letter anywhere (e.g. "a" matched "Sabanal"), making the lists too long and hard to navigate.
+- **Fix:** Restricted the model queries in `searchFullTextCheckAllow()` to filter strictly by starts-with conditions on **Last Name** and **First Name**, completely removing contains criteria.
+- **Result:** Typing **"a"** now only matches students whose Last Name starts with A, or whose First Name starts with A.
 
 ---
 

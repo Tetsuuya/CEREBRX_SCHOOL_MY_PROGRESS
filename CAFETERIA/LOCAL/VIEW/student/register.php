@@ -382,8 +382,10 @@
 												<div class="col-sm-8">
 													<label>Student Name:</label>  
 													<div style="display: flex; gap: 10px; align-items: center;">
-														<input type="text" list="student_list_reg_datalist" class="form-control" id="student_search_reg" placeholder="Type student name to search..." autocomplete="chrome-off" style="flex: 1; height: 34px;">
-														<datalist id="student_list_reg_datalist"></datalist>
+														<div style="position: relative; flex: 1;">
+															<input type="text" class="form-control" id="student_search_reg" placeholder="Type student name to search..." autocomplete="chrome-off" style="width: 100%; height: 34px;">
+															<div id="student_list_reg_suggestions" style="position: absolute; z-index: 1000; background: white; border: 1px solid #ddd; display: none; max-height: 300px; overflow-y: auto; width: 100%; box-shadow: 0 2px 4px rgba(0,0,0,0.2); margin-top: 2px;"></div>
+														</div>
 														<button class="btn btn-primary" type="button" id="btn_search_reg" style="height: 34px; padding: 6px 12px;"> Search</button>
 													</div>
 												</div>
@@ -479,12 +481,13 @@
 												<div class="col-sm-8">
 													<label>Student Name:</label>  
 													<div style="display: flex; gap: 10px; align-items: center;">
-														<input type="text"
-														list="student_list_unreg"
-														class="form-control"
-														id="student_search_unreg"
-														placeholder="Type student name to search..." autocomplete="chrome-off" style="flex: 1; height: 34px;">
-														<datalist id="student_list_unreg"></datalist>
+														<div style="position: relative; flex: 1;">
+															<input type="text"
+															class="form-control"
+															id="student_search_unreg"
+															placeholder="Type student name to search..." autocomplete="chrome-off" style="width: 100%; height: 34px;">
+															<div id="student_list_unreg_suggestions" style="position: absolute; z-index: 1000; background: white; border: 1px solid #ddd; display: none; max-height: 300px; overflow-y: auto; width: 100%; box-shadow: 0 2px 4px rgba(0,0,0,0.2); margin-top: 2px;"></div>
+														</div>
 														<button class="btn btn-primary" type="button" id="btn_search_unreg" style="height: 34px; padding: 6px 12px;"> Search</button>
 													</div>
 												</div>
@@ -1914,134 +1917,206 @@ $(document).ready(function () {
 		
 		let searchTimeout; // For debouncing
 		
-		$("#student_search_reg").keyup(function() {
-			var search_student = $(this).val().trim();
+		function performSearchReg() {
+			var search_student = $("#student_search_reg").val().trim();
 			var session_id = $('#session_id').val();
-			var searchInput = $(this);
-			
-			// Clear previous timeout
-			clearTimeout(searchTimeout);
 			
 			if (!session_id) {
-				$("#student_list_reg_datalist").empty();
-				$("#student_list_reg_datalist").append("<option value='Please select a school year first'>"); 
+				$("#student_list_reg_suggestions").empty().hide();
 				return;
 			}
 
-			// Clear results if search is empty
 			if (search_student.length < 1) {
-				$("#student_list_reg_datalist").empty();
+				$("#student_list_reg_suggestions").empty().hide();
 				return;
 			}
 
-			// Debounce: wait 300ms after user stops typing
-			searchTimeout = setTimeout(function() {
-				$.ajax({
-					url: "<?php echo base_url('cafeteria/student/getsearchstudentallow'); ?>", // REGISTERED students (allow='yes')
-					type: "POST",
-					data: { "search_student": search_student, "session_id": session_id },
-					dataType: "json",
-					success: function(data) {
-						
-						$("#student_list_reg_datalist").empty();
+			$.ajax({
+				url: "<?php echo base_url('cafeteria/student/getsearchstudentallow'); ?>", // REGISTERED students (allow='yes')
+				type: "POST",
+				data: { "search_student": search_student, "session_id": session_id },
+				dataType: "json",
+				success: function(data) {
+					
+					$("#student_list_reg_suggestions").empty();
 
-						// Sort results alphabetically (A-Z) by Last Name, First Name
-						data.sort(function(a, b) {
-							let nameA = (a.lastname + ', ' + a.firstname).toLowerCase();
-							let nameB = (b.lastname + ', ' + b.firstname).toLowerCase();
-							return nameA.localeCompare(nameB);
-						});
+					let addedIds = [];
+					let matchCount = 0;
+					let html = '';
 
-						let addedIds = [];
-						let searchLower = search_student.toLowerCase();
-						let matchCount = 0;
-
-						$.each(data, function(index, student) {
-							// Filter out duplicate database records
-							if (addedIds.includes(student.id)) {
-								return;
-							}
-
-							let middlename = student.middlename ? ' ' + student.middlename : '';
-							let suffix = student.suffix ? ' ' + student.suffix : '';
-							let full_name = student.lastname + ', ' + student.firstname + middlename + suffix;
-							
-							// ADAPTIVE FILTER: Only keep if the Last Name STARTS WITH what the user typed
-							let lastNameLower = student.lastname.toLowerCase();
-							if (!lastNameLower.startsWith(searchLower)) {
-								return; // Skip student if their last name doesn't start with the query
-							}
-
-							addedIds.push(student.id);
-							matchCount++;
-
-							// Only show in datalist if not already selected in the table
-							if (!selectedStudents.some(s => s.id == student.id)) {
-								$("#student_list_reg_datalist").append(
-									"<option value='" + full_name + "' " +
-									"data-id='" + student.id + "' " +
-									"data-gender='" + student.gender + "' " +
-									"data-meal='" + (student.meal_plan || 'cafeteria') + "' " +
-									"data-class='" + (student.class || '') + "' " +
-									"data-section='" + (student.section || '') + "'></option>"
-								);
-							}
-						});
-						
-						// Show message if no results found
-						if (matchCount === 0) {
-							$("#student_list_reg_datalist").append(
-								"<option value='No registered students found with last name starting with \"" + search_student + "\"'>"
-							);
+					$.each(data, function(index, student) {
+						if (addedIds.includes(student.id)) {
+							return;
 						}
-					},
-					error: function() {
-						// Remove loading indicator on error
-						searchInput.css('background', '');
-						$("#student_list_reg_datalist").empty();
-						$("#student_list_reg_datalist").append("<option value='Error loading students. Please try again.'>");
-					}
-				});
-			}, 300); // Wait 300ms after user stops typing
-		});
 
-		// Handle selection when user clicks/presses enter on an autocomplete option
-		$("#student_search_reg").on('input', function() {
-			var val = $(this).val();
-			var options = $('#student_list_reg_datalist option');
-			var matchedOption = null;
-			
-			options.each(function() {
-				if ($(this).val() === val) {
-					matchedOption = $(this);
-					return false;
+						let middlename = student.middlename ? ' ' + student.middlename : '';
+						let suffix = student.suffix ? ' ' + student.suffix : '';
+						let full_name = student.lastname + ', ' + student.firstname + middlename + suffix;
+
+						addedIds.push(student.id);
+						matchCount++;
+
+						if (!selectedStudents.some(s => s.id == student.id)) {
+							let gender = student.gender || 'N/A';
+							let className = student.class || 'N/A';
+							let sectionName = student.section || 'N/A';
+							let mealPlan = student.meal_plan || 'cafeteria';
+							
+							let mealPlanText = mealPlan;
+							if (mealPlan === 'cafeteria') {
+								mealPlanText = 'Cafeteria (₱' + (gender === 'Female' ? '3000' : '3200') + ')';
+							} else if (mealPlan === 'subsidized_1') {
+								mealPlanText = 'Subsidized: ₱3500';
+							} else if (mealPlan === 'subsidized_2') {
+								mealPlanText = 'Subsidized: ₱4000';
+							} else if (mealPlan === 'subsidized_3') {
+								mealPlanText = 'Subsidized: ₱4500';
+							}
+
+							html += '<div class="suggestion-item suggestion-item-reg" style="cursor: pointer; padding: 10px 12px; border-bottom: 1px solid #eee; background: white;" ' +
+								'data-id="' + student.id + '" ' +
+								'data-name="' + full_name + '" ' +
+								'data-gender="' + gender + '" ' +
+								'data-meal="' + mealPlan + '" ' +
+								'data-class="' + className + '" ' +
+								'data-section="' + sectionName + '">';
+							html += '<strong style="color: #333;">' + full_name + '</strong><br>';
+							html += '<small class="text-muted">Grade: ' + className + ' | Section: ' + sectionName + ' | Gender: ' + gender + ' | Meal Plan: ' + mealPlanText + '</small>';
+							html += '</div>';
+						}
+					});
+					
+					if (matchCount === 0) {
+						html = '<div style="padding: 10px; color: #999; text-align: center; background: white;">No registered students found matching "' + search_student + '"</div>';
+					}
+
+					if (html !== '') {
+						$("#student_list_reg_suggestions").html(html).show();
+					} else {
+						$("#student_list_reg_suggestions").hide();
+					}
+				},
+				error: function() {
+					$("#student_list_reg_suggestions").html('<div style="padding: 10px; color: #a94442; text-align: center; background: white;">Error loading students. Please try again.</div>').show();
 				}
 			});
+		}
+		
+		$("#student_search_reg").keyup(function() {
+			clearTimeout(searchTimeout);
+			var search_student = $(this).val().trim();
+			if (search_student.length < 1) {
+				$("#student_list_reg_suggestions").empty().hide();
+				return;
+			}
+			searchTimeout = setTimeout(performSearchReg, 300);
+		});
+
+		// Search button click handler
+		$('#btn_search_reg').click(function(e) {
+			e.preventDefault();
+			var search_student = $("#student_search_reg").val().trim();
+			var session_id = $('#session_id').val();
+			var btn = $(this);
 			
-			if (matchedOption) {
-				let studentId = matchedOption.attr('data-id');
-				let studentName = val;
-				let studentGender = matchedOption.attr('data-gender');
-				let studentMeal = matchedOption.attr('data-meal') || 'cafeteria';
-				let studentClass = matchedOption.attr('data-class');
-				let studentSection = matchedOption.attr('data-section');
-				
-				// Add selected student to table array
-				selectedStudents.push({
-					id: studentId,
-					name: studentName,
-					gender: studentGender,
-					meal_plan: studentMeal,
-					class: studentClass,
-					section: studentSection
-				});
-				
-				// Update UI Selected Students table
-				updateSelectedStudentsList();
-				
-				// Clear input search bar and dynamic datalist
-				$("#student_search_reg").val('');
-				$("#student_list_reg_datalist").empty();
+			if (!session_id) {
+				alert('Please select a school year first');
+				return;
+			}
+
+			if (search_student.length < 1) {
+				alert('Please type a student name to search');
+				return;
+			}
+
+			btn.prop('disabled', true).text('Searching...');
+
+			$.ajax({
+				url: "<?php echo base_url('cafeteria/student/getsearchstudentallow'); ?>", // REGISTERED students (allow='yes')
+				type: "POST",
+				data: { "search_student": search_student, "session_id": session_id },
+				dataType: "json",
+				success: function(data) {
+					// Clear previous results first
+					selectedStudents = [];
+					let addedIds = [];
+					let matchCount = 0;
+
+					$.each(data, function(index, student) {
+						if (!student.id) {
+							return;
+						}
+						// Filter out duplicate database records
+						if (addedIds.includes(student.id)) {
+							return;
+						}
+
+						let middlename = student.middlename ? ' ' + student.middlename : '';
+						let suffix = student.suffix ? ' ' + student.suffix : '';
+						let full_name = student.lastname + ', ' + student.firstname + middlename + suffix;
+
+						addedIds.push(student.id);
+						matchCount++;
+
+						selectedStudents.push({
+							id: student.id,
+							name: full_name,
+							gender: student.gender,
+							meal_plan: student.meal_plan || 'cafeteria',
+							class: student.class || 'N/A',
+							section: student.section || 'N/A'
+						});
+					});
+					
+					updateSelectedStudentsList();
+					$("#student_search_reg").val('');
+					$("#student_list_reg_suggestions").hide().empty();
+					btn.prop('disabled', false).text('Search');
+					
+					alert('Found ' + matchCount + ' student(s)');
+				},
+				error: function() {
+					btn.prop('disabled', false).text('Search');
+					alert('Error loading students. Please try again.');
+				}
+			});
+		});
+
+		// Handle selection when user clicks on an autocomplete option
+		$(document).on('click', '#student_list_reg_suggestions .suggestion-item-reg', function() {
+			let studentId = $(this).data('id');
+			let studentName = $(this).data('name');
+			let studentGender = $(this).data('gender');
+			let studentMeal = $(this).data('meal') || 'cafeteria';
+			let studentClass = $(this).data('class');
+			let studentSection = $(this).data('section');
+			
+			selectedStudents.push({
+				id: studentId,
+				name: studentName,
+				gender: studentGender,
+				meal_plan: studentMeal,
+				class: studentClass,
+				section: studentSection
+			});
+			
+			updateSelectedStudentsList();
+			
+			$("#student_search_reg").val('');
+			$("#student_list_reg_suggestions").hide().empty();
+		});
+
+		// Hover effects for suggestion items
+		$(document).on('mouseenter', '#student_list_reg_suggestions .suggestion-item-reg', function() {
+			$(this).css('background-color', '#f5f5f5');
+		}).on('mouseleave', '#student_list_reg_suggestions .suggestion-item-reg', function() {
+			$(this).css('background-color', 'white');
+		});
+
+		// Close registered suggestions when clicking outside
+		$(document).on('click', function(e) {
+			if (!$(e.target).closest('#student_search_reg, #student_list_reg_suggestions, #btn_search_reg').length) {
+				$('#student_list_reg_suggestions').hide();
 			}
 		});
 
@@ -2274,134 +2349,206 @@ $(document).ready(function() {
 	
 	let searchTimeoutUnreg; // For debouncing
 	
-	$("#student_search_unreg").keyup(function() {
-		var search_student = $(this).val().trim();
+	function performSearchUnreg() {
+		var search_student = $("#student_search_unreg").val().trim();
 		var session_id = $('#session_id_unreg').val();
-		var searchInput = $(this);
-		
-		// Clear previous timeout
-		clearTimeout(searchTimeoutUnreg);
 		
 		if (!session_id) {
-			$("#student_list_unreg").empty();
-			$("#student_list_unreg").append("<option value='Please select a school year first'>"); 
+			$("#student_list_unreg_suggestions").empty().hide();
 			return;
 		}
 
-		// Clear results if search is empty
 		if (search_student.length === 0) {
-			$("#student_list_unreg").empty();
+			$("#student_list_unreg_suggestions").empty().hide();
 			return;
 		}
 
-		// Debounce: wait 300ms after user stops typing
-		searchTimeoutUnreg = setTimeout(function() {
-			$.ajax({
-				url: "<?php echo base_url('cafeteria/student/search_unregistered_students'); ?>", // UNREGISTERED students (allow='no')
-				type: "POST",
-				data: { "search_student": search_student, "session_id": session_id },
-				dataType: "json",
-				success: function(data) {
-					
-					$("#student_list_unreg").empty();
+		$.ajax({
+			url: "<?php echo base_url('cafeteria/student/search_unregistered_students'); ?>", // UNREGISTERED students (allow='no')
+			type: "POST",
+			data: { "search_student": search_student, "session_id": session_id },
+			dataType: "json",
+			success: function(data) {
+				
+				$("#student_list_unreg_suggestions").empty();
 
-					// Sort results alphabetically (A-Z) by Last Name, First Name
-					data.sort(function(a, b) {
-						let nameA = (a.lastname + ', ' + a.firstname).toLowerCase();
-						let nameB = (b.lastname + ', ' + b.firstname).toLowerCase();
-						return nameA.localeCompare(nameB);
-					});
+				let addedIds = [];
+				let matchCount = 0;
+				let html = '';
 
-					let addedIds = [];
-					let searchLower = search_student.toLowerCase();
-					let matchCount = 0;
-
-					$.each(data, function(index, student) {
-						// Filter out duplicate database records
-						if (addedIds.includes(student.id)) {
-							return;
-						}
-
-						let middlename = student.middlename ? ' ' + student.middlename : '';
-						let suffix = student.suffix ? ' ' + student.suffix : '';
-						let full_name = student.lastname + ', ' + student.firstname + middlename + suffix;
-						
-						// ADAPTIVE FILTER: Only keep if the Last Name STARTS WITH what the user typed
-						let lastNameLower = student.lastname.toLowerCase();
-						if (!lastNameLower.startsWith(searchLower)) {
-							return;
-						}
-
-						addedIds.push(student.id);
-						matchCount++;
-
-						// Only show in datalist if not already selected in the table
-						if (!selectedStudentsUnreg.some(s => s.id == student.id)) {
-							$("#student_list_unreg").append(
-								"<option value='" + full_name + "' " +
-								"data-id='" + student.id + "' " +
-								"data-gender='" + student.gender + "' " +
-								"data-meal='" + (student.meal_plan || 'cafeteria') + "' " +
-								"data-class='" + (student.class || '') + "' " +
-								"data-section='" + (student.section || '') + "'></option>"
-							);
-						}
-					});
-					
-					// Show message if no results found
-					if (matchCount === 0) {
-						$("#student_list_unreg").append(
-							"<option value='No unregistered students found with last name starting with \"" + search_student + "\"'>"
-						);
+				$.each(data, function(index, student) {
+					if (addedIds.includes(student.id)) {
+						return;
 					}
-				},
-				error: function() {
-					// Remove loading indicator on error
-					searchInput.css('background', '');
-					$("#student_list_unreg").empty();
-					$("#student_list_unreg").append("<option value='Error loading students. Please try again.'>");
-				}
-			});
-		}, 300); // Wait 300ms after user stops typing
-	});
 
-	// Handle selection when user clicks/presses enter on an autocomplete option
-	$("#student_search_unreg").on('input', function() {
-		var val = $(this).val();
-		var options = $('#student_list_unreg option');
-		var matchedOption = null;
-		
-		options.each(function() {
-			if ($(this).val() === val) {
-				matchedOption = $(this);
-				return false;
+					let middlename = student.middlename ? ' ' + student.middlename : '';
+					let suffix = student.suffix ? ' ' + student.suffix : '';
+					let full_name = student.lastname + ', ' + student.firstname + middlename + suffix;
+
+					addedIds.push(student.id);
+					matchCount++;
+
+					if (!selectedStudentsUnreg.some(s => s.id == student.id)) {
+						let gender = student.gender || 'N/A';
+						let className = student.class || 'N/A';
+						let sectionName = student.section || 'N/A';
+						let mealPlan = student.meal_plan || 'cafeteria';
+						
+						let mealPlanText = mealPlan;
+						if (mealPlan === 'cafeteria') {
+							mealPlanText = 'Cafeteria (₱' + (gender === 'Female' ? '3000' : '3200') + ')';
+						} else if (mealPlan === 'subsidized_1') {
+							mealPlanText = 'Subsidized: ₱3500';
+						} else if (mealPlan === 'subsidized_2') {
+							mealPlanText = 'Subsidized: ₱4000';
+						} else if (mealPlan === 'subsidized_3') {
+							mealPlanText = 'Subsidized: ₱4500';
+						}
+
+						html += '<div class="suggestion-item suggestion-item-unreg" style="cursor: pointer; padding: 10px 12px; border-bottom: 1px solid #eee; background: white;" ' +
+							'data-id="' + student.id + '" ' +
+							'data-name="' + full_name + '" ' +
+							'data-gender="' + gender + '" ' +
+							'data-meal="' + mealPlan + '" ' +
+							'data-class="' + className + '" ' +
+							'data-section="' + sectionName + '">';
+						html += '<strong style="color: #333;">' + full_name + '</strong><br>';
+						html += '<small class="text-muted">Grade: ' + className + ' | Section: ' + sectionName + ' | Gender: ' + gender + ' | Meal Plan: ' + mealPlanText + '</small>';
+						html += '</div>';
+					}
+				});
+				
+				if (matchCount === 0) {
+					html = '<div style="padding: 10px; color: #999; text-align: center; background: white;">No unregistered students found matching "' + search_student + '"</div>';
+				}
+
+				if (html !== '') {
+					$("#student_list_unreg_suggestions").html(html).show();
+				} else {
+					$("#student_list_unreg_suggestions").hide();
+				}
+			},
+			error: function() {
+				$("#student_list_unreg_suggestions").html('<div style="padding: 10px; color: #a94442; text-align: center; background: white;">Error loading students. Please try again.</div>').show();
 			}
 		});
+	}
+	
+	$("#student_search_unreg").keyup(function() {
+		clearTimeout(searchTimeoutUnreg);
+		var search_student = $(this).val().trim();
+		if (search_student.length === 0) {
+			$("#student_list_unreg_suggestions").empty().hide();
+			return;
+		}
+		searchTimeoutUnreg = setTimeout(performSearchUnreg, 300);
+	});
+
+	// Search button click handler
+	$('#btn_search_unreg').click(function(e) {
+		e.preventDefault();
+		var search_student = $("#student_search_unreg").val().trim();
+		var session_id = $('#session_id_unreg').val();
+		var btn = $(this);
 		
-		if (matchedOption) {
-			let studentId = matchedOption.attr('data-id');
-			let studentName = val;
-			let studentGender = matchedOption.attr('data-gender');
-			let studentMeal = matchedOption.attr('data-meal') || 'cafeteria';
-			let studentClass = matchedOption.attr('data-class');
-			let studentSection = matchedOption.attr('data-section');
-			
-			// Add selected student to table array
-			selectedStudentsUnreg.push({
-				id: studentId,
-				name: studentName,
-				gender: studentGender,
-				meal_plan: studentMeal,
-				class: studentClass,
-				section: studentSection
-			});
-			
-			// Update UI Selected Students table
-			updateSelectedStudentsListUnreg();
-			
-			// Clear input search bar and dynamic datalist
-			$("#student_search_unreg").val('');
-			$("#student_list_unreg").empty();
+		if (!session_id) {
+			alert('Please select a school year first');
+			return;
+		}
+
+		if (search_student.length === 0) {
+			alert('Please type a student name to search');
+			return;
+		}
+
+		btn.prop('disabled', true).text('Searching...');
+
+		$.ajax({
+			url: "<?php echo base_url('cafeteria/student/search_unregistered_students'); ?>", // UNREGISTERED students (allow='no')
+			type: "POST",
+			data: { "search_student": search_student, "session_id": session_id },
+			dataType: "json",
+			success: function(data) {
+				// Clear previous results first
+				selectedStudentsUnreg = [];
+				let addedIds = [];
+				let matchCount = 0;
+
+				$.each(data, function(index, student) {
+					if (!student.id) {
+						return;
+					}
+					// Filter out duplicate database records
+					if (addedIds.includes(student.id)) {
+						return;
+					}
+
+					let middlename = student.middlename ? ' ' + student.middlename : '';
+					let suffix = student.suffix ? ' ' + student.suffix : '';
+					let full_name = student.lastname + ', ' + student.firstname + middlename + suffix;
+
+					addedIds.push(student.id);
+					matchCount++;
+
+					selectedStudentsUnreg.push({
+						id: student.id,
+						name: full_name,
+						gender: student.gender,
+						meal_plan: student.meal_plan || 'cafeteria',
+						class: student.class || 'N/A',
+						section: student.section || 'N/A'
+					});
+				});
+				
+				updateSelectedStudentsListUnreg();
+				$("#student_search_unreg").val('');
+				$("#student_list_unreg_suggestions").hide().empty();
+				btn.prop('disabled', false).text('Search');
+				
+				alert('Found ' + matchCount + ' student(s)');
+			},
+			error: function() {
+				btn.prop('disabled', false).text('Search');
+				alert('Error loading students. Please try again.');
+			}
+		});
+	});
+
+	// Handle selection when user clicks on an autocomplete option
+	$(document).on('click', '#student_list_unreg_suggestions .suggestion-item-unreg', function() {
+		let studentId = $(this).data('id');
+		let studentName = $(this).data('name');
+		let studentGender = $(this).data('gender');
+		let studentMeal = $(this).data('meal') || 'cafeteria';
+		let studentClass = $(this).data('class');
+		let studentSection = $(this).data('section');
+		
+		selectedStudentsUnreg.push({
+			id: studentId,
+			name: studentName,
+			gender: studentGender,
+			meal_plan: studentMeal,
+			class: studentClass,
+			section: studentSection
+		});
+		
+		updateSelectedStudentsListUnreg();
+		
+		$("#student_search_unreg").val('');
+		$("#student_list_unreg_suggestions").hide().empty();
+	});
+
+	// Hover effects for unregistered suggestion items
+	$(document).on('mouseenter', '#student_list_unreg_suggestions .suggestion-item-unreg', function() {
+		$(this).css('background-color', '#f5f5f5');
+	}).on('mouseleave', '#student_list_unreg_suggestions .suggestion-item-unreg', function() {
+		$(this).css('background-color', 'white');
+	});
+
+	// Close unregistered suggestions when clicking outside
+	$(document).on('click', function(e) {
+		if (!$(e.target).closest('#student_search_unreg, #student_list_unreg_suggestions, #btn_search_unreg').length) {
+			$('#student_list_unreg_suggestions').hide();
 		}
 	});
 

@@ -338,7 +338,20 @@ class Student_model extends CI_Model {
         $this->db->or_like('students.rfid_number', $searchterm);
        // $this->db->or_like('students.rfid', $searchterm);
         $this->db->group_end();
-        $this->db->order_by('students.id');
+        
+        $starts_with = $this->db->escape_like_str($searchterm) . '%';
+        $contains = '%' . $this->db->escape_like_str($searchterm) . '%';
+        
+        // Order by priority: lastname starts with > firstname starts with > lastname contains > firstname contains
+        $this->db->order_by("CASE 
+            WHEN students.lastname LIKE '$starts_with' THEN 1 
+            WHEN students.firstname LIKE '$starts_with' THEN 2
+            WHEN students.lastname LIKE '$contains' THEN 3
+            WHEN students.firstname LIKE '$contains' THEN 4
+            ELSE 5 
+        END", '', FALSE);
+        $this->db->order_by('students.lastname', 'asc');
+        $this->db->order_by('students.firstname', 'asc');
        // $this->db->group_by('students.id');
         $this->db->limit('10');
         $query = $this->db->get();
@@ -2109,8 +2122,20 @@ public function searchFullTextCheckAllow($searchterm , $include_session = "yes",
 			}
             $this->db->where('student_session.session_id', $session_id );
         //} 
-        // Search only by last name (starts with)
-        $this->db->like('students.lastname', $searchterm, 'after');
+        // Search by LASTNAME or FIRSTNAME (starts with ONLY)
+        $starts_with = $this->db->escape_like_str($searchterm) . '%';
+        
+        $this->db->group_start();
+        $this->db->where("students.lastname LIKE '$starts_with'");
+        $this->db->or_where("students.firstname LIKE '$starts_with'");
+        $this->db->group_end();
+        
+        // Order by priority: lastname starts with > firstname starts with
+        $this->db->order_by("CASE 
+            WHEN students.lastname LIKE '$starts_with' THEN 1 
+            WHEN students.firstname LIKE '$starts_with' THEN 2
+            ELSE 3 
+        END", '', FALSE);
         $this->db->order_by('students.lastname', 'asc');
         $this->db->order_by('students.firstname', 'asc');
         $this->db->limit('10');

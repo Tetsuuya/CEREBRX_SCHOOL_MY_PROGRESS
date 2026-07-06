@@ -1,6 +1,4 @@
-# Dorm Dean System - Complete Code Changes Report (Wednesday to Friday)
-
-This document provides a comprehensive, file-by-file comparison of all the changes made to the **Dorm Dean** system, covering **Wednesday's session** (initial role separation) and **Thursday/Friday's session** (performance pagination, search, and visibility adjustments) relative to the original `BACKUP` state.
+# Dorm Dean System - GATEPASS
 
 All file changes are listed in sequential order from the top of the file to the bottom (by line numbers).
 

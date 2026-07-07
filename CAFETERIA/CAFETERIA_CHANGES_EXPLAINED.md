@@ -1102,6 +1102,24 @@ We added three key enhancements to improve the layout design and user workflow t
 
 ---
 
+## Phase 3 Fixes: Unregistered Meal Plan Instant Save & Attribute Mismatch Fix
+
+We implemented additional fixes to resolve bugs in the meal plan selection workflow:
+
+### 1. Global Scoping of Success Notifications
+- **Problem:** The `showFlashMessage` function (which displays the green success notification) was scoped inside specific jQuery `$(document).ready` wrappers, making it inaccessible to the unregistered student search script block.
+- **Fix:** Moved `showFlashMessage` to the global page scope and removed the duplicate local definitions.
+
+### 2. Instant AJAX Save for Unregistered Students
+- **Problem:** Selecting a meal plan for an unregistered student (Panel 2) updated only the client-side state and form inputs, but did not instantly save to the database via AJAX or show the green notification popup.
+- **Fix:** Added a database save via AJAX (`update_meal_plan`) inside the `.meal-plan-radio-unreg` change handler, ensuring instant autosave and the green success notification.
+
+### 3. Data Attribute Lookup Correction
+- **Problem:** Certain event and form submit handlers looked up `$(this).data('student-id')` while the HTML structure used `data-student` for registered student tables. This caused the selection array to fail to update.
+- **Fix:** Corrected lookup patterns to inspect both `data-student` and `data-student-id` attributes dynamically.
+
+---
+
 ## End of Document
 
 **Created:** Today  

@@ -458,6 +458,103 @@ And:
 
 ---
 
+### 1.7 View - View/request.php
+#### Relabeling Quarter to Term in Change Grade Request Form
+* **Type of Change**: Modified
+* **Lines Changed**: Lines 107-137, 177, 196 in original `BACKUP` (replaced by lines 107-132, 172, 191-205 in Today's `LOCAL`)
+
+##### Before (Original BACKUP State)
+```html
+<!-- Form Dropdown (Lines 107-137) -->
+<label for="exampleInputEmail1">Select Quarter</label>
+<select  id="quarter" name="quarter" class="form-control" >
+   <option value=""><?php echo $this->lang->line('select'); ?></option>
+    <?php
+        foreach ($getquarter as $key => $value) {
+        if( $value == 1 && $firstqsettings == 'yes'){
+        	?>
+        	  <option  value="<?php echo $key; ?>"><?php echo $value; ?></option>
+        	<?php
+        }
+         if( $value == 2 && $secondqsettings == 'yes'){
+        	?>
+        	  <option  value="<?php echo $key; ?>"><?php echo $value; ?></option>
+        	<?php
+        }
+         if( $value == 3 && $thirdqsettings == 'yes'){
+        	?>
+        	  <option  value="<?php echo $key; ?>"><?php echo $value; ?></option>
+        	<?php
+        }
+         if( $value == 4 && $fourthqsettings == 'yes'){
+        	?>
+        	  <option  value="<?php echo $key; ?>"><?php echo $value; ?></option>
+        	<?php
+        }
+        }
+    ?>
+</select>
+
+<!-- Table Header (Line 177) -->
+<th>Quarter</th>
+
+<!-- Table Cell (Line 196) -->
+<td class="mailbox-name"> <?php echo $requestgrade['quarter'] ?></td>
+```
+
+##### After (Today's LOCAL State)
+```html
+<!-- Form Dropdown (Lines 107-132) -->
+<label for="exampleInputEmail1">Select Term</label>
+<select  id="quarter" name="quarter" class="form-control" >
+   <option value=""><?php echo $this->lang->line('select'); ?></option>
+    <?php
+        foreach ($getquarter as $key => $value) {
+        if( $value == 1 && $firstqsettings == 'yes'){
+        	?>
+        	  <option  value="<?php echo $key; ?>">Term 1</option>
+        	<?php
+        }
+         if( $value == 2 && $secondqsettings == 'yes'){
+        	?>
+        	  <option  value="<?php echo $key; ?>">Term 2</option>
+        	<?php
+        }
+         if( $value == 3 && $thirdqsettings == 'yes'){
+        	?>
+        	  <option  value="<?php echo $key; ?>">Term 3</option>
+        	<?php
+        }
+        }
+    ?>
+</select>
+
+<!-- Table Header (Line 172) -->
+<th>Term</th>
+
+<!-- Table Cell (Lines 191-205) -->
+<td class="mailbox-name">
+	<?php 
+	$term_display = '';
+	if ($requestgrade['quarter'] == 1) {
+		$term_display = 'Term 1';
+	} elseif ($requestgrade['quarter'] == 2) {
+		$term_display = 'Term 2';
+	} elseif ($requestgrade['quarter'] == 3) {
+		$term_display = 'Term 3';
+	} else {
+		$term_display = $requestgrade['quarter'];
+	}
+	echo $term_display;
+	?>
+</td>
+```
+
+* **What Changed**: Relabeled the modal dropdown field "Select Quarter" to "Select Term" and converted options to "Term 1", "Term 2", and "Term 3" (skipping and removing "Term 4"). Also updated the request history table header from "Quarter" to "Term" and dynamically converted numerical values in cells to Term names.
+* **Purpose**: Align the grade change request module with the new 3-term system, eliminating references to the 4th quarter and quarter terminology.
+
+---
+
 ## 2. Controller Changes - Controller/Grade.php
 
 ### 2.1 Load Setting Variables on generate_spreadsheet Validation Error

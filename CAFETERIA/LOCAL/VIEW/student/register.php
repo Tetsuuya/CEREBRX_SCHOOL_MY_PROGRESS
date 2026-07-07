@@ -1597,22 +1597,18 @@ $(document).ready(function () {
 
 
   <script type="text/javascript">
-		// Flash message helper function defined globally
-		function showFlashMessage(message, type) {
-			const flashMessage = $('#flashMessage');
-			if (flashMessage.length === 0) {
-				$('body').append('<div id="flashMessage" class="flash-message"></div>');
-			}
-			$('#flashMessage').text(message)
-				.removeClass('flash-success flash-error')
-				.addClass(type === 'success' ? 'flash-success' : 'flash-error')
-				.fadeIn()
-				.delay(2000)
-				.fadeOut();
-		}
-
 		// added meal plan javascript
 		$(document).ready(function () {
+			function showFlashMessage(message, type) {
+				const flashMessage = $('#flashMessage');
+				flashMessage.text(message)
+					.removeClass('flash-success flash-error')
+					.addClass(type === 'success' ? 'flash-success' : 'flash-error')
+					.fadeIn()
+					.delay(2000)
+					.fadeOut();
+			}
+
 			$(document).on('change', '.meal-plan-radio', function() {
 				var student_id = $(this).data('student');
 				var meal_plan = $(this).val();
@@ -2231,7 +2227,7 @@ $(document).ready(function () {
 
 		// Handle meal plan radio button changes
 		$(document).on('change', 'input[type="radio"][name^="meal_plan_"]', function() {
-			let studentId = $(this).data('student-id') || $(this).data('student');
+			let studentId = $(this).data('student-id');
 			let newMealPlan = $(this).val();
 			
 			// Update the selectedStudents array
@@ -2303,7 +2299,7 @@ $(document).ready(function () {
 
 			// Update meal plans from current radio button selections before submitting
 			$('input[type="radio"][name^="meal_plan_"]:checked').each(function() {
-				let studentId = $(this).data('student-id') || $(this).data('student');
+				let studentId = $(this).data('student-id');
 				let mealPlan = $(this).val();
 				let studentIndex = selectedStudents.findIndex(s => s.id == studentId);
 				if (studentIndex !== -1) {
@@ -2667,27 +2663,6 @@ $(document).ready(function() {
 		
 		// Update hidden input
 		$('.meal_plan_input_unreg_' + studentId).val(mealPlan);
-
-		// SAVE TO DATABASE VIA AJAX (instant save)
-		$.ajax({
-			url: '<?php echo base_url("cafeteria/student/update_meal_plan"); ?>',
-			type: 'POST',
-			data: {
-				student_id: studentId,
-				meal_plan: mealPlan
-			},
-			success: function(response) {
-				var data = JSON.parse(response);
-				if(data.status == 'success') {
-					showFlashMessage('Meal plan updated successfully', 'success');
-				} else {
-					showFlashMessage('Error updating meal plan', 'error');
-				}
-			},
-			error: function() {
-				showFlashMessage('Error occurred while updating meal plan', 'error');
-			}
-		});
 	});
 
 	/**
@@ -2847,6 +2822,22 @@ $(document).ready(function() {
 			}
 		});
 	});
+	
+	// Flash message helper function (if not already defined)
+	function showFlashMessage(message, type) {
+		const flashMessage = $('#flashMessage');
+		if (flashMessage.length === 0) {
+			// Create flash message element if it doesn't exist
+			$('body').append('<div id="flashMessage" class="flash-message"></div>');
+		}
+		
+		$('#flashMessage').text(message)
+			.removeClass('flash-success flash-error')
+			.addClass(type === 'success' ? 'flash-success' : 'flash-error')
+			.fadeIn()
+			.delay(4000)
+			.fadeOut();
+	}
 });
 </script>
 <!-- END AJAX UNREGISTER HANDLER -->

@@ -88,7 +88,7 @@ class Notification extends CI_Controller {
 
         $this->form_validation->set_rules('title', 'Title', 'trim|required|xss_clean');
 
-        $this->form_validation->set_rules('message', 'Message', 'trim|required|xss_clean'); 
+        $this->form_validation->set_rules('message', 'Message', 'trim|required|xss_clean|callback_check_sms_segments'); 
 
         $this->form_validation->set_rules('date', 'Notice Date', 'trim|required|xss_clean');
 
@@ -215,9 +215,36 @@ class Notification extends CI_Controller {
 
             $message = $this->input->post('message');
 
-            // $sms_message = htmlentities($message);
+            // remove the non-editable header if it exists in HTML
+            $clean_html = preg_replace('/<(div|span)[^>]*contenteditable="false"[^>]*>(.*?)<\/\1>/is', '', $message);
 
-            $sms_message = strip_tags($message);
+            // convert HTML line breaks and paragraph ends to plain-text newlines
+            $sms_message = preg_replace('/<(br|br\s*\/)>/i', "\n", $clean_html);
+            $sms_message = preg_replace('/<\/(p|div|li|h[1-6])>\s*<(p|div|li|h[1-6])[^>]*>/i', "\n", $sms_message);
+            $sms_message = preg_replace('/<\/(p|div|li|h[1-6])>/i', '', $sms_message);
+
+            // strip remaining HTML tags
+            $sms_message = strip_tags($sms_message);
+
+            // decode HTML entities 
+            $sms_message = html_entity_decode($sms_message, ENT_QUOTES, 'UTF-8');
+
+            // replace UTF-8 non-breaking spaces with standard spaces
+            $sms_message = str_replace(array("\xc2\xa0", "\xa0"), ' ', $sms_message);
+
+            // strip carriage returns
+            $sms_message = str_replace("\r", '', $sms_message);
+
+            // reduce multiple consecutive blank lines to at most 2 newlines
+            $sms_message = preg_replace("/\n{3,}/", "\n\n", $sms_message);
+
+            // trim leading and trailing spaces/newlines (including Unicode/invisible spaces)
+            $sms_message = preg_replace('/^[\s\p{Z}\r\n]+|[\s\p{Z}\r\n]+$/u', '', $sms_message);
+
+            // prepend non-editable header 
+            if (strpos($sms_message, "CBX School") !== 0) {
+                $sms_message = "CBX School:\n" . $sms_message;
+            }
 
 
 
@@ -438,7 +465,7 @@ class Notification extends CI_Controller {
 
         $this->form_validation->set_rules('title', 'Title', 'trim|required|xss_clean');
 
-        $this->form_validation->set_rules('message', 'Message', 'trim|required|xss_clean'); 
+        $this->form_validation->set_rules('message', 'Message', 'trim|required|xss_clean|callback_check_sms_segments'); 
 
         $this->form_validation->set_rules('date', 'Notice Date', 'trim|required|xss_clean');
 
@@ -608,9 +635,36 @@ class Notification extends CI_Controller {
 
             $message = $this->input->post('message');
 
-            // $sms_message = htmlentities($message);
+            // remove the non-editable header if it exists in HTML
+            $clean_html = preg_replace('/<(div|span)[^>]*contenteditable="false"[^>]*>(.*?)<\/\1>/is', '', $message);
 
-            $sms_message = strip_tags($message);
+            // convert HTML line breaks and paragraph ends to plain-text newlines
+            $sms_message = preg_replace('/<(br|br\s*\/)>/i', "\n", $clean_html);
+            $sms_message = preg_replace('/<\/(p|div|li|h[1-6])>\s*<(p|div|li|h[1-6])[^>]*>/i', "\n", $sms_message);
+            $sms_message = preg_replace('/<\/(p|div|li|h[1-6])>/i', '', $sms_message);
+
+            // strip remaining HTML tags
+            $sms_message = strip_tags($sms_message);
+
+            // decode HTML entities
+            $sms_message = html_entity_decode($sms_message, ENT_QUOTES, 'UTF-8');
+
+            // replace UTF-8 non-breaking spaces with standard spaces
+            $sms_message = str_replace(array("\xc2\xa0", "\xa0"), ' ', $sms_message);
+
+            // strip carriage returns
+            $sms_message = str_replace("\r", '', $sms_message);
+
+            // reduce multiple consecutive blank lines to at most 2 newlines
+            $sms_message = preg_replace("/\n{3,}/", "\n\n", $sms_message);
+
+            // trim leading and trailing spaces/newlines (including Unicode/invisible spaces)
+            $sms_message = preg_replace('/^[\s\p{Z}\r\n]+|[\s\p{Z}\r\n]+$/u', '', $sms_message);
+
+            // prepend non-editable header 
+            if (strpos($sms_message, "CBX School") !== 0) {
+                $sms_message = "CBX School:\n" . $sms_message;
+            }
 
 
 
@@ -808,6 +862,77 @@ class Notification extends CI_Controller {
 
         $query = $this->db->get();
         echo json_encode($query->result_array());
+    }
+
+    public function check_sms_segments($message) {
+        // remove the visual contenteditable header if it exists
+        $clean_html = preg_replace('/<(div|span)[^>]*contenteditable="false"[^>]*>(.*?)<\/\1>/is', '', $message);
+
+        // convert HTML tags to newlines cleanly
+        $sms_message = preg_replace('/<(br|br\s*\/)>/i', "\n", $clean_html);
+        $sms_message = preg_replace('/<\/(p|div|li|h[1-6])>\s*<(p|div|li|h[1-6])[^>]*>/i', "\n", $sms_message);
+        $sms_message = preg_replace('/<\/(p|div|li|h[1-6])>/i', '', $sms_message);
+        
+        $sms_message = strip_tags($sms_message);
+        $sms_message = html_entity_decode($sms_message, ENT_QUOTES, 'UTF-8');
+        $sms_message = str_replace(array("\xc2\xa0", "\xa0"), ' ', $sms_message);
+        $sms_message = str_replace("\r", '', $sms_message);
+        $sms_message = preg_replace("/\n{3,}/", "\n\n", $sms_message);
+        
+        // trim leading and trailing spaces/newlines (including Unicode/invisible spaces)
+        $sms_message = preg_replace('/^[\s\p{Z}\r\n]+|[\s\p{Z}\r\n]+$/u', '', $sms_message);
+
+        // prepend non-editable header 
+        if (strpos($sms_message, "CBX School") !== 0) {
+            $sms_message = "CBX School:\n" . $sms_message;
+        }
+
+        // check for emails or domains
+        $blocked_pattern = '/(\.com|\.ph|\.net|\.org|\.edu)\b/i';
+        $email_pattern = '/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/i';
+
+        if (preg_match($blocked_pattern, $sms_message) || preg_match($email_pattern, $sms_message)) {
+            $this->form_validation->set_message('check_sms_segments', 'Website links (like .com or .ph) and email addresses are not allowed in text messages.');
+            return FALSE;
+        }
+
+        $segments = $this->get_sms_segments($sms_message);
+        if ($segments > 4) {
+            $this->form_validation->set_message('check_sms_segments', 'The {field} exceeds the maximum limit of 4 SMS segments. Please shorten your message.');
+            return FALSE;
+        }
+        return TRUE;
+    }
+
+    private function get_sms_segments($str) {
+        $gsm7_basic = "@£$¥èéùìòÇ\nØø\rÅåΔ_ΦΓΛΩΠΨΣΘΞÆæßÉ !\"#¤%&'()*+,-./0123456789:;<=>?¡ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÑÜ§¿abcdefghijklmnopqrstuvwxyzäöñüà";
+        $gsm7_ext = "^{}\\[~\\]|€";
+        
+        $len = mb_strlen($str, 'UTF-8');
+        $is_unicode = false;
+        $gsm7_len = 0;
+        
+        for ($i = 0; $i < $len; $i++) {
+            $char = mb_substr($str, $i, 1, 'UTF-8');
+            if (mb_strpos($gsm7_basic, $char, 0, 'UTF-8') !== false) {
+                $gsm7_len += 1;
+            } elseif (mb_strpos($gsm7_ext, $char, 0, 'UTF-8') !== false) {
+                $gsm7_len += 2;
+            } else {
+                $is_unicode = true;
+                break;
+            }
+        }
+        
+        if ($is_unicode) {
+            if ($len == 0) return 0;
+            if ($len <= 70) return 1;
+            return ceil($len / 67);
+        } else {
+            if ($gsm7_len == 0) return 0;
+            if ($gsm7_len <= 160) return 1;
+            return ceil($gsm7_len / 153);
+        }
     }
 
 }

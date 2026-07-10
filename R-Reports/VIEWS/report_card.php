@@ -355,7 +355,22 @@
 
       
 		$("#batch-grade-slip").click(function () { 
-          $('#form5').submit();
+            var checked_students = $('input[name="student_print[]"]:checked');
+            if (checked_students.length > 0) {
+                var form_clone = $('#form5').clone();
+                form_clone.find('input[name="student_id[]"]').remove();
+                checked_students.each(function () {
+                    var student_id = $(this).val();
+                    $('<input>').attr({
+                        type: 'hidden',
+                        name: 'student_id[]',
+                        value: student_id
+                    }).appendTo(form_clone);
+                });
+                form_clone.appendTo('body').submit().remove();
+            } else {
+                $('#form5').submit();
+            }
         });
     });
 </script>

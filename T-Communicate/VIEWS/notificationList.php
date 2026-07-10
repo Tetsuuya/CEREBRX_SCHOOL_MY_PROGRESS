@@ -132,9 +132,88 @@
                                                                 <ul class="nav nav-pills nav-stacked">
                                                                     <li><i class="fa fa-user" aria-hidden="true"></i> <?php echo $this->lang->line('student'); ?> : <?php echo $notification['visible_student']; ?> </li>
                                                                     <li>
-
                                                                         <i class="fa fa-user" aria-hidden="true"></i>
-                                                                        <?php echo $this->lang->line('parent'); ?> : <?php echo $notification['visible_parent']; ?>
+                                                                        <?php echo $this->lang->line('parent'); ?> : 
+                                                                        <?php 
+                                                                        if ($notification['visible_parent'] == 'Yes' || $notification['visible_parent'] == 'yes') {
+                                                                            $specific_students = array();
+                                                                            $specific_class_sections = array();
+
+                                                                            if (!empty($notification['custom_student_ids'])) {
+                                                                                $student_ids = explode(',', $notification['custom_student_ids']);
+                                                                                $this->db->select('students.firstname, students.lastname, students.guardian_name, students.guardian_phone, classes.class, sections.section, student_session.class_id, student_session.section_id');
+                                                                                $this->db->from('students');
+                                                                                $this->db->join('student_session', 'student_session.student_id = students.id AND student_session.session_id = (SELECT session_id FROM sch_settings LIMIT 1)', 'left', FALSE);
+                                                                                $this->db->join('classes', 'classes.id = student_session.class_id', 'left');
+                                                                                $this->db->join('sections', 'sections.id = student_session.section_id', 'left');
+                                                                                $this->db->where_in('students.id', $student_ids);
+                                                                                $query = $this->db->get();
+                                                                                $specific_students = $query->result_array();
+                                                                                
+                                                                                foreach ($specific_students as $student) {
+                                                                                    if (!empty($student['class_id']) && !empty($student['section_id'])) {
+                                                                                        $key = $student['class_id'] . $student['section_id'];
+                                                                                        $specific_class_sections[$key] = true;
+                                                                                    }
+                                                                                }
+                                                                            }
+
+                                                                            $all_parents_sections = array();
+                                                                            if (!empty($notification['custom_parent'])) {
+                                                                                $pairs = explode(',', $notification['custom_parent']);
+                                                                                foreach ($pairs as $pair) {
+                                                                                    $parts = explode('-', $pair);
+                                                                                    if (count($parts) === 2) {
+                                                                                        $class_id = $parts[0];
+                                                                                        $section_id = $parts[1];
+                                                                                        $key = $class_id . $section_id;
+                                                                                        
+                                                                                        if (!isset($specific_class_sections[$key])) {
+                                                                                            $this->db->select('classes.class, sections.section');
+                                                                                            $this->db->from('class_sections');
+                                                                                            $this->db->join('classes', 'classes.id = class_sections.class_id');
+                                                                                            $this->db->join('sections', 'sections.id = class_sections.section_id');
+                                                                                            $this->db->where('class_sections.class_id', $class_id);
+                                                                                            $this->db->where('class_sections.section_id', $section_id);
+                                                                                            $query = $this->db->get();
+                                                                                            $res = $query->row_array();
+                                                                                            if ($res) {
+                                                                                                $all_parents_sections[] = $res['class'] . ' ' . $res['section'];
+                                                                                            }
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            }
+
+                                                                            if (!empty($specific_students) || !empty($all_parents_sections)) {
+                                                                                if (!empty($specific_students)) {
+                                                                                    echo 'Specific Parent:';
+                                                                                    foreach ($specific_students as $student) {
+                                                                                        $class_sec = '';
+                                                                                        if (!empty($student['class']) && !empty($student['section'])) {
+                                                                                            $class_sec = $student['class'] . ' ' . $student['section'] . ' - ';
+                                                                                        }
+                                                                                        echo '<br>&nbsp;&nbsp;&nbsp;&nbsp;' . $class_sec . $student['guardian_name'] . ' (' . $student['guardian_phone'] . ')';
+                                                                                    }
+                                                                                }
+                                                                                if (!empty($all_parents_sections)) {
+                                                                                    if (!empty($specific_students)) {
+                                                                                        echo '<br>';
+                                                                                    }
+                                                                                    if (count($all_parents_sections) > 1) {
+                                                                                        $last = array_pop($all_parents_sections);
+                                                                                        echo 'All Parents: ' . implode(', ', $all_parents_sections) . ' and ' . $last;
+                                                                                    } else {
+                                                                                        echo 'All Parents: ' . $all_parents_sections[0];
+                                                                                    }
+                                                                                }
+                                                                            } else {
+                                                                                echo 'Yes';
+                                                                            }
+                                                                        } else {
+                                                                            echo 'No';
+                                                                        }
+                                                                        ?>
                                                                     </li>
                                                                     <li>
 

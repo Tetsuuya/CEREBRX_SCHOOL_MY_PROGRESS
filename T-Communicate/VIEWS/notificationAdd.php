@@ -38,13 +38,31 @@
                                     <input id="title" name="title" placeholder="" type="text" class="form-control"  value="<?php echo set_value('title'); ?>" />
                                     <span class="text-danger"><?php echo form_error('title'); ?></span>
                                 </div>
-                                <div class="form-group"><label><?php echo $this->lang->line('message'); ?></label>
-                                    <textarea id="compose-textarea" name="message" class="form-control" style="height: 300px" maxlength="150">
-                                        <?php echo set_value('message'); ?>
-                                    </textarea>
-                                    <span class="text-danger"><?php echo form_error('message'); ?></span>
-                                </div>
-
+                                <div class="form-group" style="position: relative; margin-bottom: 5px;">
+                                    <label><?php echo $this->lang->line('message'); ?></label>
+                                     <textarea id="compose-textarea" name="message" class="form-control" style="height: 300px" maxlength="150">
+                                         <?php echo set_value('message'); ?>
+                                     </textarea>
+                                     <span class="text-danger"><?php echo form_error('message'); ?></span>
+                                     
+                                     <!-- character count estimator -->
+                                     <div id="sms-counter-estimator" style="text-align: right; margin-top: 5px; font-size: 11px; color: #666; font-family: 'Outfit', 'Inter', sans-serif;">
+                                         <span id="sms-char-count">0</span> characters | 
+                                         <span style="font-weight: bold; color: #333;" id="sms-parts-count">0</span> message part(s) 
+                                         <span style="color: #888; font-size: 10px;" id="sms-part-limit-info">(Limit: 160 per text)</span>
+                                         <span id="sms-encoding-badge" style="font-size: 10px; padding: 2px 6px; border-radius: 10px; font-weight: bold; background: #f39c12; color: #fff; margin-left: 5px; display: none;"></span>
+                                     </div>
+                                 </div>
+                                 
+                                 <!-- notice / warning -->
+                                 <div id="sms-composer-notice" style="margin-top: 15px; padding: 12px; border-radius: 6px; border: 1px solid #d2d6de; font-size: 12px; font-family: 'Outfit', 'Inter', sans-serif; line-height: 1.5; color: #555;">
+                                     <h5 style="margin-top: 0; margin-bottom: 8px; font-weight: 600; color: #333; font-size: 13px;"><i class="fa fa-info-circle"></i> Notice to Composer:</h5>
+                                     <ul style="margin: 0; padding-left: 20px; margin-bottom: 0;">
+                                         <li>Do <b>NOT</b> include emails, URLs, or domains because they will be automatically blocked by carriers.</li>
+                                         <li>Use simple standard characters like <code>-</code>, <code>/</code>, <code>!</code>. Avoid complex elements (e.g., bullet lists, emojis) to prevent transmission failure.</li>
+                                     </ul>
+                                     <div id="sms-warnings-container" style="display: none; margin-top: 10px; padding: 10px; border-radius: 4px; line-height: 1.4; background: #f2dede; border: 1px solid #ebccd1; color: #a94442;"></div>
+                                 </div>
                             </div>
                             <div class="col-md-3">
 
@@ -420,7 +438,194 @@
 </script>
 <script>
     $(function () {
+        // fix for modal backdrop overlay remaining on screen when closing modals
+        $(document).on('hidden.bs.modal', function () {
+            $('.modal-backdrop').remove();
+            $('body').removeClass('modal-open');
+        });
+
         //Add text editor
-        $("#compose-textarea").wysihtml5();
+        var wysiEditor = $("#compose-textarea").wysihtml5({
+            "events": {
+                "load": function() {
+                    var editorInstance = this;
+                    
+                    var injectStyle = function() {
+                        try {
+                            var iframeDoc = editorInstance.composer.element.ownerDocument;
+                            if (!iframeDoc.getElementById('sms-header-style')) {
+                                var style = iframeDoc.createElement('style');
+                                style.id = 'sms-header-style';
+                                style.innerHTML = 'body::before { content: "CBX School:\\a"; font-weight: bold; display: block; white-space: pre; color: #333; margin-bottom: 5px; }';
+                                iframeDoc.head.appendChild(style);
+                            }
+                        } catch (e) {
+                            console.error("Error injecting editor header style:", e);
+                        }
+                    };
+                    
+                    var updateSMSCounter = function() {
+                        injectStyle();
+                        var html = editorInstance.getValue();
+                        var result = checkSMSContent(html);
+                        
+                        var limit = 160;
+                        var segmentLimit = 153;
+                        if (result.isUnicode) {
+                            limit = 70;
+                            segmentLimit = 67;
+                        }
+                        
+                        var segments = 0;
+                        if (result.length > 0) {
+                            if (result.length <= limit) {
+                                segments = 1;
+                            } else {
+                                segments = Math.ceil(result.length / segmentLimit);
+                            }
+                        }
+                        
+                        $('#sms-char-count').text(result.length);
+                        $('#sms-parts-count').text(segments);
+                        
+                        var badge = $('#sms-encoding-badge');
+                        badge.hide();
+                        if (result.isUnicode) {
+                            $('#sms-part-limit-info').text('(Limit: 70 per segment, 67 if multiple)');
+                        } else {
+                            $('#sms-part-limit-info').text('(Limit: 160 per segment, 153 if multiple)');
+                        }
+                        
+                        var warnContainer = $('#sms-warnings-container');
+                        if (result.warnings.length > 0) {
+                            warnContainer.html(result.warnings.join('<br><br>')).css({
+                                'background': '#f2dede',
+                                'border': '1px solid #ebccd1',
+                                'color': '#a94442',
+                                'display': 'block'
+                            });
+                        } else {
+                            warnContainer.hide().empty();
+                        }
+                        
+                        // disable/enable Send button based on whether isBlocked is true
+                        var submitBtn = $('#form1 button[type="submit"]');
+                        if (result.isBlocked) {
+                            submitBtn.prop('disabled', true).css('opacity', '0.5');
+                        } else {
+                            submitBtn.prop('disabled', false).css('opacity', '1');
+                        }
+                    };
+                    
+                    // Hook into change event
+                    editorInstance.on("change", updateSMSCounter);
+                    // Hook into keyboard events inside iframe composer
+                    var composerElem = editorInstance.composer.element;
+                    composerElem.addEventListener('keyup', updateSMSCounter);
+                    composerElem.addEventListener('paste', updateSMSCounter);
+                    composerElem.addEventListener('input', updateSMSCounter);
+                    
+                    // Initial update on page load
+                    updateSMSCounter();
+                }
+            }
+        });
+        
+        // GSM-7 verification logic
+        var gsm7Basic = "@\u00a3$\u00a5\u00e8\u00e9\u00f9\u00ec\u00f2\u00c7\n\u00d8\u00f8\r\u00c5\u00e5\u0394_\u03a6\u0393\u039b\u03a9\u03a0\u03a8\u03a3\u0398\u039e\u00c6\u00e6\u00df\u00c9 !\"#\u00a4%&'()*+,-./0123456789:;<=>?\u00a1ABCDEFGHIJKLMNOPQRSTUVWXYZ\u00c4\u00d6\u00d1\u00dc\u00a7\u00bfabcdefghijklmnopqrstuvwxyz\u00e4\u00f6\u00f1\u00fc\u00e0";
+        var gsm7Extension = "^{}\\[~\\]|€";
+        
+        function checkSMSContent(html) {
+            var text = html;
+            
+            // Convert tags
+            text = text.replace(/<(br|br\s*\/)>/ig, "\n");
+            // Convert paragraph/block breaks to newlines
+            text = text.replace(/<\/(p|div|li|h[1-6])>\s*<(p|div|li|h[1-6])[^>]*>/ig, "\n");
+            // Remove other closing block tags
+            text = text.replace(/<\/(p|div|li|h[1-6])>/ig, "");
+            // Strip remaining tags
+            text = text.replace(/<[^>]*>/g, "");
+            
+            // Decode common entities
+            var temp = document.createElement("div");
+            temp.innerHTML = text;
+            text = temp.textContent || temp.innerText || "";
+            
+            // Replace non-breaking spaces
+            text = text.replace(/\xa0/g, ' ').replace(/\u00a0/g, ' ');
+            text = text.replace(/\r/g, '');
+            text = text.replace(/\n{3,}/g, "\n\n");
+            
+            // Trim leading and trailing spaces/newlines (including Unicode/invisible spaces)
+            text = text.replace(/^[\s\u200B\u200C\u200D\u200E\u200F\uFEFF\u00A0\r\n]+|[\s\u200B\u200C\u200D\u200E\u200F\uFEFF\u00A0\r\n]+$/g, '');
+            
+            // Prepend non-editable header manually
+            text = "CBX School:\n" + text;
+            
+            var isUnicode = false;
+            var totalLength = 0;
+            
+            for (var i = 0; i < text.length; i++) {
+                var char = text.charAt(i);
+                if (gsm7Basic.indexOf(char) !== -1) {
+                    totalLength += 1;
+                } else if (gsm7Extension.indexOf(char) !== -1) {
+                    totalLength += 2;
+                } else {
+                    isUnicode = true;
+                    totalLength += 1;
+                }
+            }
+            
+            if (isUnicode) {
+                totalLength = text.length;
+            }
+            
+            var warnings = [];
+            var isBlocked = false;
+            
+            // Check for emails or .com / .ph domains
+            var blockedPattern = /(\.com|\.ph|\.net|\.org|\.edu)\b/i;
+            var emailPattern = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/i;
+            
+            if (blockedPattern.test(text) || emailPattern.test(text)) {
+                warnings.push('<b>Do Not Include Links or Emails:</b> Website links (like `.com` or `.ph`) and email addresses are automatically blocked by mobile network providers. Please remove them to make sure your message is received.');
+                isBlocked = true;
+            }
+            
+             // Check for bullet forms, complex characters, or unicode warning
+            var complexPattern = /[•●■▪◦⁃♦★○—–_]/;
+            if (isUnicode) {
+                warnings.push('<b>Special Characters Detected:</b> Emojis, special bullet points, or unusual symbols shorten the allowed message length. Please use standard letters, numbers, and basic punctuation to keep your message short.');
+            } else if (complexPattern.test(text)) {
+                warnings.push('<b>Special Characters:</b> Avoid bullet points (<code>•</code>, <code>●</code>) or long dashes. Please use standard characters like hyphens (<code>-</code>) or slashes (<code>/</code>) to make sure the message is delivered correctly.');
+            }
+            
+            // calculate segment count and apply limit of 4
+            var limit = isUnicode ? 70 : 160;
+            var segmentLimit = isUnicode ? 67 : 153;
+            var segments = 0;
+            if (totalLength > 0) {
+                if (totalLength <= limit) {
+                    segments = 1;
+                } else {
+                    segments = Math.ceil(totalLength / segmentLimit);
+                }
+            }
+            
+            if (segments > 4) {
+                warnings.push('<b>Message is Too Long:</b> This message is too long and would be split into ' + segments + ' text messages. The maximum limit is <b>4 text messages</b>. Please shorten your message so you can send it.');
+                isBlocked = true;
+            }
+            
+            return {
+                text: text,
+                length: totalLength,
+                isUnicode: isUnicode,
+                warnings: warnings,
+                isBlocked: isBlocked
+            };
+        }
     });
 </script>

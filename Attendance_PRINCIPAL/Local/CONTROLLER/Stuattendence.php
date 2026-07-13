@@ -507,9 +507,9 @@ class stuattendence extends CI_Controller {
             $sheetXml
         );
 
-        // Update female header merge cell reference
-        $sheetXml = str_replace(
-            '<mergeCell ref="A9:B9"/>',
+        // Update female header merge cell reference (matches with or without spaces/slashes)
+        $sheetXml = preg_replace(
+            '/<mergeCell\s+ref="A9:B9"\s*\/>/i',
             '<mergeCell ref="A' . $female_header_row . ':B' . $female_header_row . '"/>',
             $sheetXml
         );
@@ -766,9 +766,9 @@ class stuattendence extends CI_Controller {
             $sheetXml
         );
 
-        // Update the mergeCell for the female header A9:B9 Ã¢â€ â€™ new row
-        $sheetXml = str_replace(
-            '<mergeCell ref="A9:B9"/>',
+        // Update the mergeCell for the female header A9:B9 to the new row (matches with or without spaces/slashes)
+        $sheetXml = preg_replace(
+            '/<mergeCell\s+ref="A9:B9"\s*\/>/i',
             '<mergeCell ref="A' . $female_header_row . ':B' . $female_header_row . '"/>',
             $sheetXml
         );

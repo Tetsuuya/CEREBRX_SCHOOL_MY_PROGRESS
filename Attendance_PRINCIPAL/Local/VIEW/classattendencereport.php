@@ -98,13 +98,6 @@
                     <div class="box box-info" id="attendencelist">
                         <div class="box-header ptbnull" >
                             <h3 class="box-title titlefix"><i class="fa fa-users"></i> <?php echo $this->lang->line('student'); ?> <?php echo $this->lang->line('attendance'); ?> <?php echo $this->lang->line('report'); ?></h3>
-                            <form action="<?php echo site_url('principal/stuattendence/export_fines_report'); ?>" method="POST" class="pull-right" style="display:inline-block; margin-left:10px;">
-                                <?php echo $this->customlib->getCSRF(); ?>
-                                <input type="hidden" name="class_id" value="<?php echo $class_id; ?>" />
-                                <input type="hidden" name="section_id" value="<?php echo $section_id; ?>" />
-                                <input type="hidden" name="month" value="<?php echo $month_selected; ?>" />
-                                <button type="submit" class="btn btn-success btn-xs" style="margin-top: 5px;"><i class="fa fa-file-excel-o"></i> Export Fines Sheet</button>
-                            </form>
                         </div>
                         <div class="box-body table-responsive">
                             <div class="row">

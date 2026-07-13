@@ -264,6 +264,234 @@ class stuattendence extends CI_Controller {
             $this->load->view('layout/principal/footer', $data);
         }
     }
+
+    // =====================================================================
+    // ATTENDANCE SUMMARY
+    // =====================================================================
+
+    public function attendanceSummary() {
+        $this->session->set_userdata('top_menu', 'Attendance');
+        $this->session->set_userdata('sub_menu', 'stuattendence/attendanceSummary');
+
+        $class = $this->class_model->get();
+        $data['classlist']   = $class;
+        $data['class_id']    = '';
+        $data['section_id']  = '';
+        $data['subject_id']  = '';
+        $data['start_date']  = '';
+        $data['end_date']    = '';
+
+        $this->load->view('layout/principal/header', $data);
+        $this->load->view('principal/stuattendence/attendancesummary', $data);
+        $this->load->view('layout/principal/footer', $data);
+    }
+
+    public function export_attendance_summary() {
+        set_time_limit(0);
+
+        $class_id   = $this->input->post('class_id');
+        $section_id = $this->input->post('section_id');
+        $subject_id = $this->input->post('subject_id');
+        $start_date = $this->input->post('start_date');
+        $end_date   = $this->input->post('end_date');
+
+        if (empty($class_id) || empty($section_id) || empty($subject_id) || empty($start_date) || empty($end_date)) {
+            redirect('principal/stuattendence/attendanceSummary');
+        }
+
+        // Parse dates — support the school date format via customlib
+        $start_ts = strtotime($this->customlib->datetostrtotime($start_date));
+        $end_ts   = strtotime($this->customlib->datetostrtotime($end_date));
+
+        $start_fmt = date('Y-m-d', $start_ts);
+        $end_fmt   = date('Y-m-d', $end_ts);
+
+        // Fetch students split by gender
+        $boys_students = $this->student_model->getstudentsByClassSectionGender($class_id, $section_id, 'Male');
+        $girl_students = $this->student_model->getstudentsByClassSectionGender($class_id, $section_id, 'Female');
+
+        // Fetch all attendance types
+        $att_types_raw = $this->db->get('attendence_type')->result_array();
+        $att_type_map  = array(); // id => type_name
+        foreach ($att_types_raw as $at) {
+            $att_type_map[$at['id']] = $at['type'];
+        }
+
+        // Query attendance records for class/section/subject within date range
+        $this->db->select('sa.student_session_id, sa.attendence_type_id, COUNT(sa.id) as total')
+                 ->from('student_attendences sa')
+                 ->join('student_session ss', 'sa.student_session_id = ss.id')
+                 ->where('ss.class_id', $class_id)
+                 ->where('ss.section_id', $section_id)
+                 ->where('sa.subject_id', $subject_id)
+                 ->where('sa.date >=', $start_fmt)
+                 ->where('sa.date <=', $end_fmt)
+                 ->group_by('sa.student_session_id, sa.attendence_type_id');
+        $rows = $this->db->get()->result_array();
+
+        // Build lookup: student_session_id => [type_name => count]
+        $att_data = array();
+        foreach ($rows as $r) {
+            $ssid      = $r['student_session_id'];
+            $type_name = isset($att_type_map[$r['attendence_type_id']]) ? $att_type_map[$r['attendence_type_id']] : 'Other';
+            if (!isset($att_data[$ssid])) {
+                $att_data[$ssid] = array();
+            }
+            $att_data[$ssid][$type_name] = (int)$r['total'];
+        }
+
+        // Resolve details
+        $class_details   = $this->class_model->get($class_id);
+        $section_details = $this->section_model->get($section_id);
+        $subject_details = $this->db->get_where('subjects', array('id' => $subject_id))->row_array();
+        $subject_name    = $subject_details ? $subject_details['name'] : 'Subject';
+        $session_current = $this->setting_model->getCurrentSessionName();
+
+        $header_title    = $class_details['class'] . ' ' . $section_details['section'];
+        $date_range_str  = date('M j, Y', $start_ts) . ' – ' . date('M j, Y', $end_ts);
+
+        // -----------------------------------------------------------------------
+        // Build Excel using ZipArchive + XML (fast, no PHPExcel)
+        // -----------------------------------------------------------------------
+
+        // Build sheet XML from scratch
+        // Columns: # | Student Name | Present | Absent | Late | Tardy | Others...
+        $type_cols = array_values(array_unique(array_keys($att_type_map))); // type IDs
+        $type_names = array();
+        foreach ($att_types_raw as $at) {
+            $type_names[] = $at['type'];
+        }
+
+        $col_letters = array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P');
+        $num_extra   = count($att_types_raw); // one col per att type
+        $last_col    = $col_letters[1 + $num_extra]; // B + num_extra
+
+        $xml  = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
+        $xml .= '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">';
+        $xml .= '<sheetData>';
+
+        // Row 1 – School name / title
+        $xml .= '<row r="1"><c r="A1" t="inlineStr"><is><t>' . htmlspecialchars($this->customlib->getAppName(), ENT_XML1) . '</t></is></c></row>';
+
+        // Row 2 – Class + Section
+        $xml .= '<row r="2"><c r="A2" t="inlineStr"><is><t>' . htmlspecialchars($header_title, ENT_XML1) . ' – ' . htmlspecialchars($subject_name, ENT_XML1) . '</t></is></c></row>';
+
+        // Row 3 – SY
+        $xml .= '<row r="3"><c r="A3" t="inlineStr"><is><t>S.Y. ' . htmlspecialchars($session_current, ENT_XML1) . '</t></is></c></row>';
+
+        // Row 4 – Date range
+        $xml .= '<row r="4"><c r="A4" t="inlineStr"><is><t>Date Range: ' . htmlspecialchars($date_range_str, ENT_XML1) . '</t></is></c></row>';
+
+        // Row 5 – blank
+        $xml .= '<row r="5"><c r="A5" t="inlineStr"><is><t></t></is></c></row>';
+
+        // Row 6 – Column headers
+        $xml .= '<row r="6">';
+        $xml .= '<c r="A6" t="inlineStr"><is><t>#</t></is></c>';
+        $xml .= '<c r="B6" t="inlineStr"><is><t>Student Name</t></is></c>';
+        foreach ($att_types_raw as $ci => $at) {
+            $cl   = $col_letters[2 + $ci];
+            $xml .= '<c r="' . $cl . '6" t="inlineStr"><is><t>' . htmlspecialchars($at['type'], ENT_XML1) . '</t></is></c>';
+        }
+        $xml .= '</row>';
+
+        // Gender section helper
+        $write_gender_rows = function($students, $gender_label, &$row_num, &$index) use (&$xml, $att_data, $att_types_raw, $col_letters) {
+            // Gender header
+            $xml .= '<row r="' . $row_num . '">';
+            $xml .= '<c r="A' . $row_num . '" t="inlineStr"><is><t>' . $gender_label . '</t></is></c>';
+            $xml .= '</row>';
+            $row_num++;
+
+            foreach ($students as $student) {
+                $ssid  = $student['student_session_id'];
+                $name  = strtoupper($student['lastname'] . ', ' . $student['firstname'] . ' ' . $student['middlename']);
+                $sdata = isset($att_data[$ssid]) ? $att_data[$ssid] : array();
+
+                $xml .= '<row r="' . $row_num . '">';
+                $xml .= '<c r="A' . $row_num . '"><v>' . $index . '</v></c>';
+                $xml .= '<c r="B' . $row_num . '" t="inlineStr"><is><t>' . htmlspecialchars($name, ENT_XML1) . '</t></is></c>';
+                foreach ($att_types_raw as $ci => $at) {
+                    $cl    = $col_letters[2 + $ci];
+                    $count = isset($sdata[$at['type']]) ? $sdata[$at['type']] : 0;
+                    $xml  .= '<c r="' . $cl . $row_num . '"><v>' . $count . '</v></c>';
+                }
+                $xml .= '</row>';
+                $row_num++;
+                $index++;
+            }
+        };
+
+        $row_num = 7;
+        $index   = 1;
+        $write_gender_rows($boys_students, 'Male',   $row_num, $index);
+        $index = 1;
+        $write_gender_rows($girl_students, 'Female', $row_num, $index);
+
+        $xml .= '</sheetData></worksheet>';
+
+        // Build a minimal xlsx from scratch (no template needed)
+        $tmpFile = tempnam(sys_get_temp_dir(), 'att_sum_') . '.xlsx';
+
+        $zip = new ZipArchive();
+        $zip->open($tmpFile, ZipArchive::CREATE | ZipArchive::OVERWRITE);
+
+        // [Content_Types].xml
+        $zip->addFromString('[Content_Types].xml',
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' .
+            '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">' .
+            '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>' .
+            '<Default Extension="xml" ContentType="application/xml"/>' .
+            '<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>' .
+            '<Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>' .
+            '</Types>'
+        );
+
+        // _rels/.rels
+        $zip->addFromString('_rels/.rels',
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' .
+            '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' .
+            '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/>' .
+            '</Relationships>'
+        );
+
+        // xl/_rels/workbook.xml.rels
+        $zip->addFromString('xl/_rels/workbook.xml.rels',
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' .
+            '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' .
+            '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/>' .
+            '</Relationships>'
+        );
+
+        // xl/workbook.xml
+        $zip->addFromString('xl/workbook.xml',
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' .
+            '<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">' .
+            '<sheets><sheet name="Summary" sheetId="1" r:id="rId1"/></sheets>' .
+            '</workbook>'
+        );
+
+        // xl/worksheets/sheet1.xml
+        $zip->addFromString('xl/worksheets/sheet1.xml', $xml);
+
+        $zip->close();
+
+        // Stream to browser
+        $filename  = 'AttSummary_' . str_replace(' ', '_', $header_title) . '_' . date('Y-m-d', $start_ts) . '_to_' . date('Y-m-d', $end_ts) . '.xlsx';
+        $file_size = filesize($tmpFile);
+
+        while (ob_get_level()) {
+            ob_end_clean();
+        }
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+        header('Content-Length: ' . $file_size);
+        header('Cache-Control: max-age=0');
+        readfile($tmpFile);
+        @unlink($tmpFile);
+        exit();
+    }
+
 	
     public function export_fines_report() {
         set_time_limit(0);

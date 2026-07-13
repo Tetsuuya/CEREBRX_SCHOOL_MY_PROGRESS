@@ -278,7 +278,15 @@
                 <!-- <li><a href="<?php echo base_url(); ?>principal/guidance"><i class="fa fa-user"></i> Guidance Counselor</a></li>  
                 <li><a href="<?php echo base_url(); ?>principal/prefect"><i class="fa fa-user"></i> Prefect of Discipline</a></li>   -->
     			<!-- <li><a href="<?php echo base_url(); ?>principal/clinic"><i class="fa fa-hospital-o"></i> Clinic</a></li>   -->
-                <li class="<?php echo set_Topmenu('stuattendence/classattendencereport'); ?>"><a href="<?php echo base_url(); ?>principal/stuattendence/classattendencereport"><i class="fa fa-calendar-check-o"></i> <?php echo $this->lang->line('attendance_report'); ?></a></li> 
+                <li class="treeview <?php echo set_Topmenu('Attendance'); ?>">
+                    <a href="#">
+                        <i class="fa fa-calendar-check-o"></i><span><?php echo $this->lang->line('attendance_report'); ?></span> <i class="fa fa-angle-left pull-right"></i>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li class="<?php echo set_Submenu('stuattendence/classattendencereport'); ?>"><a href="<?php echo base_url(); ?>principal/stuattendence/classattendencereport"><i class="fa fa-angle-double-right"></i> Attendance Report</a></li>
+                        <li class="<?php echo set_Submenu('stuattendence/attendanceSummary'); ?>"><a href="<?php echo base_url(); ?>principal/stuattendence/attendanceSummary"><i class="fa fa-angle-double-right"></i> Attendance Summary</a></li>
+                    </ul>
+                </li>
                 <li class="treeview <?php echo set_Topmenu('Library'); ?>">
                     <a href="#">
                         <i class="fa fa-book"></i> <span><?php echo $this->lang->line('library'); ?></span> <i class="fa fa-angle-left pull-right"></i>

@@ -195,7 +195,7 @@ class Stuattendence_model extends CI_Model {
              ANY_VALUE(student_attendences.attendence_type_id) as attendence_type_id,
              ANY_VALUE(student_attendences.excuse_note) as excuse_note,
              ANY_VALUE(student_attendences.exempted_note) as exempted_note
-             FROM `student_session` LEFT JOIN student_attendences ON student_attendences.student_session_id=student_session.id  and student_attendences.date=" . $this->db->escape($date) . " where  student_session.session_id=" . $this->db->escape($this->current_session) . " and student_session.class_id=" . $this->db->escape($class_id) . " and student_session.section_id=" . $this->db->escape($section_id) . " AND student_attendences.subject_id=" . $this->db->escape($subject) .  " GROUP BY student_session.student_id ) as student_sessions LEFT JOIN attendence_type ON attendence_type.id=student_sessions.attendence_type_id where student_sessions.student_id=students.id";
+             FROM `student_session` LEFT JOIN student_attendences ON student_attendences.student_session_id=student_session.id  and student_attendences.date=" . $this->db->escape($date) . " AND student_attendences.subject_id=" . $this->db->escape($subject) . " where  student_session.session_id=" . $this->db->escape($this->current_session) . " and student_session.class_id=" . $this->db->escape($class_id) . " and student_session.section_id=" . $this->db->escape($section_id) . " GROUP BY student_session.student_id ) as student_sessions LEFT JOIN attendence_type ON attendence_type.id=student_sessions.attendence_type_id where student_sessions.student_id=students.id";
 
   
         $query = $this->db->query($sql);

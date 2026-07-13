@@ -224,15 +224,19 @@ class stuattendence extends CI_Controller {
 
             $session_current = $this->setting_model->getCurrentSessionName();
             $startMonth = $this->setting_model->getStartMonth();
-            $centenary = substr($session_current, 0, 2); //2017-18 to 2017
-            $year_first_substring = substr($session_current, 2, 2); //2017-18 to 2017
-            $year_second_substring = substr($session_current, 5, 2); //2017-18 to 18
             $month_number = date("m", strtotime($month));
 
+            $session_parts = explode('-', $session_current);
+            $year_first = $session_parts[0];
+            $year_second = isset($session_parts[1]) ? $session_parts[1] : $year_first;
+            if (strlen($year_second) == 2) {
+                $year_second = substr($year_first, 0, 2) . $year_second;
+            }
+
             if ($month_number >= $startMonth && $month_number <= 12) {
-                $year = $centenary . $year_first_substring;
+                $year = $year_first;
             } else {
-                $year = $centenary . $year_second_substring;
+                $year = $year_second;
             }
             $num_of_days = cal_days_in_month(CAL_GREGORIAN, $month_number, $year);
             $attr_result = array();
@@ -261,15 +265,274 @@ class stuattendence extends CI_Controller {
         }
     }
 	
-		// NEW CODE 
+    public function export_fines_report() {
+        set_time_limit(0);
+        $class_id = $this->input->post('class_id');
+        $section_id = $this->input->post('section_id');
+        $month = $this->input->post('month');
+
+        if (empty($class_id) || empty($section_id) || empty($month)) {
+            redirect('principal/stuattendence/classattendencereport');
+        }
+
+        // Fetch students split by gender
+        $boys_students = $this->student_model->getstudentsByClassSectionGender($class_id, $section_id, 'Male');
+        $girl_students = $this->student_model->getstudentsByClassSectionGender($class_id, $section_id, 'Female');
+
+        // Search for subject IDs matching Flag, Chapel, and Ten Days of Prayer
+        $subjects = $this->db->select('id, name')
+                             ->from('subjects')
+                             ->group_start()
+                             ->like('name', 'Flag')
+                             ->or_like('name', 'Chapel')
+                             ->or_like('name', 'Prayer')
+                             ->group_end()
+                             ->get()
+                             ->result_array();
+
+        $flag_sub_ids = array();
+        $chapel_sub_ids = array();
+        $prayer_sub_ids = array();
+
+        foreach ($subjects as $sub) {
+            $name_lower = strtolower($sub['name']);
+            if (strpos($name_lower, 'flag') !== false) {
+                $flag_sub_ids[] = $sub['id'];
+            } elseif (strpos($name_lower, 'chapel') !== false) {
+                $chapel_sub_ids[] = $sub['id'];
+            } elseif (strpos($name_lower, 'prayer') !== false) {
+                $prayer_sub_ids[] = $sub['id'];
+            }
+        }
+
+        // Query the Absent type id
+        $absent_type = $this->db->get_where('attendence_type', array('type' => 'Absent'))->row_array();
+        $absent_type_id = $absent_type ? $absent_type['id'] : 4;
+
+        // Compute month dates
+        $month_number = date("m", strtotime($month));
+        $session_current = $this->setting_model->getCurrentSessionName();
+        $startMonth = $this->setting_model->getStartMonth();
+        
+        $session_parts = explode('-', $session_current);
+        $year_first = $session_parts[0];
+        $year_second = isset($session_parts[1]) ? $session_parts[1] : $year_first;
+        if (strlen($year_second) == 2) {
+            $year_second = substr($year_first, 0, 2) . $year_second;
+        }
+
+        if ($month_number >= $startMonth && $month_number <= 12) {
+            $year = $year_first;
+        } else {
+            $year = $year_second;
+        }
+        $num_of_days = cal_days_in_month(CAL_GREGORIAN, $month_number, $year);
+
+        $start_date = $year . "-" . $month_number . "-01";
+        $end_date   = $year . "-" . $month_number . "-" . sprintf("%02d", $num_of_days);
+
+        // Fetch monthly absences for students in class/section
+        $this->db->select('student_attendences.student_session_id, student_attendences.subject_id, COUNT(student_attendences.id) as total_absences')
+                 ->from('student_attendences')
+                 ->join('student_session', 'student_attendences.student_session_id = student_session.id')
+                 ->where('student_session.class_id', $class_id)
+                 ->where('student_session.section_id', $section_id)
+                 ->where('student_attendences.date >=', $start_date)
+                 ->where('student_attendences.date <=', $end_date)
+                 ->where('student_attendences.attendence_type_id', $absent_type_id)
+                 ->group_by('student_attendences.student_session_id, student_attendences.subject_id');
+        $absences_query = $this->db->get()->result_array();
+
+        $student_absences = array();
+        foreach ($absences_query as $row) {
+            $ssid   = $row['student_session_id'];
+            $sub_id = $row['subject_id'];
+            $count  = $row['total_absences'];
+
+            if (!isset($student_absences[$ssid])) {
+                $student_absences[$ssid] = array('flag' => 0, 'chapel' => 0, 'prayer' => 0);
+            }
+
+            if (in_array($sub_id, $flag_sub_ids)) {
+                $student_absences[$ssid]['flag'] += $count;
+            } elseif (in_array($sub_id, $chapel_sub_ids)) {
+                $student_absences[$ssid]['chapel'] += $count;
+            } elseif (in_array($sub_id, $prayer_sub_ids)) {
+                $student_absences[$ssid]['prayer'] += $count;
+            }
+        }
+
+        // Resolve details
+        $class_details        = $this->class_model->get($class_id);
+        $section_details      = $this->section_model->get($section_id);
+        $class_section_title  = "Fines - " . $class_details['class'] . " " . $section_details['section'];
+
+        // -----------------------------------------------------------------------
+        // FAST XML / ZipArchive approach â€“ no PHPExcel loading
+        // -----------------------------------------------------------------------
+        $templatePath = FCPATH . "uploads/template_documents/Attendace_Principal/Clean_Attendace_template_v3.xlsx";
+        if (!file_exists($templatePath)) {
+            $templatePath = "./uploads/template_documents/Attendace_Principal/Clean_Attendace_template_v3.xlsx";
+        }
+
+        // Copy template to a temp file so we can modify the zip in-place
+        $tmpFile = tempnam(sys_get_temp_dir(), 'fines_') . '.xlsx';
+        copy($templatePath, $tmpFile);
+
+        $zip = new ZipArchive();
+        if ($zip->open($tmpFile) !== TRUE) {
+            die('Error: Could not open template zip.');
+        }
+
+        // Read the worksheet XML
+        $sheetXml = $zip->getFromName('xl/worksheets/sheet1.xml');
+
+        // Helper: build a numeric cell tag
+        // s= style index from template row 8 (male) / row 10 (female)
+        $make_num_cell = function($col, $row, $style, $val) {
+            if ($val === '' || $val === null) {
+                return '<c r="' . $col . $row . '" s="' . $style . '" t="n"/>';
+            }
+            return '<c r="' . $col . $row . '" s="' . $style . '"><v>' . $val . '</v></c>';
+        };
+
+        // Helper: build an inlineStr cell tag
+        $make_str_cell = function($col, $row, $style, $val) {
+            $val = htmlspecialchars((string)$val, ENT_XML1, 'UTF-8');
+            if ($val === '') {
+                return '<c r="' . $col . '" s="' . $style . '" t="n"/>';
+            }
+            return '<c r="' . $col . $row . '" s="' . $style . '" t="inlineStr"><is><t>' . $val . '</t></is></c>';
+        };
+
+        // Build the male rows XML block (starting at row 8)
+        // Template row 8 style codes: A=4, B=5, C-H=6, I=7
+        $male_rows_xml   = '';
+        $female_rows_xml = '';
+        $row_num = 8;
+        $index   = 1;
+
+        foreach ($boys_students as $student) {
+            $ssid       = $student['student_session_id'];
+            $flag_fine  = isset($student_absences[$ssid]['flag'])   ? (int)$student_absences[$ssid]['flag']   * 50 : 0;
+            $chapel_fine= isset($student_absences[$ssid]['chapel']) ? (int)$student_absences[$ssid]['chapel'] * 50 : 0;
+            $name       = strtoupper($student['lastname'] . ', ' . $student['firstname'] . ' ' . $student['middlename']);
+            $sum_formula= '=SUM(C' . $row_num . ':H' . $row_num . ')';
+
+            $male_rows_xml .= '<row r="' . $row_num . '">'
+                . $make_num_cell('A', $row_num, '4', $index)
+                . $make_str_cell('B', $row_num, '5', $name)
+                . $make_num_cell('C', $row_num, '6', $flag_fine > 0 ? $flag_fine : 0)
+                . $make_num_cell('D', $row_num, '6', $chapel_fine > 0 ? $chapel_fine : 0)
+                . $make_num_cell('E', $row_num, '6', '')
+                . $make_num_cell('F', $row_num, '6', '')
+                . $make_num_cell('G', $row_num, '6', '')
+                . $make_num_cell('H', $row_num, '6', '')
+                . '<c r="I' . $row_num . '" s="7"><f>' . htmlspecialchars($sum_formula, ENT_XML1) . '</f><v>0</v></c>'
+                . '</row>';
+            $row_num++;
+            $index++;
+        }
+
+        // Female header row
+        $female_header_row = $row_num;
+        $female_header_xml = '<row r="' . $female_header_row . '">'
+            . '<c r="A' . $female_header_row . '" s="57" t="inlineStr"><is><t>Female</t></is></c>'
+            . '<c r="B' . $female_header_row . '" s="53" t="n"/>'
+            . '<c r="C' . $female_header_row . '" s="58" t="n"/>'
+            . '<c r="D' . $female_header_row . '" s="58" t="n"/>'
+            . '<c r="E' . $female_header_row . '" s="58" t="n"/>'
+            . '<c r="F' . $female_header_row . '" s="58" t="n"/>'
+            . '<c r="G' . $female_header_row . '" s="58" t="n"/>'
+            . '<c r="H' . $female_header_row . '" s="58" t="n"/>'
+            . '<c r="I' . $female_header_row . '" s="58" t="n"/>'
+            . '</row>';
+        $row_num++;
+
+        $index = 1;
+        foreach ($girl_students as $student) {
+            $ssid        = $student['student_session_id'];
+            $flag_fine   = isset($student_absences[$ssid]['flag'])   ? (int)$student_absences[$ssid]['flag']   * 50 : 0;
+            $chapel_fine = isset($student_absences[$ssid]['chapel']) ? (int)$student_absences[$ssid]['chapel'] * 50 : 0;
+            $name        = strtoupper($student['lastname'] . ', ' . $student['firstname'] . ' ' . $student['middlename']);
+            $sum_formula = '=SUM(C' . $row_num . ':H' . $row_num . ')';
+
+            $female_rows_xml .= '<row r="' . $row_num . '">'
+                . $make_num_cell('A', $row_num, '4', $index)
+                . $make_str_cell('B', $row_num, '5', $name)
+                . $make_num_cell('C', $row_num, '6', $flag_fine > 0 ? $flag_fine : 0)
+                . $make_num_cell('D', $row_num, '6', $chapel_fine > 0 ? $chapel_fine : 0)
+                . $make_num_cell('E', $row_num, '5', '')
+                . $make_num_cell('F', $row_num, '5', '')
+                . $make_num_cell('G', $row_num, '5', '')
+                . $make_num_cell('H', $row_num, '6', '')
+                . '<c r="I' . $row_num . '" s="7"><f>' . htmlspecialchars($sum_formula, ENT_XML1) . '</f><v>0</v></c>'
+                . '</row>';
+            $row_num++;
+            $index++;
+        }
+
+        // Replace header cells: S.Y., Fines title, Month
+        $sheetXml = preg_replace(
+            '/<c r="A3"[^>]*>.*?<\/c>/s',
+            '<c r="A3" s="47" t="inlineStr"><is><t>S.Y. ' . htmlspecialchars($session_current, ENT_XML1) . '</t></is></c>',
+            $sheetXml
+        );
+        $sheetXml = preg_replace(
+            '/<c r="A4"[^>]*>.*?<\/c>/s',
+            '<c r="A4" s="48" t="inlineStr"><is><t>' . htmlspecialchars($class_section_title, ENT_XML1) . '</t></is></c>',
+            $sheetXml
+        );
+        $sheetXml = preg_replace(
+            '/<c r="C5"[^>]*>.*?<\/c>/s',
+            '<c r="C5" s="26" t="inlineStr"><is><t>For the Month of ' . htmlspecialchars($month, ENT_XML1) . '</t></is></c>',
+            $sheetXml
+        );
+
+        // Replace the sheetData block: remove old rows 8, 9, 10 and inject generated rows
+        $new_sheet_data_rows = $male_rows_xml . $female_header_xml . $female_rows_xml;
+        $sheetXml = preg_replace(
+            '/<row r="8"[^>]*>.*?<\/row>.*?<row r="9"[^>]*>.*?<\/row>.*?<row r="10"[^>]*>.*?<\/row>/s',
+            $new_sheet_data_rows,
+            $sheetXml
+        );
+
+        // Update the mergeCell for the female header A9:B9 â†’ new row
+        $sheetXml = str_replace(
+            '<mergeCell ref="A9:B9"/>',
+            '<mergeCell ref="A' . $female_header_row . ':B' . $female_header_row . '"/>',
+            $sheetXml
+        );
+
+        // Save modified XML back into zip
+        $zip->addFromString('xl/worksheets/sheet1.xml', $sheetXml);
+        $zip->close();
+
+        // Stream the file to the browser
+        $filename = 'Fines_' . str_replace(' ', '_', $class_details['class'] . '_' . $section_details['section'] . '_' . $month) . '.xlsx';
+        $file_size = filesize($tmpFile);
+
+        while (ob_get_level()) {
+            ob_end_clean();
+        }
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+        header('Content-Length: ' . $file_size);
+        header('Cache-Control: max-age=0');
+        readfile($tmpFile);
+        @unlink($tmpFile);
+        exit();
+    }
+
+	// NEW CODE 
     function teacherattendancechecked($id) {
         $this->session->set_userdata('top_menu', 'Attendance');
         $this->session->set_userdata('sub_menu', 'stuattendence/attendenceReport');
         $teacher = $this->teacher_model->getactiveattendance();
-													
+
         $data['teacherlist'] = $teacher;
-		// $data['subject_list'] =$this->stuattendence_model->get_attendance_checked( $id ); 
-        $data['subject_list'] =$this->stuattendence_model->get_attendance_checked_by_teacher_subject_today( $id ); 
+        $data['subject_list'] =$this->stuattendence_model->get_attendance_checked_by_teacher_subject_today( $id );
 
         $this->load->view('layout/principal/header', $data);
         $this->load->view('principal/stuattendence/teacherattendancereport', $data);
@@ -277,5 +540,3 @@ class stuattendence extends CI_Controller {
     }
 
 }
-
-?>

@@ -235,6 +235,9 @@ class Notification extends CI_Controller {
             // strip carriage returns
             $sms_message = str_replace("\r", '', $sms_message);
 
+            // strip zero-width and invisible Unicode characters
+            $sms_message = preg_replace('/\x{200B}|\x{200C}|\x{200D}|\x{FEFF}/u', '', $sms_message);
+
             // reduce multiple consecutive blank lines to at most 2 newlines
             $sms_message = preg_replace("/\n{3,}/", "\n\n", $sms_message);
 
@@ -655,6 +658,9 @@ class Notification extends CI_Controller {
             // strip carriage returns
             $sms_message = str_replace("\r", '', $sms_message);
 
+            // strip zero-width and invisible Unicode characters
+            $sms_message = preg_replace('/\x{200B}|\x{200C}|\x{200D}|\x{FEFF}/u', '', $sms_message);
+
             // reduce multiple consecutive blank lines to at most 2 newlines
             $sms_message = preg_replace("/\n{3,}/", "\n\n", $sms_message);
 
@@ -877,6 +883,10 @@ class Notification extends CI_Controller {
         $sms_message = html_entity_decode($sms_message, ENT_QUOTES, 'UTF-8');
         $sms_message = str_replace(array("\xc2\xa0", "\xa0"), ' ', $sms_message);
         $sms_message = str_replace("\r", '', $sms_message);
+
+        // strip zero-width and invisible Unicode characters
+        $sms_message = preg_replace('/\x{200B}|\x{200C}|\x{200D}|\x{FEFF}/u', '', $sms_message);
+
         $sms_message = preg_replace("/\n{3,}/", "\n\n", $sms_message);
         
         // trim leading and trailing spaces/newlines (including Unicode/invisible spaces)

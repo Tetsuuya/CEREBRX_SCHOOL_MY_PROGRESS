@@ -40,9 +40,7 @@
                                 </div>
                                 <div class="form-group" style="position: relative; margin-bottom: 5px;">
                                     <label><?php echo $this->lang->line('message'); ?></label>
-                                     <textarea id="compose-textarea" name="message" class="form-control" style="height: 300px" maxlength="150">
-                                         <?php echo set_value('message'); ?>
-                                     </textarea>
+                                     <textarea id="compose-textarea" name="message" class="form-control" style="height: 300px" maxlength="150"><?php echo set_value('message'); ?></textarea>
                                      <span class="text-danger"><?php echo form_error('message'); ?></span>
                                      
                                      <!-- character count estimator -->

@@ -15,7 +15,7 @@
     <section class="content">
         <div class="row">          
             <div class="col-md-12">              
-                                
+                        
                 <div class="box box-primary" id="sublist"> 
                      <div class="box-header with-border">
                         <h3 class="box-title">Select Student by Grade and Section</h3>

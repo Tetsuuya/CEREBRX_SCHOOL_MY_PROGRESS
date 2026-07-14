@@ -497,15 +497,15 @@ class stuattendence extends CI_Controller {
         // Female header row
         $female_header_row = $row_num;
         $female_header_xml = '<row r="' . $female_header_row . '">'
-            . '<c r="A' . $female_header_row . '" s="57" t="inlineStr"><is><t>Female</t></is></c>'
-            . '<c r="B' . $female_header_row . '" s="53" t="n"/>'
-            . '<c r="C' . $female_header_row . '" s="58" t="n"/>'
-            . '<c r="D' . $female_header_row . '" s="58" t="n"/>'
-            . '<c r="E' . $female_header_row . '" s="58" t="n"/>'
-            . '<c r="F' . $female_header_row . '" s="58" t="n"/>'
-            . '<c r="G' . $female_header_row . '" s="58" t="n"/>'
-            . '<c r="H' . $female_header_row . '" s="58" t="n"/>'
-            . '<c r="I' . $female_header_row . '" s="58" t="n"/>'
+            . '<c r="A' . $female_header_row . '" s="26" t="inlineStr"><is><t>Female</t></is></c>'
+            . '<c r="B' . $female_header_row . '" s="13" t="n"/>'
+            . '<c r="C' . $female_header_row . '" s="8" t="n"/>'
+            . '<c r="D' . $female_header_row . '" s="33" t="n"/>'
+            . '<c r="E' . $female_header_row . '" s="34" t="n"/>'
+            . '<c r="F' . $female_header_row . '" s="34" t="n"/>'
+            . '<c r="G' . $female_header_row . '" s="34" t="n"/>'
+            . '<c r="H' . $female_header_row . '" s="8" t="n"/>'
+            . '<c r="I' . $female_header_row . '" s="36" t="n"/>'
             . '</row>';
         $row_num++;
 
@@ -756,15 +756,15 @@ class stuattendence extends CI_Controller {
         // Female header row
         $female_header_row = $row_num;
         $female_header_xml = '<row r="' . $female_header_row . '">'
-            . '<c r="A' . $female_header_row . '" s="57" t="inlineStr"><is><t>Female</t></is></c>'
-            . '<c r="B' . $female_header_row . '" s="53" t="n"/>'
-            . '<c r="C' . $female_header_row . '" s="58" t="n"/>'
-            . '<c r="D' . $female_header_row . '" s="58" t="n"/>'
-            . '<c r="E' . $female_header_row . '" s="58" t="n"/>'
-            . '<c r="F' . $female_header_row . '" s="58" t="n"/>'
-            . '<c r="G' . $female_header_row . '" s="58" t="n"/>'
-            . '<c r="H' . $female_header_row . '" s="58" t="n"/>'
-            . '<c r="I' . $female_header_row . '" s="58" t="n"/>'
+            . '<c r="A' . $female_header_row . '" s="26" t="inlineStr"><is><t>Female</t></is></c>'
+            . '<c r="B' . $female_header_row . '" s="13" t="n"/>'
+            . '<c r="C' . $female_header_row . '" s="8" t="n"/>'
+            . '<c r="D' . $female_header_row . '" s="33" t="n"/>'
+            . '<c r="E' . $female_header_row . '" s="34" t="n"/>'
+            . '<c r="F' . $female_header_row . '" s="34" t="n"/>'
+            . '<c r="G' . $female_header_row . '" s="34" t="n"/>'
+            . '<c r="H' . $female_header_row . '" s="8" t="n"/>'
+            . '<c r="I' . $female_header_row . '" s="36" t="n"/>'
             . '</row>';
         $row_num++;
 

@@ -475,8 +475,10 @@ class stuattendence extends CI_Controller {
 
         foreach ($boys_students as $student) {
             $ssid           = $student['student_session_id'];
-            $flag_summary   = $is_flag_selected   ? $build_summary_str($ssid, 'flag')   : '';
-            $chapel_summary = $is_chapel_selected ? $build_summary_str($ssid, 'chapel') : '';
+            $flag_summary   = $is_flag_selected   ? $build_summary_str($ssid, 'flag')   : ' ';
+            $chapel_summary = $is_chapel_selected ? $build_summary_str($ssid, 'chapel') : ' ';
+            if ($flag_summary === '') { $flag_summary = ' '; }
+            if ($chapel_summary === '') { $chapel_summary = ' '; }
             $name           = strtoupper($student['lastname'] . ', ' . $student['firstname'] . ' ' . $student['middlename']);
 
             $male_rows_xml .= '<row r="' . $row_num . '">'
@@ -484,11 +486,11 @@ class stuattendence extends CI_Controller {
                 . $make_str_cell('B', $row_num, '5', $name)
                 . $make_str_cell('C', $row_num, '6', $flag_summary)
                 . $make_str_cell('D', $row_num, '6', $chapel_summary)
-                . $make_num_cell('E', $row_num, '6', '')
-                . $make_num_cell('F', $row_num, '6', '')
-                . $make_num_cell('G', $row_num, '6', '')
-                . $make_num_cell('H', $row_num, '6', '')
-                . $make_str_cell('I', $row_num, '7', '')
+                . $make_str_cell('E', $row_num, '6', ' ')
+                . $make_str_cell('F', $row_num, '6', ' ')
+                . $make_str_cell('G', $row_num, '6', ' ')
+                . $make_str_cell('H', $row_num, '6', ' ')
+                . $make_str_cell('I', $row_num, '7', ' ')
                 . '</row>';
             $row_num++;
             $index++;
@@ -512,8 +514,10 @@ class stuattendence extends CI_Controller {
         $index = 1;
         foreach ($girl_students as $student) {
             $ssid           = $student['student_session_id'];
-            $flag_summary   = $is_flag_selected   ? $build_summary_str($ssid, 'flag')   : '';
-            $chapel_summary = $is_chapel_selected ? $build_summary_str($ssid, 'chapel') : '';
+            $flag_summary   = $is_flag_selected   ? $build_summary_str($ssid, 'flag')   : ' ';
+            $chapel_summary = $is_chapel_selected ? $build_summary_str($ssid, 'chapel') : ' ';
+            if ($flag_summary === '') { $flag_summary = ' '; }
+            if ($chapel_summary === '') { $chapel_summary = ' '; }
             $name           = strtoupper($student['lastname'] . ', ' . $student['firstname'] . ' ' . $student['middlename']);
 
             $female_rows_xml .= '<row r="' . $row_num . '">'
@@ -521,11 +525,11 @@ class stuattendence extends CI_Controller {
                 . $make_str_cell('B', $row_num, '5', $name)
                 . $make_str_cell('C', $row_num, '6', $flag_summary)
                 . $make_str_cell('D', $row_num, '6', $chapel_summary)
-                . $make_num_cell('E', $row_num, '5', '')
-                . $make_num_cell('F', $row_num, '5', '')
-                . $make_num_cell('G', $row_num, '5', '')
-                . $make_num_cell('H', $row_num, '6', '')
-                . $make_str_cell('I', $row_num, '7', '')
+                . $make_str_cell('E', $row_num, '5', ' ')
+                . $make_str_cell('F', $row_num, '5', ' ')
+                . $make_str_cell('G', $row_num, '5', ' ')
+                . $make_str_cell('H', $row_num, '6', ' ')
+                . $make_str_cell('I', $row_num, '7', ' ')
                 . '</row>';
             $row_num++;
             $index++;

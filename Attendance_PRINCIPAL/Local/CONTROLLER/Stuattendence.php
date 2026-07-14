@@ -300,8 +300,8 @@ class stuattendence extends CI_Controller {
         }
 
         // Parse dates
-        $start_ts  = strtotime($this->customlib->datetostrtotime($start_date));
-        $end_ts    = strtotime($this->customlib->datetostrtotime($end_date));
+        $start_ts  = $this->customlib->datetostrtotime($start_date);
+        $end_ts    = $this->customlib->datetostrtotime($end_date);
         $start_fmt = date('Y-m-d', $start_ts);
         $end_fmt   = date('Y-m-d', $end_ts);
         $date_range_label = date('M j, Y', $start_ts) . ' - ' . date('M j, Y', $end_ts);
@@ -309,6 +309,9 @@ class stuattendence extends CI_Controller {
         // Fetch students split by gender
         $boys_students = $this->student_model->getstudentsByClassSectionGender($class_id, $section_id, 'Male');
         $girl_students = $this->student_model->getstudentsByClassSectionGender($class_id, $section_id, 'Female');
+
+        // Fetch all attendance types from the database
+        $all_types = $this->db->get('attendence_type')->result_array();
 
         // Find Flag and Chapel subject IDs
         $subjects = $this->db->select('id, name')
@@ -336,44 +339,93 @@ class stuattendence extends CI_Controller {
             }
         }
 
-        // If a specific subject was selected, filter only that subject's absences
-        $absent_type = $this->db->get_where('attendence_type', array('type' => 'Absent'))->row_array();
-        $absent_type_id = $absent_type ? $absent_type['id'] : 4;
-
+        // Query all attendance types for the selected students and date range
         $query_builder = $this->db
-            ->select('student_attendences.student_session_id, student_attendences.subject_id, COUNT(student_attendences.id) as total_absences')
+            ->select('student_attendences.student_session_id, student_attendences.subject_id, student_attendences.attendence_type_id, COUNT(student_attendences.id) as total_count')
             ->from('student_attendences')
             ->join('student_session', 'student_attendences.student_session_id = student_session.id')
             ->where('student_session.class_id', $class_id)
             ->where('student_session.section_id', $section_id)
-            ->where('student_attendences.date >=', $start_fmt)
-            ->where('student_attendences.date <=', $end_fmt)
-            ->where('student_attendences.attendence_type_id', $absent_type_id);
+            ->where('DATE(student_attendences.date) >=', $start_fmt)
+            ->where('DATE(student_attendences.date) <=', $end_fmt);
 
         if (!empty($subject_id)) {
             $query_builder->where('student_attendences.subject_id', $subject_id);
         }
 
-        $absences_query = $query_builder->group_by('student_attendences.student_session_id, student_attendences.subject_id')->get()->result_array();
+        $attendances_query = $query_builder->group_by('student_attendences.student_session_id, student_attendences.subject_id, student_attendences.attendence_type_id')
+                                           ->get()
+                                           ->result_array();
 
-        $student_absences = array();
-        foreach ($absences_query as $row) {
-            $ssid   = $row['student_session_id'];
-            $sub_id = $row['subject_id'];
-            $count  = $row['total_absences'];
+        $student_counts = array();
+        foreach ($attendances_query as $row) {
+            $ssid    = $row['student_session_id'];
+            $sub_id  = $row['subject_id'];
+            $type_id = $row['attendence_type_id'];
+            $count   = (int)$row['total_count'];
 
-            if (!isset($student_absences[$ssid])) {
-                $student_absences[$ssid] = array('flag' => 0, 'chapel' => 0, 'prayer' => 0);
+            // Skip Present (ID 1)
+            if ($type_id == 1) {
+                continue;
             }
 
+            $category = null;
             if (in_array($sub_id, $flag_sub_ids)) {
-                $student_absences[$ssid]['flag'] += $count;
+                $category = 'flag';
             } elseif (in_array($sub_id, $chapel_sub_ids)) {
-                $student_absences[$ssid]['chapel'] += $count;
+                $category = 'chapel';
             } elseif (in_array($sub_id, $prayer_sub_ids)) {
-                $student_absences[$ssid]['prayer'] += $count;
+                $category = 'prayer';
+            }
+
+            if ($category) {
+                if (!isset($student_counts[$ssid][$category][$type_id])) {
+                    $student_counts[$ssid][$category][$type_id] = 0;
+                }
+                $student_counts[$ssid][$category][$type_id] += $count;
             }
         }
+
+        // Determine if only specific column should be populated
+        $is_flag_selected   = false;
+        $is_chapel_selected = false;
+
+        if (!empty($subject_id)) {
+            if (in_array($subject_id, $flag_sub_ids)) {
+                $is_flag_selected = true;
+            } elseif (in_array($subject_id, $chapel_sub_ids) || in_array($subject_id, $prayer_sub_ids)) {
+                $is_chapel_selected = true;
+            }
+        } else {
+            $is_flag_selected   = true;
+            $is_chapel_selected = true;
+        }
+
+        $build_summary_str = function($ssid, $category) use ($student_counts, $all_types) {
+            // Display: L, A, E, SC, OC, OSR, Ex, Exm
+            $desired_ids = array(3, 4, 2, 8, 9, 10, 6, 7);
+            $parts = array();
+
+            foreach ($desired_ids as $tid) {
+                $type_row = null;
+                foreach ($all_types as $t) {
+                    if ($t['id'] == $tid) {
+                        $type_row = $t;
+                        break;
+                    }
+                }
+                if (!$type_row) continue;
+
+                $clean_key = strip_tags($type_row['key_value']);
+                $cnt = 0;
+                if (isset($student_counts[$ssid][$category][$tid])) {
+                    $cnt = $student_counts[$ssid][$category][$tid];
+                }
+                $parts[] = $clean_key . ' = ' . $cnt;
+            }
+
+            return implode(', ', $parts);
+        };
 
         // Resolve class/section details
         $class_details       = $this->class_model->get($class_id);
@@ -382,7 +434,7 @@ class stuattendence extends CI_Controller {
         $session_current     = $this->setting_model->getCurrentSessionName();
 
         // -----------------------------------------------------------------------
-        // FAST XML / ZipArchive â€” use the same fines template
+        // FAST XML / ZipArchive — use the same fines template
         // -----------------------------------------------------------------------
         $templatePath = FCPATH . "uploads/template_documents/Attendace_Principal/Clean_Attendace_template_v3.xlsx";
         if (!file_exists($templatePath)) {
@@ -410,7 +462,7 @@ class stuattendence extends CI_Controller {
         $make_str_cell = function($col, $row, $style, $val) {
             $val = htmlspecialchars((string)$val, ENT_XML1, 'UTF-8');
             if ($val === '') {
-                return '<c r="' . $col . '" s="' . $style . '" t="n"/>';
+                return '<c r="' . $col . $row . '" s="' . $style . '" t="n"/>';
             }
             return '<c r="' . $col . $row . '" s="' . $style . '" t="inlineStr"><is><t>' . $val . '</t></is></c>';
         };
@@ -422,22 +474,21 @@ class stuattendence extends CI_Controller {
         $index   = 1;
 
         foreach ($boys_students as $student) {
-            $ssid        = $student['student_session_id'];
-            $flag_fine   = isset($student_absences[$ssid]['flag'])   ? (int)$student_absences[$ssid]['flag']   * 50 : 0;
-            $chapel_fine = isset($student_absences[$ssid]['chapel']) ? (int)$student_absences[$ssid]['chapel'] * 50 : 0;
-            $name        = strtoupper($student['lastname'] . ', ' . $student['firstname'] . ' ' . $student['middlename']);
-            $sum_formula = '=SUM(C' . $row_num . ':H' . $row_num . ')';
+            $ssid           = $student['student_session_id'];
+            $flag_summary   = $is_flag_selected   ? $build_summary_str($ssid, 'flag')   : '';
+            $chapel_summary = $is_chapel_selected ? $build_summary_str($ssid, 'chapel') : '';
+            $name           = strtoupper($student['lastname'] . ', ' . $student['firstname'] . ' ' . $student['middlename']);
 
             $male_rows_xml .= '<row r="' . $row_num . '">'
                 . $make_num_cell('A', $row_num, '4', $index)
                 . $make_str_cell('B', $row_num, '5', $name)
-                . $make_num_cell('C', $row_num, '6', $flag_fine)
-                . $make_num_cell('D', $row_num, '6', $chapel_fine)
+                . $make_str_cell('C', $row_num, '6', $flag_summary)
+                . $make_str_cell('D', $row_num, '6', $chapel_summary)
                 . $make_num_cell('E', $row_num, '6', '')
                 . $make_num_cell('F', $row_num, '6', '')
                 . $make_num_cell('G', $row_num, '6', '')
                 . $make_num_cell('H', $row_num, '6', '')
-                . '<c r="I' . $row_num . '" s="7"><f>' . htmlspecialchars($sum_formula, ENT_XML1) . '</f><v>0</v></c>'
+                . $make_str_cell('I', $row_num, '7', '')
                 . '</row>';
             $row_num++;
             $index++;
@@ -460,22 +511,21 @@ class stuattendence extends CI_Controller {
 
         $index = 1;
         foreach ($girl_students as $student) {
-            $ssid        = $student['student_session_id'];
-            $flag_fine   = isset($student_absences[$ssid]['flag'])   ? (int)$student_absences[$ssid]['flag']   * 50 : 0;
-            $chapel_fine = isset($student_absences[$ssid]['chapel']) ? (int)$student_absences[$ssid]['chapel'] * 50 : 0;
-            $name        = strtoupper($student['lastname'] . ', ' . $student['firstname'] . ' ' . $student['middlename']);
-            $sum_formula = '=SUM(C' . $row_num . ':H' . $row_num . ')';
+            $ssid           = $student['student_session_id'];
+            $flag_summary   = $is_flag_selected   ? $build_summary_str($ssid, 'flag')   : '';
+            $chapel_summary = $is_chapel_selected ? $build_summary_str($ssid, 'chapel') : '';
+            $name           = strtoupper($student['lastname'] . ', ' . $student['firstname'] . ' ' . $student['middlename']);
 
             $female_rows_xml .= '<row r="' . $row_num . '">'
                 . $make_num_cell('A', $row_num, '4', $index)
                 . $make_str_cell('B', $row_num, '5', $name)
-                . $make_num_cell('C', $row_num, '6', $flag_fine)
-                . $make_num_cell('D', $row_num, '6', $chapel_fine)
+                . $make_str_cell('C', $row_num, '6', $flag_summary)
+                . $make_str_cell('D', $row_num, '6', $chapel_summary)
                 . $make_num_cell('E', $row_num, '5', '')
                 . $make_num_cell('F', $row_num, '5', '')
                 . $make_num_cell('G', $row_num, '5', '')
                 . $make_num_cell('H', $row_num, '6', '')
-                . '<c r="I' . $row_num . '" s="7"><f>' . htmlspecialchars($sum_formula, ENT_XML1) . '</f><v>0</v></c>'
+                . $make_str_cell('I', $row_num, '7', '')
                 . '</row>';
             $row_num++;
             $index++;

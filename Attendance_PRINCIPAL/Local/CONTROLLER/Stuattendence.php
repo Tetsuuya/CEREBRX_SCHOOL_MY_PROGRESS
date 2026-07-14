@@ -534,12 +534,12 @@ class stuattendence extends CI_Controller {
         // Update header cells in the template
         $sheetXml = preg_replace(
             '/<c r="A3"[^>]*>.*?<\/c>/s',
-            '<c r="A3" s="47" t="inlineStr"><is><t>S.Y. ' . htmlspecialchars($session_current, ENT_XML1) . '</t></is></c>',
+            '<c r="A3" s="25" t="inlineStr"><is><t>S.Y. ' . htmlspecialchars($session_current, ENT_XML1) . '</t></is></c>',
             $sheetXml
         );
         $sheetXml = preg_replace(
             '/<c r="A4"[^>]*>.*?<\/c>/s',
-            '<c r="A4" s="48" t="inlineStr"><is><t>' . htmlspecialchars($class_section_title, ENT_XML1) . '</t></is></c>',
+            '<c r="A4" s="28" t="inlineStr"><is><t>' . htmlspecialchars($class_section_title, ENT_XML1) . '</t></is></c>',
             $sheetXml
         );
         // Row 5 col C5 â€” use date range instead of month
@@ -794,12 +794,12 @@ class stuattendence extends CI_Controller {
         // Replace header cells: S.Y., Fines title, Month
         $sheetXml = preg_replace(
             '/<c r="A3"[^>]*>.*?<\/c>/s',
-            '<c r="A3" s="47" t="inlineStr"><is><t>S.Y. ' . htmlspecialchars($session_current, ENT_XML1) . '</t></is></c>',
+            '<c r="A3" s="25" t="inlineStr"><is><t>S.Y. ' . htmlspecialchars($session_current, ENT_XML1) . '</t></is></c>',
             $sheetXml
         );
         $sheetXml = preg_replace(
             '/<c r="A4"[^>]*>.*?<\/c>/s',
-            '<c r="A4" s="48" t="inlineStr"><is><t>' . htmlspecialchars($class_section_title, ENT_XML1) . '</t></is></c>',
+            '<c r="A4" s="28" t="inlineStr"><is><t>' . htmlspecialchars($class_section_title, ENT_XML1) . '</t></is></c>',
             $sheetXml
         );
         $sheetXml = preg_replace(

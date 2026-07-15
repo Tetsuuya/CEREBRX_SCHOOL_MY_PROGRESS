@@ -36,7 +36,6 @@
     <section class="content-header">
         <h1>
             <i class="fa fa-bar-chart"></i> Attendance Summary
-            <small>Generate Attendance Summary Sheet by Date Range</small>
         </h1>
         <ol class="breadcrumb">
             <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>

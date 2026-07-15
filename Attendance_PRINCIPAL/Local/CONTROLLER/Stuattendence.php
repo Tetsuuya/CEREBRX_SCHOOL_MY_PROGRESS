@@ -402,8 +402,8 @@ class stuattendence extends CI_Controller {
         }
 
         $build_summary_str = function($ssid, $category) use ($student_counts, $all_types) {
-            // Display: L, A, E, SC, OC, OSR, Ex, Exm
-            $desired_ids = array(3, 4, 2, 8, 9, 10, 6, 7);
+            // Display: L, A, E, SC, OC, OSR, Ex
+            $desired_ids = array(3, 4, 2, 8, 9, 10, 6);
             $parts = array();
 
             foreach ($desired_ids as $tid) {

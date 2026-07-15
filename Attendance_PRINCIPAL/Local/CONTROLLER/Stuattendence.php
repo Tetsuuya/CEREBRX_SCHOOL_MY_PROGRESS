@@ -520,15 +520,17 @@ class stuattendence extends CI_Controller {
             if ($chapel_summary === '') { $chapel_summary = ' '; }
             $name           = strtoupper($student['lastname'] . ', ' . $student['firstname'] . ' ' . $student['middlename']);
 
+            $style_c_d_h = ($index === 1) ? '5' : '6';
+
             $female_rows_xml .= '<row r="' . $row_num . '">'
                 . $make_num_cell('A', $row_num, '4', $index)
                 . $make_str_cell('B', $row_num, '5', $name)
-                . $make_str_cell('C', $row_num, '6', $flag_summary)
-                . $make_str_cell('D', $row_num, '6', $chapel_summary)
+                . $make_str_cell('C', $row_num, $style_c_d_h, $flag_summary)
+                . $make_str_cell('D', $row_num, $style_c_d_h, $chapel_summary)
                 . $make_str_cell('E', $row_num, '5', ' ')
                 . $make_str_cell('F', $row_num, '5', ' ')
                 . $make_str_cell('G', $row_num, '5', ' ')
-                . $make_str_cell('H', $row_num, '6', ' ')
+                . $make_str_cell('H', $row_num, $style_c_d_h, ' ')
                 . $make_str_cell('I', $row_num, '7', ' ')
                 . '</row>';
             $row_num++;
@@ -780,15 +782,17 @@ class stuattendence extends CI_Controller {
             $name        = strtoupper($student['lastname'] . ', ' . $student['firstname'] . ' ' . $student['middlename']);
             $sum_formula = '=SUM(C' . $row_num . ':H' . $row_num . ')';
 
+            $style_c_d_h = ($index === 1) ? '5' : '6';
+
             $female_rows_xml .= '<row r="' . $row_num . '">'
                 . $make_num_cell('A', $row_num, '4', $index)
                 . $make_str_cell('B', $row_num, '5', $name)
-                . $make_num_cell('C', $row_num, '6', $flag_fine > 0 ? $flag_fine : 0)
-                . $make_num_cell('D', $row_num, '6', $chapel_fine > 0 ? $chapel_fine : 0)
+                . $make_num_cell('C', $row_num, $style_c_d_h, $flag_fine > 0 ? $flag_fine : 0)
+                . $make_num_cell('D', $row_num, $style_c_d_h, $chapel_fine > 0 ? $chapel_fine : 0)
                 . $make_num_cell('E', $row_num, '5', '')
                 . $make_num_cell('F', $row_num, '5', '')
                 . $make_num_cell('G', $row_num, '5', '')
-                . $make_num_cell('H', $row_num, '6', '')
+                . $make_num_cell('H', $row_num, $style_c_d_h, '')
                 . '<c r="I' . $row_num . '" s="7"><f>' . htmlspecialchars($sum_formula, ENT_XML1) . '</f><v>0</v></c>'
                 . '</row>';
             $row_num++;

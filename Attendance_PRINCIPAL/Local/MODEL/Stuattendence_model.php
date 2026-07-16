@@ -390,13 +390,12 @@ class Stuattendence_model extends CI_Model {
 		$total_late = 0;
 		$total_present = 0;
 		$score = 0;
-		$consecutive_days = 0;
 		for( $x=1;$x<=$total_days;$x++){
 			 $check_attendance = $this->check_date_attendance( $user_id, $x, $month, $year, $session_id );
-			 $check_if_present = $check_attendance['present'];
-			 $check_if_absent = $check_attendance['absent'];
-			 $check_if_late = $check_attendance['late'];
-			 $check_if_holiday = $check_attendance['holiday'];
+			 $check_if_present = isset($check_attendance['present']) ? $check_attendance['present'] : 0;
+			 $check_if_absent = isset($check_attendance['absent']) ? $check_attendance['absent'] : 0;
+			 $check_if_late = isset($check_attendance['late']) ? $check_attendance['late'] : 0;
+			 $check_if_holiday = isset($check_attendance['holiday']) ? $check_attendance['holiday'] : 0;
 			if( $check_if_absent != 0  && $check_if_present != 0 ){
 				$total_present = $total_present + .5 ;
 				$total_absent = $total_absent + .5 ;
@@ -410,25 +409,11 @@ class Stuattendence_model extends CI_Model {
 			
 			if( $check_if_late != 0 ){
 				$total_late = $total_late + 1 ;
-				 $consecutive_days++;
-				 if( $consecutive_days == 3){
-					$total_absent = $total_absent + 1 ;
-					$consecutive_days=0;
-				 }
-			} else {
-				 $consecutive_days = 0;
 			}
-			
 		}
 
-		if( $type == 1 ){
-			return $total_present;
-		} elseif( $type == 4 ){
-			return $total_absent;
-		} elseif( $type == 3 ){
-			return $total_late;
-		}
-		
+		// Enforce the 3 lates = 1 absent rule cumulatively
+		$total_absent = $total_absent + floor($total_late / 3);
 
 		if( $type == 1 ){
 			return $total_present;

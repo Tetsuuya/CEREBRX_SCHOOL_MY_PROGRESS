@@ -406,6 +406,16 @@ class stuattendence extends CI_Controller {
             $desired_ids = array(3, 4, 2, 8, 9, 10, 6);
             $parts = array();
 
+            // Calculate total lates (ID 3: Late, ID 2: Late with excuse)
+            $lates = 0;
+            if (isset($student_counts[$ssid][$category][3])) {
+                $lates += $student_counts[$ssid][$category][3];
+            }
+            if (isset($student_counts[$ssid][$category][2])) {
+                $lates += $student_counts[$ssid][$category][2];
+            }
+            $extra_absents = floor($lates / 3);
+
             foreach ($desired_ids as $tid) {
                 $type_row = null;
                 foreach ($all_types as $t) {
@@ -421,6 +431,12 @@ class stuattendence extends CI_Controller {
                 if (isset($student_counts[$ssid][$category][$tid])) {
                     $cnt = $student_counts[$ssid][$category][$tid];
                 }
+
+                // If it is Absent (ID 4), add the extra absents from lates
+                if ($tid == 4) {
+                    $cnt += $extra_absents;
+                }
+
                 $parts[] = $clean_key . ' = ' . $cnt;
             }
 

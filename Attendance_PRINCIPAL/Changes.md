@@ -10,7 +10,8 @@ Upload these files from your local workspace to the remote folders listed below:
 
 | File Type | Local File Path | Remote Target Folder | Action / Note |
 | :--- | :--- | :--- | :--- |
-| **Controller** | `Attendance_PRINCIPAL/Local/CONTROLLER/Stuattendence.php` | `/application/controllers/principal/` | **Overwrite** (Updated with centered headers, date parsing fix, and text clipping) |
+| **Controller** | `Attendance_PRINCIPAL/Local/CONTROLLER/Stuattendence.php` | `/application/controllers/principal/` | **Overwrite** (Updated with centered headers, date parsing fix, text clipping, and cumulative lates penalty in Attendance Summary text) |
+| **Model** | `Attendance_PRINCIPAL/Local/MODEL/Stuattendence_model.php` | `/application/models/` | **Overwrite** (Updates lates to absents logic to use cumulative instead of consecutive, and resolves undefined index warnings on non-class days) |
 | **Header Layout** | `Attendance_PRINCIPAL/Local/header.php` | `/application/views/layout/principal/` | **Overwrite** (Adds sidebar sub-menus) |
 | **Attendance Report View** | `Attendance_PRINCIPAL/Local/VIEW/classattendencereport.php` | `/application/views/principal/stuattendence/` | **Overwrite** (Removes export button) |
 | **Attendance Summary View** | `Attendance_PRINCIPAL/Local/VIEW/attendancesummary.php` | `/application/views/principal/stuattendence/` | **New File** (Renders new date-range view) |
@@ -45,3 +46,7 @@ Upload these files from your local workspace to the remote folders listed below:
 * **Clean Text Clipping**: Formatted empty cells under columns C to I with a single space (`' '`). This invisible character prevents the summary text from overflowing into empty adjacent columns, forcing Excel to clip it cleanly at cell borders.
 * **Fines Calculation Removal**: Changed columns C (Flag) and D (Chapel) to output the summary count of student violations (e.g. `L = 3, A = 3, E = 2, SC = 1, OC = 0, OSR = 0`) instead of charging fine amounts, and left Column I (Amount) blank.
 * **Merged Cells Fix**: Replaced static string replacements with a regex match for the female header row merge configuration (`<mergeCell ref="A9:B9" />`), ensuring it updates to the dynamic row offset correctly.
+
+### E. Attendance Penalties & Warnings (`Local/MODEL/Stuattendence_model.php`)
+* **Cumulative Lates**: Changed the "3 lates = 1 absent" rule from counting consecutive calendar days (which was easily broken by weekends/holidays) to count cumulative lates during the month/period (e.g. `floor(total_lates / 3)`).
+* **Undefined Index Warnings Fix**: Wrapped database array accesses in `isset` ternary checks to prevent PHP warnings when querying dates with no classes or attendance records (such as weekends).

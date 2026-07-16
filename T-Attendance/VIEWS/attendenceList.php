@@ -1,4 +1,7 @@
-<?php if (!isset($exempted_type_id)) { $exempted_type_id = 7; } ?>
+<?php 
+if (!isset($exempted_type_id)) { $exempted_type_id = 7; } 
+$is_flag_ceremony = (isset($subject_name) && (stripos($subject_name, 'Flag Ceremony') !== FALSE || stripos($subject_name, 'Chapel') !== FALSE));
+?>
 <style type="text/css">
     .radio {
         padding-left: 20px; }
@@ -254,6 +257,9 @@
 													<?php
 													$row_count = 1;
 													foreach ($resultlist_male as $key => $value) {
+														if (!is_array($value) || !isset($value['student_session_id'])) {
+															continue;
+														}
 														$student_status = isset($value['status'])?$value['status']:'';
                                                     
                                                         ?>
@@ -272,7 +278,13 @@
                                                             </td>
                                                             -->
                                                             <td>
-                                                                <?php echo "<b>".$value['lastname'] ."</b>, " . $value['firstname']." ".$value['suffix']." ".$value['middlename']; ?>
+                                                                <?php 
+                                                                $lastname = isset($value['lastname']) ? $value['lastname'] : '';
+                                                                $firstname = isset($value['firstname']) ? $value['firstname'] : '';
+                                                                $suffix = isset($value['suffix']) ? $value['suffix'] : '';
+                                                                $middlename = isset($value['middlename']) ? $value['middlename'] : '';
+                                                                echo "<b>".$lastname ."</b>, " . $firstname." ".$suffix." ".$middlename; 
+                                                                ?>
                                                             </td>
                                                             <td><?php echo $value['status']; ?></td>
 
@@ -302,6 +314,11 @@
                                                                                 <label class='label-warning label'><?php echo $value['att_type'];?></label>
                                                                             <?php
                                                                         } */ 
+                                                                        if( strpos($value['att_type'], 'SC') !== FALSE || strpos($value['att_type'], 'OC') !== FALSE || strpos($value['att_type'], 'OSR') !== FALSE ){
+                                                                            ?>
+                                                                                <label class='label-info label'><?php echo $value['att_type'];?></label>
+                                                                            <?php
+                                                                        }
                                                                         ?>
                                                                         <?php
                                                                     } else {
@@ -317,6 +334,9 @@
                                                                 $count = 0; 
                                                                 foreach ($attendencetypeslist as $key => $type) {
                                                                     if ($type['key_value'] != "H" && $type['id'] != $exempted_type_id) {
+                                                                        if (!$is_flag_ceremony && in_array($type['id'], [8, 9, 10])) {
+                                                                            continue;
+                                                                        }
                                                                         $att_type= str_replace(" ","_",strtolower($type['type']));
                                                                         
                                                                         if ($value['date'] != "xxx") {
@@ -331,7 +351,13 @@
                                                                                     <?php echo ($value['status'] != 'active') ? 'disabled' : ''; ?>
                                                                                 >
                                                                                 <label for="attendencetype<?php echo $value['student_session_id'] . "-" . $count; ?>">
-                                                                                    <?php echo ucfirst($type['type']); ?>
+                                                                                    <?php 
+                                                                                    $display_type = ucfirst($type['type']);
+                                                                                    if (strpos($display_type, ' - ') !== FALSE) {
+                                                                                        $display_type = explode(' - ', $display_type)[0];
+                                                                                    }
+                                                                                    echo $display_type;
+                                                                                    ?>
                                                                                 </label>
                                                                             </div>
                                                                             <?php
@@ -347,7 +373,13 @@
                                                                                     <?php echo ($value['status'] != 'active') ? 'disabled' : ''; ?>
                                                                                 >
                                                                                 <label for="attendencetype<?php echo $value['student_session_id'] . "-" . $count; ?>">
-                                                                                    <?php echo ucfirst($type['type']); ?>
+                                                                                    <?php 
+                                                                                    $display_type = ucfirst($type['type']);
+                                                                                    if (strpos($display_type, ' - ') !== FALSE) {
+                                                                                        $display_type = explode(' - ', $display_type)[0];
+                                                                                    }
+                                                                                    echo $display_type;
+                                                                                    ?>
                                                                                 </label>
                                                                             </div>
                                                                             <?php
@@ -400,6 +432,9 @@
 													<?php
 													$row_count = 1;
 													foreach ($resultlist_female as $key => $value) {
+														if (!is_array($value) || !isset($value['student_session_id'])) {
+															continue;
+														}
 														$student_status = isset($value['status'])?$value['status']:'';
                                                     
                                                         ?>
@@ -418,7 +453,13 @@
                                                             </td>
                                                             -->
                                                             <td>
-                                                                <?php echo "<b>".$value['lastname'] ."</b>, " . $value['firstname']." ".$value['suffix']." ".$value['middlename']; ?>
+                                                                <?php 
+                                                                $lastname = isset($value['lastname']) ? $value['lastname'] : '';
+                                                                $firstname = isset($value['firstname']) ? $value['firstname'] : '';
+                                                                $suffix = isset($value['suffix']) ? $value['suffix'] : '';
+                                                                $middlename = isset($value['middlename']) ? $value['middlename'] : '';
+                                                                echo "<b>".$lastname ."</b>, " . $firstname." ".$suffix." ".$middlename; 
+                                                                ?>
                                                             </td>
                                                             <td><?php echo $value['status']; ?></td>
 
@@ -446,6 +487,11 @@
                                                                             <label class='label-warning label'><?php echo $value['att_type'];?></label>
                                                                         <?php
                                                                     } */  
+                                                                    if( strpos($value['att_type'], 'SC') !== FALSE || strpos($value['att_type'], 'OC') !== FALSE || strpos($value['att_type'], 'OSR') !== FALSE ){
+                                                                        ?>
+                                                                            <label class='label-info label'><?php echo $value['att_type'];?></label>
+                                                                        <?php
+                                                                    }
                                                                     ?>
                                                                     <?php
                                                                 } else {
@@ -461,6 +507,9 @@
                                                                 $count = 0; 
                                                                 foreach ($attendencetypeslist as $key => $type) {
                                                                     if ($type['key_value'] != "H" && $type['id'] != $exempted_type_id) {
+                                                                        if (!$is_flag_ceremony && in_array($type['id'], [8, 9, 10])) {
+                                                                            continue;
+                                                                        }
                                                                         $att_type= str_replace(" ","_",strtolower($type['type']));
                                                                         if ($value['date'] != "xxx") {
                                                                             ?>
@@ -474,7 +523,13 @@
                                                                                     <?php echo ($value['status'] != 'active') ? 'disabled' : ''; ?>
                                                                                 >
                                                                                 <label for="attendencetype<?php echo $value['student_session_id'] . "-" . $count; ?>">
-                                                                                    <?php echo ucfirst($type['type']); ?>
+                                                                                    <?php 
+                                                                                    $display_type = ucfirst($type['type']);
+                                                                                    if (strpos($display_type, ' - ') !== FALSE) {
+                                                                                        $display_type = explode(' - ', $display_type)[0];
+                                                                                    }
+                                                                                    echo $display_type;
+                                                                                    ?>
                                                                                 </label>
                                                                             </div>
                                                                             <?php
@@ -490,7 +545,13 @@
                                                                                     <?php echo ($value['status'] != 'active') ? 'disabled' : ''; ?>
                                                                                 >
                                                                                 <label for="attendencetype<?php echo $value['student_session_id'] . "-" . $count; ?>">
-                                                                                    <?php echo ucfirst($type['type']); ?>
+                                                                                    <?php 
+                                                                                    $display_type = ucfirst($type['type']);
+                                                                                    if (strpos($display_type, ' - ') !== FALSE) {
+                                                                                        $display_type = explode(' - ', $display_type)[0];
+                                                                                    }
+                                                                                    echo $display_type;
+                                                                                    ?>
                                                                                 </label>
                                                                             </div>
                                                                             <?php

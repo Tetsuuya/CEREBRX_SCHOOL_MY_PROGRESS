@@ -47,6 +47,7 @@ class stuattendence extends CI_Controller {
         $data['class_id'] = "";
         $data['section_id'] = "";
         $data['subject_id'] = "";
+        $data['subject_name'] = "";
         $data['date'] = "";
         $this->form_validation->set_rules('class_id', 'Class', 'trim|required|xss_clean');
         // $this->form_validation->set_rules('session_id', 'School Year', 'trim|required|xss_clean');
@@ -340,6 +341,12 @@ class stuattendence extends CI_Controller {
             $data['resultlist_male'] = $resultlist_male;
             $data['resultlist_female'] = $resultlist_female;
             // printx($data['resultlist_male']); 
+            $subject_name = "";
+            if ($subject) {
+                $subject_detail = $this->subject_model->get($subject);
+                $subject_name = isset($subject_detail['name']) ? $subject_detail['name'] : '';
+            }
+            $data['subject_name'] = $subject_name;
             $data['excuse_type_id'] = 6; 
             // $data['exempted_type_id'] = 7; 
             $this->load->view('layout/teacher/header', $data);
